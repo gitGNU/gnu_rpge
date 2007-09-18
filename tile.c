@@ -16,18 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-#define BLOCK_NONE 0x0
-#define BLOCK_GROUND 0x1
-#define BLOCK_AIR 0x2
-#define BLOCK_ALL BLOCK_GROUND | BLOCK_AIR
+#include "tile.h"
 
-typedef struct
+tile**
+init_tilegrid(unsigned int width,unsigned int height)
 {
-  int tilesheetindex; //in the as-of-yet barely functional global imagestack
-  SDL_Rect sheetclipping info;//the part of the tilesheet containing the actual tile
-  char blocking; 
-} tile;
-
-extern tile **tilegrid;
-
-tile** init_tilegrid(unsigned int width, unsigned int height);
+  return malloc(sizeof(tile)*width*height);
+}

@@ -25,6 +25,7 @@ You should have received a copy of the GNU General Public License
 #include "video.h"
 #include "mobs.h"
 #include "imagestack.h"
+#include "tile.h"
 #define FRAMES_PER_SECOND 40
 
 #endif
