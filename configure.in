@@ -1,0 +1,22 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_INIT(configure.in)
+AM_INIT_AUTOMAKE([RPGE],[0.0.1],[vrsoft@gmail.com])
+AC_CONFIG_SRCDIR([main.c])
+AC_CONFIG_HEADER([config.h])
+
+# Checks for programs.
+AC_PROG_CC_STDC
+
+# Checks for libraries.
+AC_CHECK_LIB(SDL, SDL_Init,[],[],[])
+AC_CHECK_LIB(SDL_image, IMG_Load,[],[],[])
+
+# Checks for header files.
+AC_CHECK_HEADERS(SDL/SDL.h SDL/SDL_image.h SDL/SDL_ttf.h)
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT

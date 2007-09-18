@@ -1,0 +1,6 @@
+Currently, RPGE is written and maintained by the following people:
+
+Remco Bras, who wrote the current image stack and mob support stubs along with the stub for main.c
+Michael de Lang, who wrote the video.c stub and helped out with several generic tasks
+
+In the future, this file shall proceed to list the people who contributed to the project.

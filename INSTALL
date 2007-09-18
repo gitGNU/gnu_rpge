@@ -1,0 +1,7 @@
+To install RPGE, execute the following commands in the RPGE source code root directory.
+
+./configure
+make
+make install
+
+Of these, only make install has to be run as root.
