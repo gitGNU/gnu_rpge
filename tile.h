@@ -15,6 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
+#include <SDL/SDL.h>
 
 #define BLOCK_NONE 0x0
 #define BLOCK_GROUND 0x1
@@ -24,10 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 typedef struct
 {
   int tilesheetindex; //in the as-of-yet barely functional global imagestack
-  SDL_Rect sheetclipping info;//the part of the tilesheet containing the actual tile
+  SDL_Rect sheetclippinginfo;//the part of the tilesheet containing the actual tile
   char blocking; 
 } tile;
 
 extern tile **tilegrid;
 
+tile make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking);
 tile** init_tilegrid(unsigned int width, unsigned int height);
+tile** tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile replacement);
+tile** tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridheight, tile replacement);

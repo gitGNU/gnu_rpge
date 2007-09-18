@@ -18,8 +18,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "tile.h"
 
+tile** tilegrid;
+
+tile 
+make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking)
+{
+  tile t;
+  t.tilesheetindex = tilesheet;
+  t.sheetclippinginfo = clipping;
+  t.blocking = blocking;
+  return t;
+}
+
 tile**
 init_tilegrid(unsigned int width,unsigned int height)
 {
   return malloc(sizeof(tile)*width*height);
+}
+
+tile** 
+tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile replacement)
+{
+  grid[x][y]=replacement;
+  return grid;
+}
+
+tile**
+tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridheight, tile replacement)
+{
+  for(int i = 0; i < gridwidth; i++)
+    {
+      for(int j = 0; j < gridheight; j++)
+        {
+          grid[i][j] = replacement;
+        }
+    }
 }

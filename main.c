@@ -35,15 +35,12 @@ main (int argc, char **argv)
     printf ("SDL_SetVideoMode failed: %s\n", SDL_GetError());
     return 1;
   }
+  //initialize tilegrid
+  tilegrid = init_tilegrid(40,30);
+  printf("Debug: %d\n",tilegrid);
   SDL_WM_SetCaption ("RPGE", "RPGE");
   notimage = load_image ("test.png");
   apply_surface ( 0, 0, notimage, screen, &clip);
-  //Let's test imagestacks too
-  for(int i = 0; i < 3000; i++)
-    {
-      push_image_on_stack("test.png");
-      remove_image("test.png");
-  }
   if ( SDL_Flip( screen ) == -1 )
     {
       printf ("SDL_Flip failed: %s\n", SDL_GetError());
