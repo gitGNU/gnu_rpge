@@ -32,7 +32,6 @@ make_image (SDL_Surface* data, char* filename)
 int 
 find_image(char* filename)
 {
-  printf("Finding in size %d, looking for image %s\n",images.size,filename);
   for(int i = 0; i < images.size; i++)
     {
       if(filename)
@@ -60,7 +59,6 @@ push_image_on_stack(char* filename)
 {
   int index  = find_image(filename), indexempty = find_empty();
   image* newimages;
-  printf("%d %d %s\n",index,indexempty,filename);
   if(index != -1)
     return index;
   if(indexempty != -1)
@@ -77,6 +75,7 @@ push_image_on_stack(char* filename)
       free(images.images);
       images.images = newimages;
       images.size++;
+      return index;
     }
 }
 
@@ -86,8 +85,6 @@ void remove_image (char* filename)
   printf("%d\n",index);
   if(index == -1 || !images.size || !images.images)
     return;
-  printf("%d %s %d %d %s\n",images.images[index].data,images.images[index].filename,images.size,images.images,filename);
-  SDL_FreeSurface(images.images[index].data);
   //Should free the filename here, tends to cause crashes
   images.images[index].data = NULL; 
   images.images[index].filename = NULL;

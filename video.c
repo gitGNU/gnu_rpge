@@ -21,19 +21,16 @@ You should have received a copy of the GNU General Public License
 SDL_Surface*
 load_image (char* filename)
 {
-  printf ("%s\n", filename);
-  SDL_Surface* loadedImage = NULL;
-  SDL_Surface* optimizedImage = NULL;
-
-  loadedImage = IMG_Load ( filename );
+  SDL_Surface* loadedImage = IMG_Load ( filename );
   if ( loadedImage != NULL )
-  {
-    optimizedImage = SDL_DisplayFormatAlpha ( loadedImage ); //forces loading of alpha in images(PNG mostly)
-    SDL_FreeSurface ( loadedImage );
-  }
+    {
+      return loadedImage;
+    }
   else
-    printf ("Loading of %s failed: %s\n", filename, IMG_GetError());
-  return optimizedImage;
+    {
+      fprintf (stderr,"Loading of %s failed: %s\n", filename, IMG_GetError());
+      return NULL;
+    }
 }
 
 void

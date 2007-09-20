@@ -33,10 +33,15 @@ make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking)
 tile**
 init_tilegrid(unsigned int width,unsigned int height)
 {
-  return malloc(sizeof(tile)*width*height);
+  tile** grid =  malloc(sizeof(tile*)*width);
+  for(int i = 0; i < width; i++)
+    {
+      grid[i] = malloc(sizeof(tile)*height);
+    }
+  return grid;
 }
 
-tile** 
+tile**
 tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile replacement)
 {
   grid[x][y]=replacement;
@@ -53,4 +58,5 @@ tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridhei
           grid[i][j] = replacement;
         }
     }
+  return grid;
 }

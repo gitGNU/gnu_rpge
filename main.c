@@ -25,10 +25,9 @@ main (int argc, char **argv)
   SDL_Surface *notimage = NULL;
   SDL_Event *event = malloc(sizeof(SDL_Event));
   SDL_Rect clip = {0,0,16,16};
-  image imageblah;
+  tile tiliditile = make_tile(push_image_on_stack("test.png"),clip,BLOCK_NONE);
   int next, now;
-  int j;
-  printf ("init: %i\n", SDL_Init (SDL_INIT_EVERYTHING));
+  SDL_Init (SDL_INIT_EVERYTHING);
   screen = SDL_SetVideoMode (800, 600, 32, SDL_HWSURFACE);
   if ( screen == NULL )
   {
@@ -37,7 +36,7 @@ main (int argc, char **argv)
   }
   //initialize tilegrid
   tilegrid = init_tilegrid(40,30);
-  printf("Debug: %d\n",tilegrid);
+  tilegrid = tilegrid_set_all_tiles(tilegrid,40,30,tiliditile);
   SDL_WM_SetCaption ("RPGE", "RPGE");
   notimage = load_image ("test.png");
   apply_surface ( 0, 0, notimage, screen, &clip);
