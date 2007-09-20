@@ -22,9 +22,11 @@ SDL_Surface*
 load_image (char* filename)
 {
   SDL_Surface* loadedImage = IMG_Load ( filename );
+  SDL_Surface* optimizedImage;
   if ( loadedImage != NULL )
     {
-      return loadedImage;
+      optimizedImage = SDL_DisplayFormatAlpha(loadedImage);
+      return optimizedImage;
     }
   else
     {

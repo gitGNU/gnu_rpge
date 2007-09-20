@@ -25,10 +25,11 @@ main (int argc, char **argv)
   SDL_Surface *notimage = NULL;
   SDL_Event *event = malloc(sizeof(SDL_Event));
   SDL_Rect clip = {0,0,16,16};
-  tile tiliditile = make_tile(push_image_on_stack("test.png"),clip,BLOCK_NONE);
+  tile tiliditile;
   int next, now;
   SDL_Init (SDL_INIT_EVERYTHING);
   screen = SDL_SetVideoMode (800, 600, 32, SDL_HWSURFACE);
+  tiliditile = make_tile(push_image_on_stack("test.png"),clip,BLOCK_NONE);
   if ( screen == NULL )
   {
     printf ("SDL_SetVideoMode failed: %s\n", SDL_GetError());
