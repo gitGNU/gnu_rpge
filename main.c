@@ -29,12 +29,12 @@ main (int argc, char **argv)
   int next, now;
   SDL_Init (SDL_INIT_EVERYTHING);
   screen = SDL_SetVideoMode (800, 600, 32, SDL_HWSURFACE);
-  tiliditile = make_tile(push_image_on_stack("test.png"),clip,BLOCK_NONE);
   if ( screen == NULL )
   {
-    printf ("SDL_SetVideoMode failed: %s\n", SDL_GetError());
+    fprintf (stderr,"SDL_SetVideoMode failed: %s\n", SDL_GetError());
     return 1;
   }
+  tiliditile = make_tile(push_image_on_stack("test.png"),clip,BLOCK_NONE);
   //initialize tilegrid
   tilegrid = init_tilegrid(40,30);
   tilegrid = tilegrid_set_all_tiles(tilegrid,40,30,tiliditile);
