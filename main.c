@@ -25,6 +25,7 @@ main (int argc, char **argv)
   mob mobby;
   SDL_Event *event = malloc(sizeof(SDL_Event));
   SDL_Rect clip = {0,0,16,16};
+  SDL_Rect clip2 = {0,0,800,640};
   tile tiliditile;
   int next, now;
   int mobindex;
@@ -41,6 +42,7 @@ main (int argc, char **argv)
   tilegrid = tilegrid_set_all_tiles(tilegrid,50,40,tiliditile);
   tilegrid_width = 50;
   tilegrid_height = 40;
+  remake_tilegrid();
   SDL_WM_SetCaption ("RPGE", "RPGE");
   //Yeah, I know this is lame, but I needed SOMETHING...
   mobby = create_mob_using_sprite(24,19,"test_sprite.png");

@@ -127,9 +127,7 @@ animate_mob(mob* m)
               return;
             }
         }
-
     }
-
 }
 
 void 

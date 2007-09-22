@@ -43,16 +43,6 @@ render_tilegrid(SDL_Surface* dest, tile** grid, int width, int height)
     }
 }
 
-void
-render_screen(SDL_Surface* dest)
-{
-  render_tilegrid(dest,tilegrid,tilegrid_width,tilegrid_height);
-  for(int i = 0; i < mobs.size; i++)
-    {
-      render_mob(dest,mobs.mobs[i]);
-    }
-}
-
 SDL_Surface*
 load_image (char* filename)
 {
@@ -79,4 +69,15 @@ apply_surface ( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL
     offset.y = y;
 
     SDL_BlitSurface ( source, clip, destination, &offset );
+}
+
+void
+render_screen(SDL_Surface* dest)
+{
+  SDL_Rect clip = {0,0,tilegrid_width*TILE_WIDTH,tilegrid_height*TILE_HEIGHT};
+  apply_surface(0,0,tilegrid_layer,dest,&clip);
+  for(int i = 0; i < mobs.size; i++)
+    {
+      render_mob(dest,mobs.mobs[i]);
+    }
 }

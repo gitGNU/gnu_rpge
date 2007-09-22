@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #ifndef TILE_H
 #define TILE_H
 #include <SDL/SDL.h>
+#include "main.h"
 
 #define BLOCK_LEFT 0x4
 #define BLOCK_RIGHT 0x8
@@ -40,6 +41,7 @@ typedef struct
 extern tile **tilegrid;
 extern int tilegrid_height;
 extern int tilegrid_width;
+extern SDL_Surface* tilegrid_layer;
 
 tile make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking);
 tile** init_tilegrid(unsigned int width, unsigned int height);
