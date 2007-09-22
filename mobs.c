@@ -37,13 +37,12 @@ create_mob_using_sprite (unsigned int x, unsigned int y, char *sprity)
 int
 find_empty_mob()
 {
-printf("Finding empty in size %d\n",mobs.size);
-for(int i = 0; i < mobs.size; i++)
-                   {
-                   if(mobs.mobs[i].imgindex == -1)
-                   return i;
-                   }
-                   return -1;
+  for(int i = 0; i < mobs.size; i++)
+     {
+       if(mobs.mobs[i].imgindex == -1)
+         return i;
+     }
+  return -1;
 }
 
 int
@@ -70,7 +69,7 @@ push_mob_on_array (mob m)
 char
 mob_equal(mob m, mob n)
 {
-  return (m.x == n.x && m.y == n.y && m.xpixelalignment == n.xpixelalignment && m.ypixelalignment == n.ypixelalignment && m.imgindex == n.imgindex && m.animation == n.animation && m.frame == n.frame && m.targetframe == n.targetframe && m.targetx == n.targetx && m.targety == n.targety && m.animrate == n.animrate && m.animtime == n.animtime && m.xmoverate == n.xmoverate && m.xmovetime == n.xmovetime && m.ymoverate == n.ymoverate && m.ymovetime == n.ymovetime);
+  return (m.x == n.x && m.y == n.y && m.xpixelalignment == n.xpixelalignment && m.ypixelalignment == n.ypixelalignment && m.imgindex == n.imgindex && m.animation == n.animation && m.frame == n.frame && m.targetframe == n.targetframe   && m.xmoverate == n.xmoverate && m.xmovetime == n.xmovetime && m.ymoverate == n.ymoverate && m.ymovetime == n.ymovetime);
 }
 
 int
@@ -96,4 +95,59 @@ remove_mob (mob m)
     {
       mobs.mobs[index].imgindex = -1;
     }
+}
+
+void
+animate_mob(mob* m)
+{
+  if(m->timetonextframe == -1)
+    return;
+  m->timetonextframe--;
+  if(!m->timetonextframe)
+    {
+      if(m->resetonnext)
+        {
+          m->frame = 0;
+          m->timetonextframe = m->initialtimetonextframe;
+          m->resetonnext = 0;
+          return;
+        }
+      m->frame++;
+      if(m->frame == m->targetframe)
+        {
+          if(m->animlooping)
+            {
+              m->resetonnext = 1;
+              m->timetonextframe = m->initialtimetonextframe;
+              return;
+            }
+          else
+            {
+              m->timetonextframe = -1;
+              return;
+            }
+        }
+
+    }
+
+}
+
+void 
+animate_mobs()
+{
+  for(int i = 0; i < mobs.size; i++)
+    {
+      animate_mob(&mobs.mobs[i]);
+    }
+}
+
+
+void
+mob_set_animation(mob* m, unsigned int animation, unsigned int startframe, unsigned int targetframe, unsigned int framesperframe, char looping)
+{
+  m->animation = animation;
+  m->frame = startframe;
+  m->targetframe = targetframe;
+  m->timetonextframe = m->initialtimetonextframe = framesperframe;
+  m->animlooping = looping;
 }

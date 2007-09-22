@@ -27,6 +27,7 @@ main (int argc, char **argv)
   SDL_Rect clip = {0,0,16,16};
   tile tiliditile;
   int next, now;
+  int mobindex;
   SDL_Init (SDL_INIT_EVERYTHING);
   screen = SDL_SetVideoMode (800, 640, 32, SDL_HWSURFACE);
   if ( screen == NULL )
@@ -44,7 +45,8 @@ main (int argc, char **argv)
   //Yeah, I know this is lame, but I needed SOMETHING...
   mobby = create_mob_using_sprite(24,19,"test_sprite.png");
   //testing...again
-  push_mob_on_array(mobby);
+  mobindex = push_mob_on_array(mobby);
+  mob_set_animation(&(mobs.mobs[mobindex]),0,0,1,40,1);
   while (1)
     {
       now = SDL_GetTicks ();
@@ -58,6 +60,7 @@ main (int argc, char **argv)
 	        break;
 	    }
 	}
+      animate_mobs();
       render_screen(screen);
       if ( SDL_Flip( screen ) == -1 )
         {

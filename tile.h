@@ -19,10 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define TILE_H
 #include <SDL/SDL.h>
 
+#define BLOCK_LEFT 0x4
+#define BLOCK_RIGHT 0x8
+#define BLOCK_UP 0x10
+#define BLOCK_DOWN 0x20
+#define BLOCK_ALL_DIRECTIONS BLOCK_LEFT | BLOCK_RIGHT | BLOCK_UP | BLOCK_DOWN
 #define BLOCK_NONE 0x0
 #define BLOCK_GROUND 0x1
 #define BLOCK_AIR 0x2
 #define BLOCK_ALL BLOCK_GROUND | BLOCK_AIR
+#define BLOCK_ALL_UNDIRECTIONAL BLOCK_ALL | BLOCK_ALL_DIRECTIONS
 
 typedef struct
 {

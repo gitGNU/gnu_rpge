@@ -32,14 +32,14 @@ typedef struct
   unsigned int animation;
   unsigned int frame;
   unsigned int targetframe;
-  unsigned int targetx;
-  unsigned int targety;
-  float animrate;
-  float animtime;
-  float xmoverate;
-  float xmovetime;
-  float ymoverate;
-  float ymovetime;
+  char animlooping;
+  char resetonnext;
+  int initialtimetonextframe;
+  int timetonextframe;
+  int xmoverate;
+  int xmovetime;
+  int ymoverate;
+  int ymovetime;
 } mob;
 
 typedef struct
@@ -53,5 +53,7 @@ extern mobstack mobs;
 mob create_mob_using_sprite (unsigned int, unsigned int, char *);
 int push_mob_on_array (mob);
 void remove_mob(mob);
+void mob_set_animation(mob* m, unsigned int animation, unsigned int startframe, unsigned int targetframe, unsigned int framesperframe, char looping);
+void  animate_mobs();
 
 #endif
