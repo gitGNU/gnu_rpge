@@ -27,5 +27,8 @@ You should have received a copy of the GNU General Public License
 #include "imagestack.h"
 #include "tile.h"
 #define FRAMES_PER_SECOND 40
-
+#define TILE_WIDTH 16
+#define TILE_HEIGHT TILE_WIDTH
+#define SPRITE_WIDTH TILE_WIDTH
+#define SPRITE_HEIGHT TILE_HEIGHT
 #endif

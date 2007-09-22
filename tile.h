@@ -15,6 +15,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
+#ifndef TILE_H
+#define TILE_H
 #include <SDL/SDL.h>
 
 #define BLOCK_NONE 0x0
@@ -35,3 +37,5 @@ tile make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking);
 tile** init_tilegrid(unsigned int width, unsigned int height);
 tile** tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile replacement);
 tile** tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridheight, tile replacement);
+
+#endif

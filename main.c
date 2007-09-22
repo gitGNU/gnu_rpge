@@ -22,13 +22,13 @@ int
 main (int argc, char **argv)
 {
   SDL_Surface *screen;
-  SDL_Surface *notimage = NULL;
+  mob mobby;
   SDL_Event *event = malloc(sizeof(SDL_Event));
   SDL_Rect clip = {0,0,16,16};
   tile tiliditile;
   int next, now;
   SDL_Init (SDL_INIT_EVERYTHING);
-  screen = SDL_SetVideoMode (800, 600, 32, SDL_HWSURFACE);
+  screen = SDL_SetVideoMode (800, 640, 32, SDL_HWSURFACE);
   if ( screen == NULL )
   {
     fprintf (stderr,"SDL_SetVideoMode failed: %s\n", SDL_GetError());
@@ -36,11 +36,14 @@ main (int argc, char **argv)
   }
   tiliditile = make_tile(push_image_on_stack("test.png"),clip,BLOCK_NONE);
   //initialize tilegrid
-  tilegrid = init_tilegrid(40,30);
-  tilegrid = tilegrid_set_all_tiles(tilegrid,40,30,tiliditile);
+  tilegrid = init_tilegrid(50,40);
+  tilegrid = tilegrid_set_all_tiles(tilegrid,50,40,tiliditile);
   SDL_WM_SetCaption ("RPGE", "RPGE");
-  notimage = load_image ("test.png");
-  apply_surface ( 0, 0, notimage, screen, &clip);
+  //Yeah, I know this is lame, but I needed SOMETHING...
+  mobby = create_mob_using_sprite(24,19,"test_sprite.png");
+  //testing...again
+  render_tilegrid(screen,tilegrid,50,40);
+  render_mob(screen,mobby);
   if ( SDL_Flip( screen ) == -1 )
     {
       printf ("SDL_Flip failed: %s\n", SDL_GetError());
@@ -63,6 +66,5 @@ main (int argc, char **argv)
       if (now < next)
 	SDL_Delay (next - now);
     }
-  SDL_FreeSurface (notimage);
   free(event);
 }

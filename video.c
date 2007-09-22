@@ -18,6 +18,31 @@ You should have received a copy of the GNU General Public License
 
 #include "video.h"
 
+void
+render_mob(SDL_Surface* dest, mob mobby)
+{
+  SDL_Rect imageclippy = {mobby.animation * SPRITE_WIDTH, mobby.frame * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT};
+  apply_surface(mobby.x*TILE_WIDTH,mobby.y*TILE_HEIGHT,images.images[mobby.imgindex].data,dest,&imageclippy);
+}
+
+void
+render_tile(SDL_Surface* dest, int x, int y, tile tily)
+{
+  apply_surface(x*TILE_WIDTH,y*TILE_HEIGHT,images.images[tily.tilesheetindex].data,dest,&tily.sheetclippinginfo);
+}
+
+void
+render_tilegrid(SDL_Surface* dest, tile** grid, int width, int height)
+{
+  for(int i = 0; i < width; i++)
+    {
+      for(int j = 0; j < height; j++)
+        {
+          render_tile(dest,i,j,grid[i][j]);
+        }
+    }
+}
+
 SDL_Surface*
 load_image (char* filename)
 {
