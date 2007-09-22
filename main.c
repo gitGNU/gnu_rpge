@@ -38,17 +38,13 @@ main (int argc, char **argv)
   //initialize tilegrid
   tilegrid = init_tilegrid(50,40);
   tilegrid = tilegrid_set_all_tiles(tilegrid,50,40,tiliditile);
+  tilegrid_width = 50;
+  tilegrid_height = 40;
   SDL_WM_SetCaption ("RPGE", "RPGE");
   //Yeah, I know this is lame, but I needed SOMETHING...
   mobby = create_mob_using_sprite(24,19,"test_sprite.png");
   //testing...again
-  render_tilegrid(screen,tilegrid,50,40);
-  render_mob(screen,mobby);
-  if ( SDL_Flip( screen ) == -1 )
-    {
-      printf ("SDL_Flip failed: %s\n", SDL_GetError());
-      return 1;
-    }
+  push_mob_on_array(mobby);
   while (1)
     {
       now = SDL_GetTicks ();
@@ -62,6 +58,12 @@ main (int argc, char **argv)
 	        break;
 	    }
 	}
+      render_screen(screen);
+      if ( SDL_Flip( screen ) == -1 )
+        {
+          fprintf (stderr, "Cannot render frame, flip failure: %s\n", SDL_GetError());
+          return 1;
+        }
       now = SDL_GetTicks ();
       if (now < next)
 	SDL_Delay (next - now);

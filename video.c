@@ -43,6 +43,16 @@ render_tilegrid(SDL_Surface* dest, tile** grid, int width, int height)
     }
 }
 
+void
+render_screen(SDL_Surface* dest)
+{
+  render_tilegrid(dest,tilegrid,tilegrid_width,tilegrid_height);
+  for(int i = 0; i < mobs.size; i++)
+    {
+      render_mob(dest,mobs.mobs[i]);
+    }
+}
+
 SDL_Surface*
 load_image (char* filename)
 {

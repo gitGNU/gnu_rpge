@@ -32,6 +32,8 @@ typedef struct
 } tile;
 
 extern tile **tilegrid;
+extern int tilegrid_height;
+extern int tilegrid_width;
 
 tile make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking);
 tile** init_tilegrid(unsigned int width, unsigned int height);

@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "tile.h"
 
 tile** tilegrid;
+int tilegrid_width;
+int tilegrid_height;
 
 tile 
 make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking)
