@@ -127,6 +127,11 @@ animate_mob(mob* m)
               return;
             }
         }
+      else
+        {
+          m->timetonextframe = m->initialtimetonextframe;
+          return;
+        }
     }
 }
 
