@@ -48,7 +48,7 @@ main (int argc, char **argv)
   mobby = create_mob_using_sprite(24,19,"test_sprite.png");
   //testing...again
   mobindex = push_mob_on_array(mobby);
-  mob_set_animation(&(mobs.mobs[mobindex]),0,0,2,40,1);
+  mob_set_animation(&(mobs.mobs[mobindex]),0,0,9,40,1);
   while (1)
     {
       now = SDL_GetTicks ();
