@@ -56,5 +56,5 @@ void remove_mob(mob);
 void mob_set_animation(mob* m, unsigned int animation, unsigned int startframe, unsigned int targetframe, unsigned int framesperframe, char looping);
 void  animate_mobs();
 void  move_mobs();
-void  mob_set_movement(mob* m, unsigned int xam, unsigned int xrate, unsigned int yam, unsigned int yrate);
+void  mob_set_movement(mob* m, int xam, int xrate, int yam, int yrate);
 #endif
