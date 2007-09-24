@@ -35,9 +35,7 @@ main (int argc, char **argv)
   SDL_WM_SetCaption ("RPGE", "RPGE");
   scm_init_guile();
   scm_c_primitive_load ("script.scm");
-  func_symbol = scm_c_lookup("do-hello");
-  func = scm_variable_ref(func_symbol);
-  scm_call_0 (func);
+  scm_c_eval_string("(do-hello)\n");
   while (1)
     {
       now = SDL_GetTicks ();
