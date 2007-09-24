@@ -24,6 +24,7 @@ main (int argc, char **argv)
   SDL_Surface *screen;
   SDL_Event *event = malloc(sizeof(SDL_Event));
   int next, now;
+  SCM func, func_symbol;
   SDL_Init (SDL_INIT_EVERYTHING);
   screen = SDL_SetVideoMode (800, 640, 32, SDL_HWSURFACE);
   if ( screen == NULL )
@@ -32,6 +33,11 @@ main (int argc, char **argv)
     return 1;
   }
   SDL_WM_SetCaption ("RPGE", "RPGE");
+  scm_init_guile();
+  scm_c_primitive_load ("script.scm");
+  func_symbol = scm_c_lookup("do-hello");
+  func = scm_variable_ref(func_symbol);
+  scm_call_0 (func);
   while (1)
     {
       now = SDL_GetTicks ();

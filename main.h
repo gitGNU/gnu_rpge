@@ -22,6 +22,7 @@ You should have received a copy of the GNU General Public License
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_image.h>
+#include <libguile.h>
 #include "tile.h"
 #include "video.h"
 #include "mobs.h"

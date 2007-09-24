@@ -3,6 +3,12 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define to 1 if you have the `guile' library (-lguile). */
+#undef HAVE_LIBGUILE
+
+/* Define to 1 if you have the <libguile.h> header file. */
+#undef HAVE_LIBGUILE_H
+
 /* Define to 1 if you have the `SDL' library (-lSDL). */
 #undef HAVE_LIBSDL
 
