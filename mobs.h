@@ -37,9 +37,9 @@ typedef struct
   int initialtimetonextframe;
   int timetonextframe;
   int xmoverate;
-  int xmovetime;
+  int xmoveamount;
   int ymoverate;
-  int ymovetime;
+  int ymoveamount;
 } mob;
 
 typedef struct
@@ -55,5 +55,6 @@ int push_mob_on_array (mob);
 void remove_mob(mob);
 void mob_set_animation(mob* m, unsigned int animation, unsigned int startframe, unsigned int targetframe, unsigned int framesperframe, char looping);
 void  animate_mobs();
-
+void  move_mobs();
+void  mob_set_movement(mob* m, unsigned int xam, unsigned int xrate, unsigned int yam, unsigned int yrate);
 #endif

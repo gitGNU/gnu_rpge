@@ -45,10 +45,11 @@ main (int argc, char **argv)
   remake_tilegrid();
   SDL_WM_SetCaption ("RPGE", "RPGE");
   //Yeah, I know this is lame, but I needed SOMETHING...
-  mobby = create_mob_using_sprite(24,19,"test_sprite.png");
+  mobby = create_mob_using_sprite(0,0,"test_sprite.png");
   //testing...again
   mobindex = push_mob_on_array(mobby);
   mob_set_animation(&(mobs.mobs[mobindex]),0,0,9,40,1);
+  mob_set_movement(&(mobs.mobs[mobindex]),800,1,640,1);
   while (1)
     {
       now = SDL_GetTicks ();
@@ -62,7 +63,13 @@ main (int argc, char **argv)
 	        break;
 	    }
 	}
+      move_mobs();
       animate_mobs();
+      if(mobs.mobs[0].x > 800)
+        mobs.mobs[0].x = 0;
+      if(mobs.mobs[0].y > 640)
+        mobs.mobs[0].y = 0;
+      mob_set_movement(&(mobs.mobs[mobindex]),500,1,300,1);
       render_screen(screen);
       if ( SDL_Flip( screen ) == -1 )
         {

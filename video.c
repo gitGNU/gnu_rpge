@@ -22,7 +22,7 @@ void
 render_mob(SDL_Surface* dest, mob mobby)
 {
   SDL_Rect imageclippy = {mobby.animation * SPRITE_WIDTH, mobby.frame * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT};
-  apply_surface(mobby.x*TILE_WIDTH,mobby.y*TILE_HEIGHT,images.images[mobby.imgindex].data,dest,&imageclippy);
+  apply_surface(mobby.x,mobby.y,images.images[mobby.imgindex].data,dest,&imageclippy);
 }
 
 void

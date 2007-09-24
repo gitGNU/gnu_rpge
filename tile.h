@@ -43,6 +43,7 @@ extern int tilegrid_height;
 extern int tilegrid_width;
 extern SDL_Surface* tilegrid_layer;
 
+SDL_Surface* remake_tilegrid();
 tile make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking);
 tile** init_tilegrid(unsigned int width, unsigned int height);
 tile** tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile replacement);

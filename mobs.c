@@ -24,8 +24,8 @@ create_mob_using_sprite (unsigned int x, unsigned int y, char *sprity)
 {
   mob mobby;
   mobby.imgindex = push_image_on_stack (sprity);
-  mobby.x = x;
-  mobby.y = y;
+  mobby.x = x*TILE_WIDTH;
+  mobby.y = y*TILE_HEIGHT;
   mobby.xpixelalignment = mobby.ypixelalignment = 0;
   memset (((char *) &mobby) + sizeof (unsigned int) * 2 + sizeof (float) * 2 +
 	  sizeof (SDL_Surface *), 0,
@@ -69,7 +69,7 @@ push_mob_on_array (mob m)
 char
 mob_equal(mob m, mob n)
 {
-  return (m.x == n.x && m.y == n.y && m.xpixelalignment == n.xpixelalignment && m.ypixelalignment == n.ypixelalignment && m.imgindex == n.imgindex && m.animation == n.animation && m.frame == n.frame && m.targetframe == n.targetframe   && m.xmoverate == n.xmoverate && m.xmovetime == n.xmovetime && m.ymoverate == n.ymoverate && m.ymovetime == n.ymovetime);
+  return (m.x == n.x && m.y == n.y && m.xpixelalignment == n.xpixelalignment && m.ypixelalignment == n.ypixelalignment && m.imgindex == n.imgindex && m.animation == n.animation && m.frame == n.frame && m.targetframe == n.targetframe   && m.xmoverate == n.xmoverate && m.xmoveamount == n.xmoveamount && m.ymoverate == n.ymoverate && m.ymoveamount == n.ymoveamount);
 }
 
 int
@@ -144,6 +144,45 @@ animate_mobs()
     }
 }
 
+void
+move_mob(mob* m)
+{
+  if(m->xmoveamount)
+    {
+      if(m->xmoveamount < m->xmoverate)
+        {
+          m->x += m->xmoveamount;
+          m->xmoveamount = m->xmoverate = 0;
+        }
+      else
+        {
+          m->x += m->xmoverate;
+          m->xmoveamount -= m->xmoverate;
+        }
+    }
+  if(m->ymoveamount)
+    {
+      if(m->ymoveamount < m->ymoverate)
+        {
+          m->y += m->ymoveamount;
+          m->ymoveamount = m->ymoverate = 0;
+        }
+      else
+        {
+          m->y += m->ymoverate;
+          m->ymoveamount -= m->ymoverate;
+        }
+    }
+}
+
+void
+move_mobs()
+{
+  for(int i = 0; i < mobs.size; i++)
+    {
+      move_mob(&(mobs.mobs[i]));
+    }
+}
 
 void
 mob_set_animation(mob* m, unsigned int animation, unsigned int startframe, unsigned int targetframe, unsigned int framesperframe, char looping)
@@ -153,4 +192,13 @@ mob_set_animation(mob* m, unsigned int animation, unsigned int startframe, unsig
   m->targetframe = targetframe;
   m->timetonextframe = m->initialtimetonextframe = framesperframe;
   m->animlooping = looping;
+}
+
+void
+mob_set_movement(mob* m, unsigned int xam, unsigned int xrate, unsigned int yam, unsigned int yrate)
+{
+  m->xmoveamount = xam;
+  m->xmoverate = xrate;
+  m->ymoveamount = yam;
+  m->ymoverate = yrate;
 }
