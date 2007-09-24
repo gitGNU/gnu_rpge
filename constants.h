@@ -15,9 +15,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 #define FRAMES_PER_SECOND 40
 #define TILE_WIDTH 16
 #define TILE_HEIGHT TILE_WIDTH
 #define SPRITE_WIDTH TILE_WIDTH
 #define SPRITE_HEIGHT TILE_HEIGHT
+
+#endif
