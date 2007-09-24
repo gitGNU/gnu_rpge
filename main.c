@@ -49,7 +49,7 @@ main (int argc, char **argv)
   //testing...again
   mobindex = push_mob_on_array(mobby);
   mob_set_animation(&(mobs.mobs[mobindex]),0,0,9,40,1);
-  mob_set_movement(&(mobs.mobs[mobindex]),800,1,640,1);
+  mob_set_movement(&(mobs.mobs[mobindex]),-800,-5,-640,-5);
   while (1)
     {
       now = SDL_GetTicks ();
@@ -65,11 +65,12 @@ main (int argc, char **argv)
 	}
       move_mobs();
       animate_mobs();
-      if(mobs.mobs[0].x > 800)
-        mobs.mobs[0].x = 0;
-      if(mobs.mobs[0].y > 640)
-        mobs.mobs[0].y = 0;
-      mob_set_movement(&(mobs.mobs[mobindex]),500,1,300,1);
+      if(mobs.mobs[0].x < 0)
+        mobs.mobs[0].x = 800;
+      if(mobs.mobs[0].y < 0)
+        mobs.mobs[0].y = 640;
+      printf("%d %d\n",mobs.mobs[0].x,mobs.mobs[0].y);
+      mob_set_movement(&(mobs.mobs[mobindex]),-800,-5,-640,-5);
       render_screen(screen);
       if ( SDL_Flip( screen ) == -1 )
         {

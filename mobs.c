@@ -149,7 +149,7 @@ move_mob(mob* m)
 {
   if(m->xmoveamount)
     {
-      if(m->xmoveamount < m->xmoverate)
+      if(abs(m->xmoveamount) < abs(m->xmoverate))
         {
           m->x += m->xmoveamount;
           m->xmoveamount = m->xmoverate = 0;
@@ -162,7 +162,7 @@ move_mob(mob* m)
     }
   if(m->ymoveamount)
     {
-      if(m->ymoveamount < m->ymoverate)
+      if(abs(m->ymoveamount) < abs(m->ymoverate))
         {
           m->y += m->ymoveamount;
           m->ymoveamount = m->ymoverate = 0;

@@ -24,8 +24,8 @@ You should have received a copy of the GNU General Public License
 
 typedef struct
 {
-  unsigned int x;
-  unsigned int y;
+  int x;
+  int y;
   float xpixelalignment;
   float ypixelalignment;
   int imgindex;
