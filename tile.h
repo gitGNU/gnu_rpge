@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #ifndef TILE_H
 #define TILE_H
+
 #include <SDL/SDL.h>
-#include "main.h"
+
 
 #define BLOCK_LEFT 0x4
 #define BLOCK_RIGHT 0x8
@@ -49,4 +50,6 @@ tile** init_tilegrid(unsigned int width, unsigned int height);
 tile** tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile replacement);
 tile** tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridheight, tile replacement);
 
+//Includes which depend on this file
+#include "video.h"
 #endif

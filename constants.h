@@ -13,17 +13,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
+along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-#ifndef MAIN_INC_GUARD
-#define MAIN_INC_GUARD
-
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
-#include <SDL/SDL_image.h>
-#include "tile.h"
-#include "video.h"
-#include "mobs.h"
-#include "imagestack.h"
-#endif
+#define FRAMES_PER_SECOND 40
+#define TILE_WIDTH 16
+#define TILE_HEIGHT TILE_WIDTH
+#define SPRITE_WIDTH TILE_WIDTH
+#define SPRITE_HEIGHT TILE_HEIGHT
