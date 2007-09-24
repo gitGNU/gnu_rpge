@@ -195,7 +195,7 @@ mob_set_animation(mob* m, unsigned int animation, unsigned int startframe, unsig
 }
 
 void
-mob_set_movement(mob* m, unsigned int xam, unsigned int xrate, unsigned int yam, unsigned int yrate)
+mob_set_movement(mob* m, int xam, int xrate, int yam, int yrate)
 {
   m->xmoveamount = xam;
   m->xmoverate = xrate;
