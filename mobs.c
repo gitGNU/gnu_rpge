@@ -75,7 +75,6 @@ mob_equal(mob m, mob n)
 int
 find_mob (mob m)
 {
-  printf("Finding in size %d\n",mobs.size);
   for(int i = 0; i < mobs.size; i++)
     {
       if(mob_equal(mobs.mobs[i],m))
@@ -88,7 +87,6 @@ void
 remove_mob (mob m)
 {
   int index = find_mob(m);
-  printf("%d\n",index);
   if(mobs.size == 0 || index == -1)
     return; 
   if(index != -1)

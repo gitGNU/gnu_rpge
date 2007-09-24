@@ -79,10 +79,10 @@ push_image_on_stack(char* filename)
     }
 }
 
-void remove_image (char* filename)
+void
+remove_image (char* filename)
 {
   int index = find_image(filename);
-  printf("%d\n",index);
   if(index == -1 || !images.size || !images.images)
     return;
   //Should free the filename here, tends to cause crashes

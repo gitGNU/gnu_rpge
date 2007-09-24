@@ -35,12 +35,8 @@ typedef struct
 
 extern imagestack images;
 
-image
-make_image (SDL_Surface* data, char* filename);
-int 
-push_image_on_stack(char* filename);
-int 
-find_image(char* filename);
-void
-remove_image(char* filename);
+image make_image (SDL_Surface* data, char* filename);
+int  push_image_on_stack(char* filename);
+int  find_image(char* filename);
+void remove_image(char* filename);
 #endif
