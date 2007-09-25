@@ -1,0 +1,90 @@
+;Copyright 2007 Remco Bras
+;
+;This file is part of the RPGE.
+;
+;RPGE is free software; you can redistribute it and/or modify
+;it under the terms of the GNU General Public License as published by
+;the Free Software Foundation; either version 3 of the License, or
+;(at your option) any later version.
+;
+;RPGE is distributed in the hope that it will be useful,
+;but WITHOUT ANY WARRANTY; without even the implied warranty of
+;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;GNU General Public License for more details.
+;
+;You should have received a copy of the GNU General Public License
+;    along with this program.  If not, see <http://www.gnu.org/licenses/>
+;
+
+(define (init-table)
+  (cons 'table '()))
+  
+(define (add-to-table table key value)
+  (append table (cons (cons key value) '())))
+
+(define (get-from-table table key)
+  (cond 
+        ((null? table) '())
+        ((eq? (car table) 'table)
+          (get-from-table (cdr table) key))
+        ((eq? (caar table) key)
+          (cdar table))
+        (else
+          (get-from-table (cdr table) key))))
+          
+(define (set-in-table! table key value)
+  (cond
+        ((null? table) 'error)
+        ((eq? (car table) 'table)
+          (set-in-table! (cdr table) key value))
+        ((eq? (caar table) key)
+          (set-cdr! (car table) value))
+        (else
+          (set-in-table! (cdr table) key value))))
+
+(define (table? table)
+  (cond
+    ((pair? table) (eq? (car table) 'table))
+    (else
+      #f)))
+      
+(define (multi-key-find-with-list table keys)
+  (cond
+    ((null? table) '())
+    ((not (pair? table)) 'error)
+    ((eq? (car table) 'table)
+      (multi-key-find-with-list (cdr table) keys))
+    ((eq? (caar table) (car keys))
+      (cond
+        ((null? (cdr keys))
+          (cdar table))
+        (else
+          (multi-key-find-with-list (cdar table) (cdr keys)))))
+    (else
+      (multi-key-find-with-list (cdr table) keys))))
+          
+(define (multi-key-find table . keys)
+  (multi-key-find-with-list table keys))
+  
+(define (add-to-table! table key value)
+  (append! table (cons (cons key value) '())))
+  
+(define (multi-key-add! table keylist value)
+  (define (multi-key-add!-sub table keylist value)
+    (let ((subtable (get-from-table table (car keylist))))
+      (cond
+        ((null? subtable) 
+          (cond
+            ((null? (cdr keylist))
+              (add-to-table! table (car keylist) value))
+            (else
+              (add-to-table! table (car keylist) (init-table))
+              (multi-key-add!-sub (get-from-table table (car keylist)) (cdr keylist) value))))
+        ((not (pair? subtable))
+          'error)
+        (else
+          (multi-key-add!-sub subtable (cdr keylist) value)))))
+   (let ((result (multi-key-add!-sub table keylist value)))
+     (if (eq? result 'error)
+       'error
+       table)))
