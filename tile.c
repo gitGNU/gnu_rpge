@@ -64,12 +64,38 @@ tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridhei
   return grid;
 }
 
+tile** set_tile(unsigned int x, unsigned int y, tile replacement)
+{
+  if(tilegrid)
+    {
+      tilegrid[x][y] = replacement;
+      return remake_tilegrid();
+    }
+  else
+    return NULL;
+}
+
+tile** set_all_tiles(tile replacement)
+{
+  if(tilegrid)
+    {
+      tilegrid = tilegrid_set_all_tiles(tilegrid,tilegrid_width,tilegrid_height,replacement);
+      return  remake_tilegrid();
+    }
+  else
+    return NULL;
+}  
 SDL_Surface*
 remake_tilegrid()
 {
-  SDL_FreeSurface(tilegrid_layer);
-  SDL_Surface* display = SDL_GetVideoSurface();
-  tilegrid_layer = SDL_CreateRGBSurface(SDL_HWSURFACE,tilegrid_width*TILE_WIDTH,tilegrid_height*TILE_HEIGHT,display->format->BitsPerPixel,display->format->Rmask,display->format->Gmask,display->format->Bmask,display->format->Amask);
+  SDL_Surface* display;
+  if(!tilegrid_layer)
+    {
+      display = SDL_GetVideoSurface();
+      tilegrid_layer = SDL_CreateRGBSurface(SDL_HWSURFACE,tilegrid_width*TILE_WIDTH,tilegrid_height*TILE_HEIGHT,display->format->BitsPerPixel,display->format->Rmask,display->format->Gmask,display->format->Bmask,display->format->Amask);
+    }
+  else
+    SDL_FillRect(tilegrid_layer,NULL,SDL_MapRGB(&tilegrid_layer->format,0,0,0));
   render_tilegrid(tilegrid_layer,tilegrid,tilegrid_width,tilegrid_height);
   return tilegrid_layer;
 }

@@ -30,6 +30,8 @@ main (int argc, char **argv)
   SDL_Surface *screen;
   SDL_Event *event = malloc(sizeof(SDL_Event));
   int next, now;
+  tile test_tile;
+  SDL_Rect clippy = {0,0,16,16};
   SDL_Init (SDL_INIT_EVERYTHING);
   screen = SDL_SetVideoMode (800, 640, 32, SDL_HWSURFACE);
   if ( screen == NULL )
@@ -39,9 +41,17 @@ main (int argc, char **argv)
   }
   SDL_WM_SetCaption ("RPGE", "RPGE");
   scm_init_guile();
+  scm_c_define_gsubr("create-mob",3,0,0,guile_create_mob);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("table_test.guile");
   SDL_CreateThread(exec_guile_shell,0);
+  //testing
+  tilegrid = init_tilegrid(50,40);
+  test_tile = make_tile(push_image_on_stack("test.png"),clippy,BLOCK_NONE);
+  tilegrid_width = 50;
+  tilegrid_height = 40;
+  set_all_tiles(test_tile);
+  set_tile(25,20,make_tile(push_image_on_stack("test_sprite.png"),clippy,BLOCK_NONE));
   while (1)
     {
       SCM_TICK;

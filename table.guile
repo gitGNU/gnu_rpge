@@ -88,3 +88,22 @@
      (if (eq? result 'error)
        'error
        table)))
+       
+(define (multi-key-set! table keylist value)
+  (define (multi-key-set-sub! table keylist value)
+    (cond
+      ((null? table) 'error)
+      ((eq? (car table) 'table)
+        (multi-key-set-sub! (cdr table) keylist value))
+      ((eq? (caar table) (car keylist))
+        (cond
+          ((null? (cdr keylist))
+            (set-in-table! table (car keylist) value))
+          (else
+            (multi-key-set-sub! (cdar table) (cdr keylist) value))))
+      (else
+        (multi-key-set-sub! (cdr table) keylist value))))
+  (let ((result (multi-key-set-sub! table keylist value)))
+    (if (eq? result 'error)
+      'error
+      table)))
