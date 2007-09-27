@@ -49,6 +49,8 @@ tile make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking);
 tile** init_tilegrid(unsigned int width, unsigned int height);
 tile** tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile replacement);
 tile** tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridheight, tile replacement);
+tile** set_all_tiles(tile replacement);
+tile** set_tile(unsigned int x, unsigned int y, tile replacement);
 
 //Includes which depend on this file
 #include "video.h"

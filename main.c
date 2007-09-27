@@ -22,6 +22,7 @@ int exec_guile_shell(void* unused_arg)
 {
   scm_init_guile();
   scm_shell(0,0);
+  return 0;//never reached, just here to please gcc.
 }
 
 int
@@ -31,6 +32,7 @@ main (int argc, char **argv)
   SDL_Event *event = malloc(sizeof(SDL_Event));
   int next, now;
   tile test_tile;
+  SCM testt;
   SDL_Rect clippy = {0,0,16,16};
   SDL_Init (SDL_INIT_EVERYTHING);
   screen = SDL_SetVideoMode (800, 640, 32, SDL_HWSURFACE);
@@ -52,6 +54,15 @@ main (int argc, char **argv)
   tilegrid_height = 40;
   set_all_tiles(test_tile);
   set_tile(25,20,make_tile(push_image_on_stack("test_sprite.png"),clippy,BLOCK_NONE));
+  testt = tile_to_list(test_tile);
+  test_tile = list_to_tile(testt);
+  testt = tile_to_list(test_tile);
+  for(int i = 0; i< 6; i++)
+    {
+      printf("%d ",scm_to_int16(scm_car(testt)));
+      testt = scm_cdr(testt);
+    }
+  printf("\n");
   while (1)
     {
       SCM_TICK;

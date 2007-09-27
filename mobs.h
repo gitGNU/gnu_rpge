@@ -52,7 +52,7 @@ extern mobstack mobs;
 
 mob create_mob_using_sprite (unsigned int, unsigned int, char *);
 int push_mob_on_array (mob);
-void remove_mob(mob);
+void remove_mob(int);
 void mob_set_animation(mob* m, unsigned int animation, unsigned int startframe, unsigned int targetframe, unsigned int framesperframe, char looping);
 void  animate_mobs();
 void  move_mobs();

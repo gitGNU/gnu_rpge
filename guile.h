@@ -17,7 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 #include "mobs.h"
+#include "tile.h"
 #include <libguile.h>
 
 SCM
 guile_create_mob(SCM,SCM,SCM);
+SCM
+tile_to_list(tile);
+tile
+list_to_tile(SCM);

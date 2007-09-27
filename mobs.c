@@ -66,30 +66,10 @@ push_mob_on_array (mob m)
     }
 }
 
-char
-mob_equal(mob m, mob n)
-{
-  return (m.x == n.x && m.y == n.y && m.xpixelalignment == n.xpixelalignment && m.ypixelalignment == n.ypixelalignment && m.imgindex == n.imgindex && m.animation == n.animation && m.frame == n.frame && m.targetframe == n.targetframe   && m.xmoverate == n.xmoverate && m.xmoveamount == n.xmoveamount && m.ymoverate == n.ymoverate && m.ymoveamount == n.ymoveamount);
-}
-
-int
-find_mob (mob m)
-{
-  for(int i = 0; i < mobs.size; i++)
-    {
-      if(mob_equal(mobs.mobs[i],m))
-        return i;
-    }
-  return -1;
-}
-
 void
-remove_mob (mob m)
+remove_mob (int index)
 {
-  int index = find_mob(m);
-  if(mobs.size == 0 || index == -1)
-    return; 
-  if(index != -1)
+  if(index < mobs.size)
     {
       mobs.mobs[index].imgindex = -1;
     }
