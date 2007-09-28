@@ -73,3 +73,27 @@ SCM tile_to_list(tile t)
                      SCM_UNDEFINED);
   return l;
 }
+
+SCM guile_create_tile(SCM sprite, SCM partclip, SCM blocking)
+{
+  char* spritefilename = scm_to_locale_string(sprite);
+  char block = scm_to_char(blocking);
+  SDL_Rect r;
+  r.x = scm_to_int16(scm_car(partclip));
+  r.y = scm_to_int16(scm_cadr(partclip));
+  r.w = scm_to_uint16(scm_caddr(partclip));
+  r.h = scm_to_uint16(scm_cadddr(partclip));
+  return tile_to_list(make_tile(push_image_on_stack(spritefilename),r,block));
+}
+
+SCM guile_set_tile(SCM x, SCM y, SCM tile)
+{
+  set_tile(scm_to_int16(x),scm_to_int16(y),list_to_tile(tile));
+  return scm_from_int(0);
+}
+
+SCM guile_set_all_tiles(SCM tile)
+{
+  set_all_tiles(list_to_tile(tile));
+  return scm_from_int(0);
+}

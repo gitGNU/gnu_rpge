@@ -1,0 +1,30 @@
+;
+;Copyright Remco Bras 
+;This file is part of RPGE.
+;
+;RPGE is free software; you can redistribute it and/or modify
+;it under the terms of the GNU General Public License as published by
+;the Free Software Foundation; either version 3 of the License, or
+;(at your option) any later version.
+;
+;RPGE is distributed in the hope that it will be useful,
+;but WITHOUT ANY WARRANTY; without even the implied warranty of
+;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;GNU General Public License for more details.
+;
+;You should have received a copy of the GNU General Public License
+;along with this program.  If not, see <http://www.gnu.org/licenses/>
+;
+
+(define make-rect list)
+
+(define block-none 0)
+(define block-ground 1)
+(define block-air 2)
+(define block-all (+ block-ground block-air))
+(define block-left 4)
+(define block-right 8)
+(define block-up 16)
+(define block-down 32)
+(define block-all-directions (+ block-left block-right block-up block-down))
+(define block-all-undirectional (+ block-all block-all-directions))

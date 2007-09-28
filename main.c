@@ -44,7 +44,11 @@ main (int argc, char **argv)
   SDL_WM_SetCaption ("RPGE", "RPGE");
   scm_init_guile();
   scm_c_define_gsubr("create-mob",3,0,0,guile_create_mob);
+  scm_c_define_gsubr("create-tile",3,0,0,guile_create_tile);
+  scm_c_define_gsubr("set-tile",3,0,0,guile_set_tile);
+  scm_c_define_gsubr("set-all-tiles",1,0,0,guile_set_all_tiles);
   scm_c_primitive_load ("table.guile");
+  scm_c_primitive_load ("utils.guile");
   scm_c_primitive_load ("table_test.guile");
   SDL_CreateThread(exec_guile_shell,0);
   //testing
