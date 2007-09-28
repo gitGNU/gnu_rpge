@@ -157,7 +157,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 RPGE_SOURCES = main.c video.c video.h main.h mobs.h mobs.c imagestack.h imagestack.c tile.h tile.c guile.h guile.c
-EXTRA_DIST = test.png test_sprite.png
+EXTRA_DIST = test.png test_sprite.png test_tile2.png
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
