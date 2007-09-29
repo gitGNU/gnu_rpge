@@ -57,4 +57,8 @@ void mob_set_animation(mob* m, unsigned int animation, unsigned int startframe, 
 void  animate_mobs();
 void  move_mobs();
 void  mob_set_movement(mob* m, int xam, int xrate, int yam, int yrate);
+void  mob_move_right(mob* m, int tiles, int frametotal);
+void  mob_move_left(mob* m, int tiles, int frametotal);
+void  mob_move_down(mob* m, int tiles, int frametotal);
+void  mob_move_up(mob* m, int tiles, int frametotal);
 #endif

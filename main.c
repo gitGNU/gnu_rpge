@@ -47,6 +47,10 @@ main (int argc, char **argv)
   scm_c_define_gsubr("create-tile",3,0,0,guile_create_tile);
   scm_c_define_gsubr("set-tile",3,0,0,guile_set_tile);
   scm_c_define_gsubr("set-all-tiles",1,0,0,guile_set_all_tiles);
+  scm_c_define_gsubr("move-mob-right",3,0,0,guile_move_mob_right);
+  scm_c_define_gsubr("move-mob-left",3,0,0,guile_move_mob_left);
+  scm_c_define_gsubr("move-mob-down",3,0,0,guile_move_mob_down);
+  scm_c_define_gsubr("move-mob-up",3,0,0,guile_move_mob_up);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   scm_c_primitive_load ("table_test.guile");

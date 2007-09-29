@@ -180,3 +180,70 @@ mob_set_movement(mob* m, int xam, int xrate, int yam, int yrate)
   m->ymoveamount = yam;
   m->ymoverate = yrate;
 }
+
+void mob_move_right(mob* m, int tiles, int frametotal)
+{
+  int mobtilecoordx = (int)m->x/TILE_WIDTH;
+  int mobtilecoordy = (int)m->y/TILE_HEIGHT;
+  int totalxam = 0;
+  int xrate = tiles*TILE_WIDTH/frametotal;
+  for(int i = 1; i <= tiles;i++)
+    {
+      if(tilegrid[mobtilecoordx+i][mobtilecoordy].blocking & BLOCK_LEFT)
+        break;
+      else
+        totalxam+=TILE_WIDTH;
+    }
+  mob_set_movement(m,totalxam,xrate,0,0);
+}
+
+void
+mob_move_left(mob* m, int tiles, int frametotal)
+{
+  int mobtilecoordx = (int)m->x/TILE_WIDTH;
+  int mobtilecoordy = (int)m->y/TILE_HEIGHT;
+  int totalxam = 0;
+  int xrate = -tiles*TILE_WIDTH/frametotal;
+  for(int i = 1; i <= tiles; i++)
+    {
+      if(tilegrid[mobtilecoordx-i][mobtilecoordy].blocking & BLOCK_RIGHT)
+        break;
+      else
+        totalxam-=TILE_WIDTH;
+    }
+  mob_set_movement(m,totalxam,xrate,0,0);
+}
+
+void
+mob_move_down(mob* m, int tiles, int frametotal)
+{
+  int mobtilecoordx = (int)m->x/TILE_WIDTH;
+  int mobtilecoordy = (int)m->y/TILE_HEIGHT;
+  int totalyam = 0;
+  int yrate = tiles*TILE_HEIGHT/frametotal;
+  for(int i = 1; i <=tiles; i++)
+    {
+      if(tilegrid[mobtilecoordx][mobtilecoordy+i].blocking & BLOCK_UP)
+        break;
+      else
+        totalyam += TILE_HEIGHT;
+     }
+   mob_set_movement(m,0,0,totalyam,yrate);
+}
+
+void
+mob_move_up(mob* m, int tiles, int frametotal)
+{
+  int mobtilecoordx = (int)m->x/TILE_WIDTH;
+  int mobtilecoordy = (int)m->y/TILE_HEIGHT;
+  int totalyam = 0;
+  int yrate = -tiles*TILE_HEIGHT/frametotal;
+  for(int i = 1; i <=tiles; i++)
+    {
+      if(tilegrid[mobtilecoordx][mobtilecoordy-i].blocking & BLOCK_UP)
+        break;
+      else
+        totalyam -= TILE_HEIGHT;
+    }
+  mob_set_movement(m,0,0,totalyam,yrate);
+}
