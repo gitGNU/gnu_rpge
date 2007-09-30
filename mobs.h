@@ -61,4 +61,5 @@ void  mob_move_right(mob* m, int tiles, int frametotal);
 void  mob_move_left(mob* m, int tiles, int frametotal);
 void  mob_move_down(mob* m, int tiles, int frametotal);
 void  mob_move_up(mob* m, int tiles, int frametotal);
+void  mob_move_all (mob * m, int xtiles, int ytiles, int frames);
 #endif

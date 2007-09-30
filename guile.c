@@ -121,3 +121,9 @@ SCM guile_move_mob_up(SCM mobindex, SCM tilecount, SCM frametotal)
   mob_move_up(&(mobs.mobs[scm_to_int(mobindex)]),scm_to_int(tilecount),scm_to_int(frametotal));
   return scm_from_int(0);
 }
+
+SCM guile_move_mob_all(SCM mobindex, SCM tilecountx, SCM tilecounty, SCM frametotal)
+{
+  mob_move_all(&(mobs.mobs[scm_to_int(mobindex)]),scm_to_int(tilecountx),scm_to_int(tilecounty),scm_to_int(frametotal));
+  return scm_from_int(0);
+}

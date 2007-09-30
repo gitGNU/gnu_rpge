@@ -30,3 +30,4 @@ SCM guile_move_mob_right(SCM mobindex, SCM tilecount, SCM frametotal);
 SCM guile_move_mob_left(SCM mobindex, SCM tilecount, SCM frametotal);
 SCM guile_move_mob_down(SCM mobindex, SCM tilecount, SCM frametotal);
 SCM guile_move_mob_up(SCM mobindex, SCM tilecount, SCM frametotal);
+SCM guile_move_mob_all(SCM mobindex, SCM tilecountx, SCM tilecounty, SCM frametotal);

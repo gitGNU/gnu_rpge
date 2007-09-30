@@ -51,6 +51,7 @@ main (int argc, char **argv)
   scm_c_define_gsubr("move-mob-left",3,0,0,guile_move_mob_left);
   scm_c_define_gsubr("move-mob-down",3,0,0,guile_move_mob_down);
   scm_c_define_gsubr("move-mob-up",3,0,0,guile_move_mob_up);
+  scm_c_define_gsubr("move-mob",4,0,0,guile_move_mob_all);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   scm_c_primitive_load ("table_test.guile");
