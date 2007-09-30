@@ -26,8 +26,4 @@ tile list_to_tile(SCM);
 SCM guile_create_tile(SCM sprite, SCM partclip, SCM blocking);
 SCM guile_set_all_tiles(SCM tile);
 SCM guile_set_tile(SCM x, SCM y, SCM tile);
-SCM guile_move_mob_right(SCM mobindex, SCM tilecount, SCM frametotal);
-SCM guile_move_mob_left(SCM mobindex, SCM tilecount, SCM frametotal);
-SCM guile_move_mob_down(SCM mobindex, SCM tilecount, SCM frametotal);
-SCM guile_move_mob_up(SCM mobindex, SCM tilecount, SCM frametotal);
 SCM guile_move_mob_all(SCM mobindex, SCM tilecountx, SCM tilecounty, SCM frametotal);
