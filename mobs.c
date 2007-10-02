@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 mobstack mobs = { 0, 0 };
 
 mob
-create_mob_using_sprite (unsigned int x, unsigned int y, char *sprity)
+create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
 {
   mob mobby;
   mobby.imgindex = push_image_on_stack (sprity);
@@ -175,7 +175,7 @@ mob_set_animation (mob * m, unsigned int animation, unsigned int startframe,
 }
 
 void
-mob_set_movement (mob * m, int xam, int xrate, int yam, int yrate)
+mob_set_movement (mob * m, int xam, double xrate, int yam, double yrate)
 {
   m->xmoveamount = xam;
   m->xmoverate = xrate;
@@ -183,11 +183,13 @@ mob_set_movement (mob * m, int xam, int xrate, int yam, int yrate)
   m->ymoverate = yrate;
 }
 
+
+//Warning, extremely inaccurate function.
 void
 mob_move_all (mob * m, int xtiles, int ytiles, int frames)
 {
-  int xrate = xtiles * TILE_WIDTH / frames;
-  int yrate = ytiles * TILE_HEIGHT / frames;
+  double xrate = xtiles * TILE_WIDTH / frames;
+  double yrate = ytiles * TILE_HEIGHT / frames;
   int xam = 0;
   int yam = 0;
   int mobtilexold, mobtilex = m->x / TILE_WIDTH, mobtileyold, mobtiley = m->y / TILE_HEIGHT;
@@ -201,6 +203,8 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
       //tile boundary reached, check
       if (mobtilex != mobtilexold || mobtiley != mobtileyold)
 	{
+          if(mobtilex < 0 || mobtilex > tilegrid_width || mobtiley < 0 || mobtiley > tilegrid_height)
+            break;
 	  block = tilegrid[mobtilex][mobtiley].blocking;
 	  if ((mobtilex < mobtilexold && (block & BLOCK_RIGHT)) ||
 	      (mobtilex > mobtilexold && (block & BLOCK_LEFT)) ||
