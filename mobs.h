@@ -36,9 +36,9 @@ typedef struct
   char resetonnext;
   int initialtimetonextframe;
   int timetonextframe;
-  double xmoverate;
+  int xmoverate;
   int xmoveamount;
-  double ymoverate;
+  int ymoverate;
   int ymoveamount;
 } mob;
 

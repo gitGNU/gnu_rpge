@@ -188,8 +188,8 @@ mob_set_movement (mob * m, int xam, double xrate, int yam, double yrate)
 void
 mob_move_all (mob * m, int xtiles, int ytiles, int frames)
 {
-  double xrate = xtiles * TILE_WIDTH / frames;
-  double yrate = ytiles * TILE_HEIGHT / frames;
+  int xrate = xtiles * TILE_WIDTH / frames;
+  int yrate = ytiles * TILE_HEIGHT / frames;
   int xam = 0;
   int yam = 0;
   int mobtilexold, mobtilex = m->x / TILE_WIDTH, mobtileyold, mobtiley = m->y / TILE_HEIGHT;
@@ -201,16 +201,21 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
       mobtilex = (m->x + (i * xrate)) / TILE_WIDTH;
       mobtiley = (m->y + (i * yrate)) / TILE_HEIGHT;
       //tile boundary reached, check
-      if (mobtilex != mobtilexold || mobtiley != mobtileyold)
+      if (mobtilex != mobtilexold || mobtiley != mobtileyold && !(mobtilex < 0 || mobtilex > tilegrid_width || mobtiley < 0 || mobtiley > tilegrid_height))
 	{
-          if(mobtilex < 0 || mobtilex > tilegrid_width || mobtiley < 0 || mobtiley > tilegrid_height)
-            break;
 	  block = tilegrid[mobtilex][mobtiley].blocking;
 	  if ((mobtilex < mobtilexold && (block & BLOCK_RIGHT)) ||
 	      (mobtilex > mobtilexold && (block & BLOCK_LEFT)) ||
 	      (mobtiley < mobtileyold && (block & BLOCK_DOWN)) ||
 	      (mobtiley > mobtileyold && (block & BLOCK_UP)))
-	    break;
+            {
+	      break;
+            }
+          else
+            {
+              xam += xrate;
+              yam += yrate;
+            }
 	}
       else
 	{
