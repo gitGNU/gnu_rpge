@@ -58,24 +58,11 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("set-tile", 3, 0, 0, guile_set_tile);
   scm_c_define_gsubr ("set-all-tiles", 1, 0, 0, guile_set_all_tiles);
   scm_c_define_gsubr ("move-mob", 4, 0, 0, guile_move_mob_all);
+  scm_c_define_gsubr ("init-tilegrid",2,0,0,guile_init_tilegrid);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   scm_c_primitive_load ("table_test.guile");
   //testing
-  tilegrid = init_tilegrid (50, 40);
-  test_tile = make_tile (push_image_on_stack ("test.png"), clippy, BLOCK_NONE);
-  tilegrid_width = 50;
-  tilegrid_height = 40;
-  set_all_tiles (test_tile);
-  set_tile (25, 20,make_tile (push_image_on_stack ("test_tile2.png"), clippy,BLOCK_NONE));
-  testt = tile_to_list (test_tile);
-  test_tile = list_to_tile (testt);
-  testt = tile_to_list (test_tile);
-  for (int i = 0; i < 6; i++)
-    {
-      printf ("%d ", scm_to_int16 (scm_car (testt)));
-      testt = scm_cdr (testt);
-    }
   printf ("\n");
   while (1)
     {

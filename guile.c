@@ -103,3 +103,11 @@ SCM guile_move_mob_all(SCM mobindex, SCM tilecountx, SCM tilecounty, SCM frameto
   mob_move_all(&(mobs.mobs[scm_to_int(mobindex)]),scm_to_int(tilecountx),scm_to_int(tilecounty),scm_to_int(frametotal));
   return scm_from_int(0);
 }
+
+SCM guile_init_tilegrid(SCM width, SCM height)
+{
+  tilegrid = init_tilegrid(scm_to_uint(width),scm_to_uint(height));
+  tilegrid_width = scm_to_uint(width);
+  tilegrid_height = scm_to_uint(height);
+  return scm_from_int(0);
+}
