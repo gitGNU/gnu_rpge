@@ -104,6 +104,12 @@ SCM guile_move_mob_all(SCM mobindex, SCM tilecountx, SCM tilecounty, SCM frameto
   return scm_from_int(0);
 }
 
+SCM guile_set_mob_animation(SCM mobindex, SCM animation, SCM start, SCM targetframe, SCM framesbetween, SCM loop)
+{
+  mob_set_animation(&(mobs.mobs[scm_to_int(mobindex)]),scm_to_int(animation),scm_to_int(start),scm_to_int(targetframe),scm_to_int(framesbetween),scm_to_bool(loop));
+  return scm_from_int(0);
+}
+
 SCM guile_init_tilegrid(SCM width, SCM height)
 {
   tilegrid = init_tilegrid(scm_to_uint(width),scm_to_uint(height));

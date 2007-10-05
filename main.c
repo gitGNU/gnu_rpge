@@ -59,11 +59,9 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("set-all-tiles", 1, 0, 0, guile_set_all_tiles);
   scm_c_define_gsubr ("move-mob", 4, 0, 0, guile_move_mob_all);
   scm_c_define_gsubr ("init-tilegrid",2,0,0,guile_init_tilegrid);
+  scm_c_define_gsubr ("set-mob-animation",6,0,0,guile_set_mob_animation);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
-  scm_c_primitive_load ("table_test.guile");
-  //testing
-  printf ("\n");
   while (1)
     {
       SCM_TICK;
