@@ -110,6 +110,12 @@ SCM guile_set_mob_animation(SCM mobindex, SCM animation, SCM start, SCM targetfr
   return scm_from_int(0);
 }
 
+SCM guile_stop_mob_animation(SCM mobindex)
+{
+  mob_stop_animation(&(mobs.mobs[scm_to_int(mobindex)]));
+  return scm_from_int(0);
+}
+
 SCM guile_init_tilegrid(SCM width, SCM height)
 {
   tilegrid = init_tilegrid(scm_to_uint(width),scm_to_uint(height));

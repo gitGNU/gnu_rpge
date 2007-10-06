@@ -175,6 +175,14 @@ mob_set_animation (mob * m, unsigned int animation, unsigned int startframe,
 }
 
 void
+mob_stop_animation(mob* m)
+{
+  m->targetframe = m->frame;
+  m->timetonextframe = -1;
+  m->animlooping = 0;
+}
+
+void
 mob_set_movement (mob * m, int xam, double xrate, int yam, double yrate)
 {
   m->xmoveamount = xam;
