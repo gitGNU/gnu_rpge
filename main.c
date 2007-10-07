@@ -54,6 +54,7 @@ main (int argc, char **argv)
   SDL_Delay(500); //DO NOT REMOVE, it's necessary to stop guile from killing itself (and no, swapping the initializations won't work either)
   scm_init_guile ();
   scm_c_define_gsubr ("create-mob", 3, 0, 0, guile_create_mob);
+  scm_c_define_gsubr ("destroy-mob",1,0,0,guile_destroy_mob);
   scm_c_define_gsubr ("create-tile", 3, 0, 0, guile_create_tile);
   scm_c_define_gsubr ("set-tile", 3, 0, 0, guile_set_tile);
   scm_c_define_gsubr ("set-all-tiles", 1, 0, 0, guile_set_all_tiles);

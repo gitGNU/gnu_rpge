@@ -116,6 +116,12 @@ SCM guile_stop_mob_animation(SCM mobindex)
   return scm_from_int(0);
 }
 
+SCM guile_destroy_mob(SCM mobindex)
+{
+  remove_mob(scm_to_int(mobindex));
+  return scm_from_int(0);
+}
+
 SCM guile_init_tilegrid(SCM width, SCM height)
 {
   tilegrid = init_tilegrid(scm_to_uint(width),scm_to_uint(height));
@@ -123,3 +129,4 @@ SCM guile_init_tilegrid(SCM width, SCM height)
   tilegrid_height = scm_to_uint(height);
   return scm_from_int(0);
 }
+
