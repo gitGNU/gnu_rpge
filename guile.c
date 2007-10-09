@@ -124,9 +124,9 @@ SCM guile_destroy_mob(SCM mobindex)
 
 SCM guile_init_tilegrid(SCM width, SCM height)
 {
-  tilegrid = init_tilegrid(scm_to_uint(width),scm_to_uint(height));
-  tilegrid_width = scm_to_uint(width);
-  tilegrid_height = scm_to_uint(height);
+  main_grid.tilegrid = init_tilegrid(scm_to_uint(width),scm_to_uint(height));
+  main_grid.width = scm_to_uint(width);
+  main_grid.height = scm_to_uint(height);
   return scm_from_int(0);
 }
 

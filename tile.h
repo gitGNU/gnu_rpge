@@ -39,10 +39,15 @@ typedef struct
   char blocking; 
 } tile;
 
-extern tile **tilegrid;
-extern int tilegrid_height;
-extern int tilegrid_width;
-extern SDL_Surface* tilegrid_layer;
+typedef struct
+{
+  tile** tilegrid;
+  int height;
+  int width;
+  SDL_Surface* imagebuffer;
+} tilelayer;
+
+extern tilelayer main_grid;
 
 SDL_Surface* remake_tilegrid();
 tile make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking);

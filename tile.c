@@ -18,10 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "tile.h"
 
-tile** tilegrid;
-int tilegrid_width;
-int tilegrid_height;
-SDL_Surface* tilegrid_layer;
+tilelayer main_grid;
 
 tile 
 make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking)
@@ -66,11 +63,11 @@ tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridhei
 
 tile** set_tile(unsigned int x, unsigned int y, tile replacement)
 {
-  if(tilegrid)
+  if(main_grid.tilegrid)
     {
-      tilegrid[x][y] = replacement;
+      main_grid.tilegrid[x][y] = replacement;
       remake_tilegrid();
-      return tilegrid;
+      return main_grid.tilegrid;
     }
   else
     return NULL;
@@ -78,11 +75,11 @@ tile** set_tile(unsigned int x, unsigned int y, tile replacement)
 
 tile** set_all_tiles(tile replacement)
 {
-  if(tilegrid)
+  if(main_grid.tilegrid)
     {
-      tilegrid = tilegrid_set_all_tiles(tilegrid,tilegrid_width,tilegrid_height,replacement);
+      main_grid.tilegrid = tilegrid_set_all_tiles(main_grid.tilegrid,main_grid.width,main_grid.height,replacement);
       remake_tilegrid();
-      return tilegrid;
+      return main_grid.tilegrid;
     }
   else
     return NULL;
@@ -91,13 +88,13 @@ SDL_Surface*
 remake_tilegrid()
 {
   SDL_Surface* display;
-  if(!tilegrid_layer)
+  if(!main_grid.imagebuffer)
     {
       display = SDL_GetVideoSurface();
-      tilegrid_layer = SDL_CreateRGBSurface(SDL_HWSURFACE,tilegrid_width*TILE_WIDTH,tilegrid_height*TILE_HEIGHT,display->format->BitsPerPixel,display->format->Rmask,display->format->Gmask,display->format->Bmask,display->format->Amask);
+      main_grid.imagebuffer = SDL_CreateRGBSurface(SDL_HWSURFACE,main_grid.width*TILE_WIDTH,main_grid.height*TILE_HEIGHT,display->format->BitsPerPixel,display->format->Rmask,display->format->Gmask,display->format->Bmask,display->format->Amask);
     }
   else
-    SDL_FillRect(tilegrid_layer,NULL,SDL_MapRGB(tilegrid_layer->format,0,0,0));
-  render_tilegrid(tilegrid_layer,tilegrid,tilegrid_width,tilegrid_height);
-  return tilegrid_layer;
+    SDL_FillRect(main_grid.imagebuffer,NULL,SDL_MapRGB(main_grid.imagebuffer->format,0,0,0));
+  render_tilegrid(main_grid.imagebuffer,main_grid.tilegrid,main_grid.width,main_grid.height);
+  return main_grid.imagebuffer;
 }

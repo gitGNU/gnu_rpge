@@ -74,8 +74,8 @@ apply_surface ( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL
 void
 render_screen(SDL_Surface* dest)
 {
-  SDL_Rect clip = {0,0,tilegrid_width*TILE_WIDTH,tilegrid_height*TILE_HEIGHT};
-  apply_surface(0,0,tilegrid_layer,dest,&clip);
+  SDL_Rect clip = {0,0,main_grid.width*TILE_WIDTH,main_grid.height*TILE_HEIGHT};
+  apply_surface(0,0,main_grid.imagebuffer,dest,&clip);
   for(int i = 0; i < mobs.size; i++)
     {
       render_mob(dest,mobs.mobs[i]);
