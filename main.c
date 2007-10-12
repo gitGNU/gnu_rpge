@@ -50,9 +50,8 @@ main (int argc, char **argv)
       return 1;
     }
   SDL_WM_SetCaption ("RPGE", "RPGE");
-  SDL_CreateThread (exec_guile_shell, 0);
-  SDL_Delay(500); //DO NOT REMOVE, it's necessary to stop guile from killing itself (and no, swapping the initializations won't work either)
   scm_init_guile ();
+  SDL_CreateThread (exec_guile_shell, 0);
   scm_c_define_gsubr ("create-mob", 3, 0, 0, guile_create_mob);
   scm_c_define_gsubr ("destroy-mob",1,0,0,guile_destroy_mob);
   scm_c_define_gsubr ("create-tile", 3, 0, 0, guile_create_tile);
