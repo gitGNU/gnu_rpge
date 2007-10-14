@@ -18,17 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "main.h"
 
-void* 
-test(void* lolz)
-{
-  scm_shell(0,0);
-  return 0;
-}
-
 int
 exec_guile_shell (void *unused_arg)
 {
-  scm_with_guile(test,0);
+  scm_init_guile();
+  scm_shell(0,0);
   return 0;			//never reached, just here to please gcc.
 }
 
