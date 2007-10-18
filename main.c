@@ -18,12 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "main.h"
 
+eventstack global_usereventstack;
+
 int
 exec_guile_shell (void *unused_arg)
 {
   scm_init_guile();
   scm_shell(0,0);
   return 0;			//never reached, just here to please gcc.
+}
+
+void dispatch(SDL_Event e)
+{
+  //Now, I could do the lame thing and dispatch AGAIN to get the relevant data, or I could NOT be lame and just shove the type on there for now.
+  eventstack_addevent(&global_usereventstack,e.type);
 }
 
 
@@ -57,6 +65,7 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("stop-mob-animation",1,0,0,guile_stop_mob_animation);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
+  global_usereventstack = eventstack_init();
   while (1)
     {
       SCM_TICK;
@@ -64,11 +73,13 @@ main (int argc, char **argv)
       next = now + (int) (1000 / FRAMES_PER_SECOND);
       while (SDL_PollEvent (event))
 	{
-	  switch (event->type)
-	    {
-	    case SDL_QUIT:
-	      return 0;
-	      break;
+	  switch (event->type) 
+            {
+	      case SDL_QUIT:
+	        return 0;
+	        break;
+              default:
+                dispatch(*event);
 	    }
 	}
       move_mobs ();

@@ -40,7 +40,9 @@ void
 eventstack_addevent(eventstack* stackptr, unsigned long int event)
 {
   unsigned long int* neweventsptr = malloc((stackptr->stacksize+1)*sizeof(unsigned long int));
-  memcpy(neweventsptr,stackptr->events,sizeof(unsigned long int)*stackptr->stacksize);
+  if(stackptr->events)
+    memcpy(neweventsptr,stackptr->events,sizeof(unsigned long int)*stackptr->stacksize);
+  stackptr->events = neweventsptr;
   stackptr->events[stackptr->stacksize] = event;
   stackptr->stacksize++;
 }
