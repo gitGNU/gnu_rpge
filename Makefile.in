@@ -50,7 +50,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_RPGE_OBJECTS = main.$(OBJEXT) video.$(OBJEXT) mobs.$(OBJEXT) \
 	imagestack.$(OBJEXT) tile.$(OBJEXT) guile.$(OBJEXT) \
-	event.$(OBJEXT)
+	event.$(OBJEXT) window.$(OBJEXT)
 RPGE_OBJECTS = $(am_RPGE_OBJECTS)
 RPGE_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@
@@ -159,7 +159,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-RPGE_SOURCES = main.c video.c video.h main.h mobs.h mobs.c imagestack.h imagestack.c tile.h tile.c guile.h guile.c constants.h event.c event.h
+RPGE_SOURCES = main.c video.c video.h main.h mobs.h mobs.c imagestack.h imagestack.c tile.h tile.c guile.h guile.c constants.h event.c event.h window.h window.c
 EXTRA_DIST = test.png test_sprite.png test_tile2.png
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -256,6 +256,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mobs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/video.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/window.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
