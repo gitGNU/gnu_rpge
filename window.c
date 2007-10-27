@@ -50,7 +50,6 @@ render_window(SDL_Surface* dest,window w)
       clip.x = clip.y = 0;
       clip.w = w.tilew;
       clip.h = w.tileh;
-      fprintf(stderr,"Invalid image dimensions -- render_window\n");
       for(unsigned int remainingx = w.width, remainingy = w.height; remainingx > 0 && remainingy > 0;)
         {
           if(remainingx < w.tilew || remainingy < w.tileh)
