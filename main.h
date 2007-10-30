@@ -30,6 +30,7 @@ You should have received a copy of the GNU General Public License
 #include "constants.h"
 #include "guile.h"
 #include "event.h"
+#include "window.h"
 
 
 extern eventstack global_usereventstack; //holds all generic game events, with the minor exception of quitting events.

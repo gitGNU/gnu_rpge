@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "window.h"
 
+windowstack windows;
+
 window
 create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename,unsigned int spritew,unsigned int spriteh)
 {
@@ -50,59 +52,118 @@ render_window(SDL_Surface* dest,window w)
       clip.x = clip.y = 0;
       clip.w = w.tilew;
       clip.h = w.tileh;
-      for(unsigned int remainingx = w.width, remainingy = w.height; remainingx > 0 && remainingy > 0;)
+      unsigned int x = w.x,y,remainingy;
+      for(unsigned int remainingx=w.width;remainingx > 0; )
         {
-          if(remainingx < w.tilew || remainingy < w.tileh)
+          y = w.y;
+          remainingy = w.height;
+          if(remainingx < w.tilew)
             {
-              if(remainingx < w.tilew && remainingy > w.tileh)
-                {
-                  //ok, so we have to loop until we have enough y done.. easy enough...
-                  clip.w = remainingx;
-                  while(remainingy > 0)
-                    {
-                      if(remainingy > w.tileh)
-                        {
-                          apply_surface(w.x+(w.width-remainingx),w.y+(w.height-remainingy),images.images[w.imageindex].data,dest,&clip);
-                          remainingy -= w.tileh;
-                        }
-                      else
-                        {
-                          clip.h = remainingy;
-                          return apply_surface(w.x+(w.width-remainingx),w.y+(w.height-remainingy),images.images[w.imageindex].data,dest,&clip);
-                        }
-                    }
-                }
-              else if(remainingx > w.tilew && remainingy < w.tileh)
-                {
-                  //pretty much a copy of that loop a single if higher up, need to rewrite this to cut the logic forest down a bit.
-                  clip.h = remainingy;
-                  while(remainingx > 0)
-                    {
-                      if(remainingx > w.tilew)
-                        {
-                          apply_surface(w.x+(w.width-remainingx),w.y+(w.height-remainingy),images.images[w.imageindex].data,dest,&clip);
-                          remainingx -= w.tilew;
-                        }
-                      else
-                        {
-                          clip.w = remainingx;
-                          return apply_surface(w.x+(w.width-remainingx),w.y+(w.height-remainingy),images.images[w.imageindex].data,dest,&clip);
-                        }
-                    }
-                }
-              else
-                {
-                  clip.h = remainingy;
-                  clip.w = remainingx;
-                  return apply_surface(w.x+(w.width-remainingx),w.y+(w.height-remainingy),images.images[w.imageindex].data,dest,&clip);
-                }
+              clip.w = remainingx;
+              remainingx = 0;
             }
           else
             {
-              apply_surface(w.x + (w.width-remainingx),w.y+(w.height-remainingy),images.images[w.imageindex].data,dest, &clip);
+              clip.w = w.tilew;
               remainingx -= w.tilew;
-              remainingy -= w.tileh;
             }
+          while(remainingy > 0)
+            {
+              if(remainingy < w.tileh)
+                {
+                  clip.h = remainingy;
+                  remainingy = 0;
+                }
+              else
+                {
+                  clip.h = w.tileh;
+                  remainingy -= w.tileh;
+                }
+              apply_surface(x,y,images.images[w.imageindex].data,dest,&clip);
+              y+= w.tileh;
+            }
+          x += w.tilew;
         }
+    }
+}
+
+/*Below is another implementation of yet another generic constant index array, which should be taken care of properly some day. However, doing so properly has a tendency to cause void* hell, which may or may not be more elegant than this forest of similar stuff. In short, if we keep writing a few dozen more of these, we need a generic edition, otherwise, the associated problems with conversion to and from generic types won't make life easier, just harder.*/
+windowstack init_windowstack(void)
+{
+  windowstack ws;
+  ws.windows = NULL;
+  ws.size = 0;
+  return ws;
+}
+
+char windows_equalp(window w1, window w2)
+{
+  return w1.width == w2.width &&
+         w1.height == w2.height &&
+         w1.x == w2.x &&
+         w1.y == w2.y &&
+         w1.imageindex == w2.imageindex &&
+         w1.tilew == w2.tilew &&
+         w1.tileh == w2.tileh;
+}
+
+int find_window(window w)
+{
+  for(int i = 0; i< windows.size; i++)
+    {
+      if(windows_equalp(windows.windows[i],w))
+        return i;
+    }
+  return -1;
+}
+
+window empty_window(void)
+{
+  window w;
+  memset(&w,0,sizeof(window));
+  return w;
+}
+
+int find_empty_window(void)
+{
+  return find_window(empty_window());
+}
+
+int windowstack_addwindow(window w)
+{
+  int empty = find_empty_window();
+  if(empty != -1)
+    {
+      windows.windows[empty] = w;
+      return empty;
+    }
+  else
+    {
+      window* newwindows = malloc(sizeof(window)*(windows.size+1));
+      memcpy(newwindows,windows.windows,sizeof(window)*windows.size);
+      newwindows[windows.size] = w;
+      windows.size++;
+      windows.windows = newwindows;
+      return windows.size -1;
+    }
+}
+
+void windowstack_removewindow(window w)
+{
+  int index = find_window(w);
+  if(index == -1)
+    return;
+  else
+    {
+      windows.windows[index] = empty_window();
+      return;
+    }
+}
+
+void render_windows(SDL_Surface* dest)
+{
+  for(int i=0;i<windows.size;i++)
+    {
+      render_window(dest,windows.windows[i]);
     }
 }

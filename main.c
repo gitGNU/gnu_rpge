@@ -66,6 +66,8 @@ main (int argc, char **argv)
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   global_usereventstack = eventstack_init();
+  windows = init_windowstack();
+  windowstack_addwindow(create_window(500,200,200,300,"test.png",16,16));
   while (1)
     {
       SCM_TICK;
@@ -85,6 +87,7 @@ main (int argc, char **argv)
       move_mobs ();
       animate_mobs ();
       render_screen (screen);
+      render_windows(screen);
       if (SDL_Flip (screen) == -1)
 	{
 	  fprintf (stderr, "Cannot render frame, flip failure: %s\n",
