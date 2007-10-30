@@ -63,11 +63,12 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("init-tilegrid",2,0,0,guile_init_tilegrid);
   scm_c_define_gsubr ("set-mob-animation",6,0,0,guile_set_mob_animation);
   scm_c_define_gsubr ("stop-mob-animation",1,0,0,guile_stop_mob_animation);
+  scm_c_define_gsubr ("create-window",7,0,0,guile_make_window);
+  scm_c_define_gsubr ("remove-window",1,0,0,guile_destroy_window);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   global_usereventstack = eventstack_init();
   windows = init_windowstack();
-  windowstack_addwindow(create_window(500,200,200,300,"test.png",16,16));
   while (1)
     {
       SCM_TICK;

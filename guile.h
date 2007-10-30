@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "mobs.h"
 #include "tile.h"
+#include "window.h"
 #include <libguile.h>
 
 SCM guile_create_mob(SCM,SCM,SCM);
@@ -31,3 +32,5 @@ SCM guile_init_tilegrid(SCM width, SCM height);
 SCM guile_set_mob_animation(SCM mobindex, SCM animation, SCM start, SCM targetframe, SCM framesbetween, SCM loop);
 SCM guile_stop_mob_animation(SCM mobindex);
 SCM guile_destroy_mob(SCM mobindex);
+SCM guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,SCM tilew, SCM tileh);
+SCM guile_destroy_window(SCM index);

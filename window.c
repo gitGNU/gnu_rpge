@@ -160,6 +160,11 @@ void windowstack_removewindow(window w)
     }
 }
 
+void windowstack_remove(int index)
+{
+  windows.windows[index] = empty_window();
+}
+
 void render_windows(SDL_Surface* dest)
 {
   for(int i=0;i<windows.size;i++)

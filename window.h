@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
+#ifndef WINDOW_H
+#define WINDOW_H
+
 #include "video.h"
 #include "imagestack.h"
 
@@ -40,6 +43,7 @@ windowstack init_windowstack(void);
 void clear_windowstack(void);
 int windowstack_addwindow(window w);
 void windowstack_remove(int index);
+void windowstack_removewindow(window w);
 void render_windows(SDL_Surface* dest);
 
-
+#endif
