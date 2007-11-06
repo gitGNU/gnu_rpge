@@ -18,6 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "event.h"
 
+event
+make_event(SCM type, SCM data)
+{
+  event e;
+  e.type = type;
+  e.data = data;
+  return e;
+}
+
 eventstack
 eventstack_init(void)
 {
@@ -37,26 +46,26 @@ eventstack_clear(eventstack* stackptr)
 }
 
 void
-eventstack_addevent(eventstack* stackptr, unsigned long int event)
+eventstack_addevent(eventstack* stackptr, event e)
 {
-  unsigned long int* neweventsptr = malloc((stackptr->stacksize+1)*sizeof(unsigned long int));
+  event* neweventsptr = malloc((stackptr->stacksize+1)*sizeof(event));
   if(stackptr->events)
-    memcpy(neweventsptr,stackptr->events,sizeof(unsigned long int)*stackptr->stacksize);
+    memcpy(neweventsptr,stackptr->events,sizeof(event)*stackptr->stacksize);
   stackptr->events = neweventsptr;
-  stackptr->events[stackptr->stacksize] = event;
+  stackptr->events[stackptr->stacksize] = e;
   stackptr->stacksize++;
 }
 
-unsigned long int
+event
 eventstack_getfirstevent(eventstack* stackptr)
 {
   if(!stackptr->stacksize)
-    return EVENT_NOTHING;
+    return make_event(SCM_UNDEFINED, SCM_UNDEFINED);
   else
     {
-      unsigned long int* newevents = malloc(sizeof(unsigned long int)*(stackptr->stacksize-1));
-      unsigned long int event = stackptr->events[0];
-      memcpy(newevents,stackptr->events+1,(stackptr->stacksize-1)*sizeof(unsigned long int));
+      event* newevents = malloc(sizeof(event)*(stackptr->stacksize-1));
+      event event = stackptr->events[0];
+      memcpy(newevents,stackptr->events+1,(stackptr->stacksize-1)*sizeof(event));
       free(stackptr->events);
       stackptr->stacksize--;
       stackptr->events = newevents;

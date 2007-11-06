@@ -20,18 +20,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define EVENT_H
 #include <stdlib.h>
 #include <string.h>
-
-#define EVENT_NOTHING 0
+#include <libguile.h>
 
 typedef struct
 {
-  unsigned long int* events;
+  SCM type;
+  SCM data;
+}event;
+
+typedef struct
+{
+  event* events;
   unsigned long int stacksize;
 } eventstack;
 
+
 eventstack eventstack_init();
 void eventstack_clear(eventstack* stackptr);
-void eventstack_addevent(eventstack* stackptr, unsigned long int event);
-unsigned long int eventstack_getfirstevent(eventstack* stackptr);
+void eventstack_addevent(eventstack* stackptr, event event);
+event eventstack_getfirstevent(eventstack* stackptr);
 
 #endif

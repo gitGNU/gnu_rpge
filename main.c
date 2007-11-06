@@ -30,8 +30,8 @@ exec_guile_shell (void *unused_arg)
 
 void dispatch(SDL_Event e)
 {
-  //Now, I could do the lame thing and dispatch AGAIN to get the relevant data, or I could NOT be lame and just shove the type on there for now.
-  eventstack_addevent(&global_usereventstack,e.type);
+  /*TODO: do something or other to extract the relevant data from an event and get a proper symbol to shove into the type, then send all this off to the global eventstack.
+  */
 }
 
 
