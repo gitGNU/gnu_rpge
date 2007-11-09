@@ -28,10 +28,71 @@ exec_guile_shell (void *unused_arg)
   return 0;			//never reached, just here to please gcc.
 }
 
+SCM
+get_type(SDL_Event e)
+{
+  switch(e.type)
+    {
+      case SDL_KEYDOWN:
+        return scm_from_locale_symbol("key-down");
+        break;
+      case SDL_KEYUP:
+        return scm_from_locale_symbol("key-up");
+        break;
+    }
+}
+
+SCM 
+get_keysym_symbol(SDL_keysym ks)
+{
+  short sym = ks.unicode;
+  char printable;
+  if(!sym)
+    return SCM_EOL; /*Return NIL for non-printable (control) chars*/
+  else
+    {
+      if(sym & 0xFF80)/*Non-ASCII char, ignore for now*/
+        return SCM_EOL;
+      else  /*ASCII char*/
+        {
+          printable = sym & 0x7F;
+          switch(printable)
+            {
+              case '\n':
+                return scm_from_locale_symbol("newline");
+                break;
+              case '\t':
+                return scm_from_locale_symbol("tab");
+                break;
+              case ' ':
+                return scm_from_locale_symbol("space");
+                break;
+              default:
+                return scm_from_locale_symboln(&printable,1);
+                break;
+            }
+        }
+    }
+}
+
+SCM
+get_data(SDL_Event e)
+{
+  switch(e.type)
+    {
+      case SDL_KEYDOWN:
+      case SDL_KEYUP:
+        return get_keysym_symbol(e.key.keysym);
+        break;
+    }
+}
+
 void dispatch(SDL_Event e)
 {
   /*TODO: do something or other to extract the relevant data from an event and get a proper symbol to shove into the type, then send all this off to the global eventstack.
   */
+  /*For now, we'll just switch in a hardcoded, boring fashion. Technically, this needs some method of autodispatching and some separation into event.c, but the autodispatch and such need a good few more mailing list discussions to prevent creeping featurism, even though supporting every single scheme under the sun in some actually useful way could be good. Of course, this gets rather hairy organization-wise. */
+  eventstack_addevent(&global_usereventstack,make_event(get_type(e),get_data(e)));
 }
 
 
@@ -52,6 +113,11 @@ main (int argc, char **argv)
       return 1;
     }
   SDL_WM_SetCaption ("RPGE", "RPGE");
+  /*
+    Enable UNICODE conversion for keysyms so we can map the ASCII characters to their relevant descriptions, provided they are not equal to a few special chars.
+    This does have some overhead according to the docs, so we might want to come up with a different, possibly faster scheme to take care of this later.
+  */
+  SDL_EnableUNICODE(0);
   scm_init_guile ();
   SDL_CreateThread (exec_guile_shell, 0);
   scm_c_define_gsubr ("create-mob", 3, 0, 0, guile_create_mob);

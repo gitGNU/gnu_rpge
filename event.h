@@ -39,5 +39,5 @@ eventstack eventstack_init();
 void eventstack_clear(eventstack* stackptr);
 void eventstack_addevent(eventstack* stackptr, event event);
 event eventstack_getfirstevent(eventstack* stackptr);
-
+event make_event(SCM type, SCM data);
 #endif
