@@ -32,6 +32,8 @@ typedef struct
 {
   event* events;
   unsigned long int stacksize;
+  unsigned long int* indices; /* See docs (currently non-existent) for details, used in regulating access by multiple threads */
+  unsigned long int indexcount;
 } eventstack;
 
 
@@ -40,4 +42,9 @@ void eventstack_clear(eventstack* stackptr);
 void eventstack_addevent(eventstack* stackptr, event event);
 event eventstack_getfirstevent(eventstack* stackptr);
 event make_event(SCM type, SCM data);
+unsigned long int eventstack_open(eventstack* es);
+void eventstack_close(eventstack* es,unsigned long int luser);
+event evenstack_get_next_event(eventstack es, unsigned long int luser);
+int eventstack_get_index_of_user(eventstack es, unsigned long int luser);
+event eventstack_get_first_of_user(eventstack* es, unsigned long int luser);
 #endif

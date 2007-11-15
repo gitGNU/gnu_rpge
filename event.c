@@ -32,7 +32,8 @@ eventstack_init(void)
 {
   eventstack es;
   es.events = NULL;
-  es.stacksize = 0;
+  es.indices = NULL;
+  es.stacksize = es.indexcount = 0;
   return es;
 }
 
@@ -71,4 +72,68 @@ eventstack_getfirstevent(eventstack* stackptr)
       stackptr->events = newevents;
       return event;
     }
+}
+
+int
+find_empty_luser(eventstack es)
+{
+    for(int i = 0; i < es.indexcount; i++)
+      {
+         if(es.indices[i] == -1)
+           return i;
+      }
+  return -1;
+}
+
+unsigned long int 
+eventstack_open(eventstack* es)
+{
+  int index = find_empty_luser(*es);
+  if(index != -1)
+    {
+      es->indices[index] = 0;
+      return index;
+    }
+  else
+    {
+       unsigned long int* newindices = malloc(sizeof(unsigned long int)*(es->indexcount+1));
+      memcpy(newindices,es->indices,sizeof(unsigned long int)*es->indexcount);
+      newindices[es->indexcount] = 0; 
+      es->indexcount++;
+      free(es->indices);
+      es->indices = newindices;
+      return es->indexcount - 1;
+    }
+}
+
+ 
+void
+eventstack_close(eventstack* es, unsigned long int luser)
+{
+  es->indices[luser] = -1;
+}
+
+int 
+eventstack_get_index_of_user(eventstack es, unsigned long int luser)
+{
+  if(luser >= es.indexcount)
+    return -1;
+  else
+    return es.indices[luser];
+}
+
+/*
+  TODO: Add automatic destruction of first element in case all indices are > 0
+*/
+event
+eventstack_get_first_of_user(eventstack* es, unsigned long int luser)
+{
+  int index = eventstack_get_index_of_user(*es,luser);
+    if(index != -1 && index < es->stacksize)
+      {
+        es->indices[luser]++;
+        return es->events[index];
+      }
+    else
+      return make_event(SCM_EOL, SCM_EOL);
 }

@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
+#include "main.h"
+#include "event.h"
 #include "mobs.h"
 #include "tile.h"
 #include "window.h"
@@ -34,3 +36,6 @@ SCM guile_stop_mob_animation(SCM mobindex);
 SCM guile_destroy_mob(SCM mobindex);
 SCM guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,SCM tilew, SCM tileh);
 SCM guile_destroy_window(SCM index);
+SCM guile_open_global_eventstack();
+SCM guile_close_global_eventstack(SCM userindex);
+SCM guile_get_global_event(SCM userindex);

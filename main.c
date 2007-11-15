@@ -39,6 +39,8 @@ get_type(SDL_Event e)
       case SDL_KEYUP:
         return scm_from_locale_symbol("key-up");
         break;
+      default: 
+        return SCM_EOL;
     }
 }
 
@@ -84,6 +86,8 @@ get_data(SDL_Event e)
       case SDL_KEYUP:
         return get_keysym_symbol(e.key.keysym);
         break;
+      default:
+        return SCM_EOL;
     }
 }
 
@@ -92,7 +96,9 @@ void dispatch(SDL_Event e)
   /*TODO: do something or other to extract the relevant data from an event and get a proper symbol to shove into the type, then send all this off to the global eventstack.
   */
   /*For now, we'll just switch in a hardcoded, boring fashion. Technically, this needs some method of autodispatching and some separation into event.c, but the autodispatch and such need a good few more mailing list discussions to prevent creeping featurism, even though supporting every single scheme under the sun in some actually useful way could be good. Of course, this gets rather hairy organization-wise. */
-  eventstack_addevent(&global_usereventstack,make_event(get_type(e),get_data(e)));
+  event ev = make_event(get_type(e),get_data(e));
+  if(ev.type != SCM_EOL)
+    eventstack_addevent(&global_usereventstack,ev);
 }
 
 
@@ -102,9 +108,6 @@ main (int argc, char **argv)
   SDL_Surface *screen;
   SDL_Event *event = malloc (sizeof (SDL_Event));
   int next, now;
-  tile test_tile;
-  SCM testt;
-  SDL_Rect clippy = { 0, 0, 16, 16 };
   SDL_Init (SDL_INIT_EVERYTHING);
   screen = SDL_SetVideoMode (800, 640, 32, SDL_HWSURFACE);
   if (screen == NULL)
@@ -117,7 +120,7 @@ main (int argc, char **argv)
     Enable UNICODE conversion for keysyms so we can map the ASCII characters to their relevant descriptions, provided they are not equal to a few special chars.
     This does have some overhead according to the docs, so we might want to come up with a different, possibly faster scheme to take care of this later.
   */
-  SDL_EnableUNICODE(0);
+  SDL_EnableUNICODE(1);
   scm_init_guile ();
   SDL_CreateThread (exec_guile_shell, 0);
   scm_c_define_gsubr ("create-mob", 3, 0, 0, guile_create_mob);
@@ -131,6 +134,9 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("stop-mob-animation",1,0,0,guile_stop_mob_animation);
   scm_c_define_gsubr ("create-window",7,0,0,guile_make_window);
   scm_c_define_gsubr ("remove-window",1,0,0,guile_destroy_window);
+  scm_c_define_gsubr ("open-global-events",0,0,0,guile_open_global_eventstack);
+  scm_c_define_gsubr ("close-global-events",1,0,0,guile_close_global_eventstack);
+  scm_c_define_gsubr ("get-global-event",1,0,0,guile_get_global_event);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   global_usereventstack = eventstack_init();

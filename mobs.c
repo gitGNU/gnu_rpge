@@ -209,7 +209,7 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
       mobtilex = (m->x + (i * xrate)) / TILE_WIDTH;
       mobtiley = (m->y + (i * yrate)) / TILE_HEIGHT;
       //tile boundary reached, check
-      if (mobtilex != mobtilexold || mobtiley != mobtileyold && !(mobtilex < 0 || mobtilex > main_grid.width || mobtiley < 0 || mobtiley > main_grid.height))
+      if ((mobtilex != mobtilexold || mobtiley != mobtileyold) && !(mobtilex < 0 || mobtilex > main_grid.width || mobtiley < 0 || mobtiley > main_grid.height))
 	{
 	  block = main_grid.tilegrid[mobtilex][mobtiley].blocking;
 	  if ((mobtilex < mobtilexold && (block & BLOCK_RIGHT)) ||

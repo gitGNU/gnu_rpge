@@ -173,3 +173,23 @@ guile_destroy_window(SCM index)
   windowstack_remove(scm_to_int(index));
   return scm_from_int(0);
 }
+
+SCM
+guile_open_global_eventstack()
+{
+  return scm_from_int(eventstack_open(&global_usereventstack));
+}
+
+SCM
+guile_close_global_eventstack(SCM userindex)
+{
+  eventstack_close(&global_usereventstack,scm_to_int(userindex));
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_get_global_event(SCM userindex)
+{
+  event e = eventstack_get_first_of_user(&global_usereventstack, scm_to_int(userindex));
+  return scm_cons(e.type,e.data);
+}
