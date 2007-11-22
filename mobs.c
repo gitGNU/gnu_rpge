@@ -31,6 +31,7 @@ create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
 	  sizeof (SDL_Surface *), 0,
 	  sizeof (mob) - sizeof (unsigned int) * 2 - sizeof (float) * 2 -
 	  sizeof (SDL_Surface *));
+  mobby.userdata = SCM_UNDEFINED;
   return mobby;
 }
 

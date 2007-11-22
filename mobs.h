@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 #define MOBS_H
 #include <SDL/SDL.h>
 #include <stdlib.h>
+#include <libguile.h>
 #include "video.h"
 #include "imagestack.h"
 
@@ -40,6 +41,7 @@ typedef struct
   int xmoveamount;
   int ymoverate;
   int ymoveamount;
+  SCM userdata;
 } mob;
 
 typedef struct
@@ -59,4 +61,5 @@ void  move_mobs();
 void  mob_set_movement(mob* m, int xam, double xrate, int yam, double yrate);
 void  mob_move_all (mob * m, int xtiles, int ytiles, int frames);
 void  mob_stop_animation(mob* m);
+
 #endif

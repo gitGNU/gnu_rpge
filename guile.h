@@ -39,3 +39,7 @@ SCM guile_destroy_window(SCM index);
 SCM guile_open_global_eventstack();
 SCM guile_close_global_eventstack(SCM userindex);
 SCM guile_get_global_event(SCM userindex);
+SCM guile_set_mob_userdata(SCM index, SCM newdata);
+SCM guile_get_mob_userdata(SCM index);
+SCM guile_get_global_userdata(void);
+SCM guile_set_global_userdata(SCM newdata);

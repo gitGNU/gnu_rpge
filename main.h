@@ -34,4 +34,5 @@ You should have received a copy of the GNU General Public License
 
 
 extern eventstack global_usereventstack; //holds all generic game events, with the minor exception of quitting events.
+extern SCM global_userdata; //There's an interesting reason for this one, see nonexistent docs.
 #endif

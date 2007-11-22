@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "main.h"
 
 eventstack global_usereventstack;
+SCM global_userdata = SCM_EOL;
 
 int
 exec_guile_shell (void *unused_arg)
@@ -137,6 +138,10 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("open-global-events",0,0,0,guile_open_global_eventstack);
   scm_c_define_gsubr ("close-global-events",1,0,0,guile_close_global_eventstack);
   scm_c_define_gsubr ("get-global-event",1,0,0,guile_get_global_event);
+  scm_c_define_gsubr ("get-mob-data",1,0,0,guile_get_mob_userdata);
+  scm_c_define_gsubr ("set-mob-data",2,0,0,guile_set_mob_userdata);
+  scm_c_define_gsubr ("get-global-data",0,0,0,guile_get_global_userdata);
+  scm_c_define_gsubr ("set-global-data",1,0,0,guile_set_global_userdata);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   global_usereventstack = eventstack_init();

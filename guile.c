@@ -193,3 +193,30 @@ guile_get_global_event(SCM userindex)
   event e = eventstack_get_first_of_user(&global_usereventstack, scm_to_int(userindex));
   return scm_cons(e.type,e.data);
 }
+
+
+SCM
+guile_set_mob_userdata(SCM index, SCM newdata)
+{
+  (mobs.mobs+scm_to_int(index))->userdata=newdata;
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_get_mob_userdata(SCM index)
+{
+  return mobs.mobs[scm_to_int(index)].userdata;
+}
+
+SCM 
+guile_get_global_userdata(void)
+{
+  return global_userdata;
+}
+
+SCM
+guile_set_global_userdata(SCM newdata)
+{
+  global_userdata = newdata;
+  return SCM_UNSPECIFIED;
+}
