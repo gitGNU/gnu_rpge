@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "window.h"
 
-sequence windows;
+windowstack windows;
 
 window
 create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename,unsigned int spritew,unsigned int spriteh)
@@ -34,22 +34,6 @@ create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, ch
   return win;
 }
 
-object
-make_window_obj(window w)
-{
-  object o;
-  o.data = malloc(sizeof(window));
-  o.typeinfo = TYPE_WINDOW;
-  *((window*)o.data)=w;
-  return o;
-}
-
-window
-get_obj_window(object o)
-{
-  return *((window*)o.data);
-}
-
 void
 render_window(SDL_Surface* dest,window w)
 {
@@ -60,7 +44,7 @@ render_window(SDL_Surface* dest,window w)
       clip.y = 0;
       clip.w = w.width;
       clip.h = w.height;
-      return apply_surface(w.x,w.y,((image*)images.data[w.imageindex].data)->data,dest,&clip);
+      return apply_surface(w.x,w.y,images.images[w.imageindex].data,dest,&clip);
     }
   else
     {
@@ -94,13 +78,22 @@ render_window(SDL_Surface* dest,window w)
                 {
                   clip.h = w.tileh;
                   remainingy -= w.tileh;
-                  }
-              apply_surface(x,y,((image*)images.data[w.imageindex].data)->data,dest,&clip);
+                }
+              apply_surface(x,y,images.images[w.imageindex].data,dest,&clip);
               y+= w.tileh;
             }
           x += w.tilew;
         }
     }
+}
+
+/*Below is another implementation of yet another generic constant index array, which should be taken care of properly some day. However, doing so properly has a tendency to cause void* hell, which may or may not be more elegant than this forest of similar stuff. In short, if we keep writing a few dozen more of these, we need a generic edition, otherwise, the associated problems with conversion to and from generic types won't make life easier, just harder.*/
+windowstack init_windowstack(void)
+{
+  windowstack ws;
+  ws.windows = NULL;
+  ws.size = 0;
+  return ws;
 }
 
 char windows_equalp(window w1, window w2)
@@ -116,9 +109,9 @@ char windows_equalp(window w1, window w2)
 
 int find_window(window w)
 {
-  for(int i = 0; i< windows.objcount; i++)
+  for(int i = 0; i< windows.size; i++)
     {
-      if(windows_equalp(*((window*)windows.data[i].data),w))
+      if(windows_equalp(windows.windows[i],w))
         return i;
     }
   return -1;
@@ -141,12 +134,17 @@ int windowstack_addwindow(window w)
   int empty = find_empty_window();
   if(empty != -1)
     {
-      *((window*)windows.data[empty].data) = w;
+      windows.windows[empty] = w;
       return empty;
     }
   else
     {
-      sequence_append(&windows,make_window_obj(w));
+      window* newwindows = malloc(sizeof(window)*(windows.size+1));
+      memcpy(newwindows,windows.windows,sizeof(window)*windows.size);
+      newwindows[windows.size] = w;
+      windows.size++;
+      windows.windows = newwindows;
+      return windows.size -1;
     }
 }
 
@@ -157,20 +155,20 @@ void windowstack_removewindow(window w)
     return;
   else
     {
-      *((window*)windows.data[index].data) = empty_window();
+      windows.windows[index] = empty_window();
       return;
     }
 }
 
 void windowstack_remove(int index)
 {
-  *((window*)windows.data[index].data) = empty_window();
+  windows.windows[index] = empty_window();
 }
 
 void render_windows(SDL_Surface* dest)
 {
-  for(int i=0;i<windows.objcount;i++)
+  for(int i=0;i<windows.size;i++)
     {
-      render_window(dest,*((window*)windows.data[i].data));
+      render_window(dest,windows.windows[i]);
     }
 }

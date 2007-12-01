@@ -16,34 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-#ifndef GUILE_H
-#define GUILE_H
-
 #include "main.h"
 #include "event.h"
 #include "mobs.h"
 #include "tile.h"
 #include "window.h"
 #include <libguile.h>
-#include <SDL/SDL.h>
 
-/*
-Again, this really is driving me nuts and I do have source for a fix ready, but I'm not sure it will actually improve performance. So, see task list for details.
-*/
-  
-typedef struct
-{
-  Uint32 threadid;
-  SCM argv;
-}  thread_argv;
-
-typedef struct
-{
-  thread_argv* argvs;
-  unsigned int size;
-}  argv_stack;
-  
-  
 SCM guile_create_mob(SCM,SCM,SCM);
 SCM tile_to_list(tile);
 tile list_to_tile(SCM);
@@ -64,6 +43,3 @@ SCM guile_set_mob_userdata(SCM index, SCM newdata);
 SCM guile_get_mob_userdata(SCM index);
 SCM guile_get_global_userdata(void);
 SCM guile_set_global_userdata(SCM newdata);
-argv_stack argv_stack_init();
-
-#endif

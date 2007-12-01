@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "imagestack.h"
 
-sequence images = {0,0};
+imagestack images = {0,0};
 
 image
 make_image (SDL_Surface* data, char* filename)
@@ -29,29 +29,19 @@ make_image (SDL_Surface* data, char* filename)
   return i;
 }
 
-object
-make_image_obj(image i)
-{
-  object o;
-  o.typeinfo = TYPE_IMAGE;
-  o.data = malloc(sizeof(image));
-  *((image*)o.data)=i;
-  return o;
-}
-
 int 
 find_image(char* filename)
 {
-  for(int i = 0; i < images.objcount; i++)
+  for(int i = 0; i < images.size; i++)
     {
       if(filename)
         {
-        if(((image*)images.data[i].data)->filename && !strcmp(((image*)images.data[i].data)->filename,filename))
+          if(images.images[i].filename && !strcmp(images.images[i].filename,filename))
             return i;
         }
       else
         {
-          if(((image*)images.data[i].data)->filename )
+          if(!images.images[i].filename )
             return i;
         }
     }
@@ -68,14 +58,24 @@ int
 push_image_on_stack(char* filename)
 {
   int index  = find_image(filename), indexempty = find_empty();
+  image* newimages;
+  if(index != -1)
+    return index;
   if(indexempty != -1)
     {
-      images.data[indexempty] = make_image_obj(make_image(load_image(filename),filename));
+      images.images[indexempty] = make_image(load_image(filename),filename);
       return indexempty;
     }
   else
     {
-       return sequence_append(&images,make_image_obj(make_image(load_image(filename),filename)));
+      index = images.size;
+      newimages = malloc(sizeof(image)*(images.size+1));
+      memcpy(newimages,images.images,sizeof(image)*images.size);
+      newimages[index] = make_image(load_image(filename),filename);
+      free(images.images);
+      images.images = newimages;
+      images.size++;
+      return index;
     }
 }
 
@@ -83,10 +83,9 @@ void
 remove_image (char* filename)
 {
   int index = find_image(filename);
-  if(index == -1 || !images.objcount || !images.data)
+  if(index == -1 || !images.size || !images.images)
     return;
   //Should free the filename here, tends to cause crashes
-  ((image*)images.data[index].data)->data = NULL;
-  ((image*)images.data[index].data)->filename = NULL;
-  images.data[index].data = NULL; 
+  images.images[index].data = NULL; 
+  images.images[index].filename = NULL;
 }

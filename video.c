@@ -22,13 +22,13 @@ void
 render_mob(SDL_Surface* dest, mob mobby)
 {
   SDL_Rect imageclippy = {mobby.animation * SPRITE_WIDTH, mobby.frame * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT};
-  apply_surface(mobby.x,mobby.y,((image*)images.data[mobby.imgindex].data)->data,dest,&imageclippy);
+  apply_surface(mobby.x,mobby.y,images.images[mobby.imgindex].data,dest,&imageclippy);
 }
 
 void
 render_tile(SDL_Surface* dest, int x, int y, tile tily)
 {
-  apply_surface(x*TILE_WIDTH,y*TILE_HEIGHT,((image*)images.data[tily.tilesheetindex].data)->data,dest,&tily.sheetclippinginfo);
+  apply_surface(x*TILE_WIDTH,y*TILE_HEIGHT,images.images[tily.tilesheetindex].data,dest,&tily.sheetclippinginfo);
 }
 
 void
@@ -76,8 +76,8 @@ render_screen(SDL_Surface* dest)
 {
   SDL_Rect clip = {0,0,main_grid.width*TILE_WIDTH,main_grid.height*TILE_HEIGHT};
   apply_surface(0,0,main_grid.imagebuffer,dest,&clip);
-  for(int i = 0; i < mobs.objcount; i++)
+  for(int i = 0; i < mobs.size; i++)
     {
-      render_mob(dest,*((mob*)mobs.data[i].data));
+      render_mob(dest,mobs.mobs[i]);
     }
 }

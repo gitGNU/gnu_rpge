@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 #include "mobs.h"
-sequence mobs;
+mobstack mobs = { 0, 0 };
 
 mob
 create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
@@ -35,22 +35,12 @@ create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
   return mobby;
 }
 
-object 
-make_mob_obj(mob m)
-{
-  object o;
-  o.typeinfo = TYPE_MOB;
-  o.data = malloc(sizeof(mob));
-  *((mob*)o.data) = m;
-  return o;
-}
-
 int
 find_empty_mob ()
 {
-  for (int i = 0; i < mobs.objcount; i++)
+  for (int i = 0; i < mobs.size; i++)
     {
-      if (((mob*)mobs.data[i].data)->imgindex == -1)
+      if (mobs.mobs[i].imgindex == -1)
 	return i;
     }
   return -1;
@@ -62,21 +52,27 @@ push_mob_on_array (mob m)
   int indexempty = find_empty_mob ();
   if (indexempty != -1)
     {
-      mobs.data[indexempty] = make_mob_obj(m);
+      mobs.mobs[indexempty] = m;
       return indexempty;
     }
   else
     {
-      return sequence_append(&mobs,make_mob_obj(m));
+      mob *newmobs = malloc (sizeof (mob) * (mobs.size + 1));
+      memcpy (newmobs, mobs.mobs, sizeof (mob) * mobs.size);
+      newmobs[mobs.size] = m;
+      free (mobs.mobs);
+      mobs.mobs = newmobs;
+      mobs.size++;
+      return mobs.size - 1;
     }
 }
 
 void
 remove_mob (int index)
 {
-  if (index < mobs.objcount)
+  if (index < mobs.size)
     {
-      ((mob*)mobs.data[index].data)->imgindex = -1;
+      mobs.mobs[index].imgindex = -1;
     }
 }
 
@@ -121,9 +117,9 @@ animate_mob (mob * m)
 void
 animate_mobs ()
 {
-  for (int i = 0; i < mobs.objcount; i++)
+  for (int i = 0; i < mobs.size; i++)
     {
-      animate_mob ((mob*)mobs.data[i].data);
+      animate_mob (&mobs.mobs[i]);
     }
 }
 
@@ -161,9 +157,9 @@ move_mob (mob * m)
 void
 move_mobs ()
 {
-  for (int i = 0; i < mobs.objcount; i++)
+  for (int i = 0; i < mobs.size; i++)
     {
-      move_mob ((mob*)mobs.data[i].data);
+      move_mob (&(mobs.mobs[i]));
     }
 }
 
