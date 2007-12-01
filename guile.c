@@ -114,7 +114,7 @@ SCM
 guile_move_mob_all (SCM mobindex, SCM tilecountx, SCM tilecounty,
 		    SCM frametotal)
 {
-  mob_move_all (&(mobs.mobs[scm_to_int (mobindex)]), scm_to_int (tilecountx),
+  mob_move_all ((mob*)mobs.data[scm_to_int (mobindex)].data, scm_to_int (tilecountx),
 		scm_to_int (tilecounty), scm_to_int (frametotal));
   return scm_from_int (0);
 }
@@ -123,7 +123,7 @@ SCM
 guile_set_mob_animation (SCM mobindex, SCM animation, SCM start,
 			 SCM targetframe, SCM framesbetween, SCM loop)
 {
-  mob_set_animation (&(mobs.mobs[scm_to_int (mobindex)]),
+  mob_set_animation ((mob*)mobs.data[scm_to_int (mobindex)].data,
 		     scm_to_int (animation), scm_to_int (start),
 		     scm_to_int (targetframe), scm_to_int (framesbetween),
 		     scm_to_bool (loop));
@@ -133,7 +133,7 @@ guile_set_mob_animation (SCM mobindex, SCM animation, SCM start,
 SCM
 guile_stop_mob_animation (SCM mobindex)
 {
-  mob_stop_animation (&(mobs.mobs[scm_to_int (mobindex)]));
+  mob_stop_animation ((mob*)mobs.data[scm_to_int (mobindex)].data);
   return scm_from_int (0);
 }
 
@@ -198,14 +198,14 @@ guile_get_global_event(SCM userindex)
 SCM
 guile_set_mob_userdata(SCM index, SCM newdata)
 {
-  (mobs.mobs+scm_to_int(index))->userdata=newdata;
+  ((mob*)mobs.data[scm_to_int(index)].data)->userdata=newdata;
   return SCM_UNSPECIFIED;
 }
 
 SCM
 guile_get_mob_userdata(SCM index)
 {
-  return mobs.mobs[scm_to_int(index)].userdata;
+  return ((mob*)mobs.data[scm_to_int(index)].data)->userdata;
 }
 
 SCM 
@@ -220,3 +220,8 @@ guile_set_global_userdata(SCM newdata)
   global_userdata = newdata;
   return SCM_UNSPECIFIED;
 }
+
+/*
+Yet-another-generic-stupid-stack-that-has-to-be-added-for-no-reason.... I do have some code lying around for this, but as it uses runtime code to do lots and lots of conversions back and forth between a wrapper around a void* and something indicating the type of whatever the void* is pointing to and whatever that actually happens to be it is actually rather slow. What we really need here is a template-like system...
+*/
+

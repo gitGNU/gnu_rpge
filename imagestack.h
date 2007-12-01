@@ -20,20 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "video.h"
 #include <SDL/SDL.h>
 #include <string.h>
+#include "sequence.h"
 
+  
 typedef struct
 {
   SDL_Surface* data;
   char* filename;
 } image;
 
-typedef struct
-{
-  image* images;
-  int size;
-} imagestack;
-
-extern imagestack images;
+extern sequence images;
 
 image make_image (SDL_Surface* data, char* filename);
 int  push_image_on_stack(char* filename);
