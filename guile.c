@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "guile.h"
 
+sequence argvs;
+
 SCM
 scm_ncar (SCM list, int n)
 {
@@ -222,6 +224,65 @@ guile_set_global_userdata(SCM newdata)
 }
 
 /*
-Yet-another-generic-stupid-stack-that-has-to-be-added-for-no-reason.... I do have some code lying around for this, but as it uses runtime code to do lots and lots of conversions back and forth between a wrapper around a void* and something indicating the type of whatever the void* is pointing to and whatever that actually happens to be it is actually rather slow. What we really need here is a template-like system...
+Technically, the following is a simple, though somewhat useful scheme to pass a single SCM to a script on boot. The whole point of this is to allow scripts that take 'arguments' to be used, in a rather warped way, somewhat like a procedure.
 */
 
+thread_argv
+make_threadargv(Uint32 threadid, SCM argv)
+{
+  thread_argv ta;
+  ta.threadid = threadid;
+  ta.argv = argv;
+  return ta;
+}
+
+object
+make_thread_argv_obj(thread_argv ta)
+{
+  object o;
+  o.typeinfo = TYPE_ARGV;
+  o.data = malloc(sizeof(thread_argv));
+  *((thread_argv*)o.data)=ta;
+  return o;
+}
+
+thread_argv
+get_obj_thread_argv(object o)
+{
+  return *((thread_argv*)o.data);
+}
+
+char guile_argv_threadids_equalp(object argv, object threadid)
+{
+  return get_obj_uint32(threadid) == get_obj_thread_argv(argv).threadid;
+}
+
+void
+guile_exec_script_with_argv(char* filename, SCM argv)
+{
+  Uint32 threadid = SDL_ThreadID();
+  int index = sequence_position(argvs,make_uint32_obj(threadid),guile_argv_threadids_equalp);
+  if(index != -1)
+    argvs.data[index] = make_thread_argv_obj(make_threadargv(threadid,argv));
+  else
+    index = sequence_append(&argvs,make_thread_argv_obj(make_threadargv(threadid,argv)));
+  scm_c_primitive_load(filename);
+  sequence_remove_at(&argvs,index);
+}
+
+SCM
+guile_API_exec_script_with_argv(SCM filename, SCM argv)
+{
+  guile_exec_script_with_argv(scm_to_locale_string(filename),argv);
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_get_argv()
+{
+  int index = sequence_position(argvs,make_uint32_obj(SDL_ThreadID()),guile_argv_threadids_equalp);
+  if(index != -1)
+    return ((thread_argv*)argvs.data[index].data)->argv;
+  else
+    return SCM_EOL;
+}

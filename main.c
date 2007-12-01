@@ -142,10 +142,12 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("set-mob-data",2,0,0,guile_set_mob_userdata);
   scm_c_define_gsubr ("get-global-data",0,0,0,guile_get_global_userdata);
   scm_c_define_gsubr ("set-global-data",1,0,0,guile_set_global_userdata);
+  scm_c_define_gsubr ("load-with-argv",2,0,0,guile_API_exec_script_with_argv);
+  scm_c_define_gsubr ("get-argv",0,0,0,guile_get_argv);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   global_usereventstack = eventstack_init();
-  windows = images = mobs = sequence_init();
+  windows = images = mobs = argvs = sequence_init();
   while (1)
     {
       SCM_TICK;

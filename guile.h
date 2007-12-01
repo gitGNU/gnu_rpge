@@ -37,13 +37,9 @@ typedef struct
   SCM argv;
 }  thread_argv;
 
-typedef struct
-{
-  thread_argv* argvs;
-  unsigned int size;
-}  argv_stack;
   
-  
+extern sequence argvs;
+
 SCM guile_create_mob(SCM,SCM,SCM);
 SCM tile_to_list(tile);
 tile list_to_tile(SCM);
@@ -64,6 +60,8 @@ SCM guile_set_mob_userdata(SCM index, SCM newdata);
 SCM guile_get_mob_userdata(SCM index);
 SCM guile_get_global_userdata(void);
 SCM guile_set_global_userdata(SCM newdata);
-argv_stack argv_stack_init();
+void guile_exec_script_with_argv(char* filename, SCM argv);
+SCM guile_API_exec_script_with_argv(SCM filename, SCM argv);
+SCM guile_get_argv();
 
 #endif
