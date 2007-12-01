@@ -22,6 +22,7 @@ You should have received a copy of the GNU General Public License
 #include <libguile.h>
 #include "video.h"
 #include "imagestack.h"
+#include "sequence.h"
 
 typedef struct
 {
@@ -44,13 +45,7 @@ typedef struct
   SCM userdata;
 } mob;
 
-typedef struct
-{
-  unsigned int size;
-  mob *mobs;
-} mobstack;
-
-extern mobstack mobs;
+extern sequence mobs;
 
 mob create_mob_using_sprite (unsigned int, unsigned int, char *);
 int push_mob_on_array (mob);

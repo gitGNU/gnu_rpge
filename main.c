@@ -145,7 +145,7 @@ main (int argc, char **argv)
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   global_usereventstack = eventstack_init();
-  windows = init_windowstack();
+  windows = images = mobs = sequence_init();
   while (1)
     {
       SCM_TICK;

@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <stdlib.h>
 #include <string.h>
 #include <libguile.h>
+#include "sequence.h"
+
 
 typedef struct
 {
@@ -30,10 +32,8 @@ typedef struct
 
 typedef struct
 {
-  event* events;
-  unsigned long int stacksize;
-  unsigned long int* indices; /* See docs (currently non-existent) for details, used in regulating access by multiple threads */
-  unsigned long int indexcount;
+  sequence events;
+  sequence indices;
 } eventstack;
 
 

@@ -25,21 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 typedef struct
 {
   unsigned int width, height,x, y;
-  int imageindex; //note: this baby should be automatically... err... I dunno.. scaled? tiled? manipulated in some strange way? to fit the window. Heck.. for now, I'll go with "tiled".
+  int imageindex; 
   unsigned int tilew, tileh;
 } window;
 
-typedef struct
-{
-  window* windows;
-  unsigned int size;
-} windowstack; /*discussion and testing needed of these versus generic stacks*/
-
-extern windowstack windows;
+extern sequence windows;
 
 window  create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename,unsigned int spritew,unsigned int spriteh);
 void render_window(SDL_Surface* dest,window w);
-windowstack init_windowstack(void);
 void clear_windowstack(void);
 int windowstack_addwindow(window w);
 void windowstack_remove(int index);

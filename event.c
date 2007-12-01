@@ -27,13 +27,27 @@ make_event(SCM type, SCM data)
   return e;
 }
 
+object
+make_event_obj(event e)
+{
+  object o;
+  o.typeinfo = TYPE_EVENT;
+  o.data = malloc(sizeof(event));
+  *((event*)o.data) = e;
+  return o;
+}
+
+event
+get_obj_event(object o)
+{
+  return  *((event*)o.data);
+}
+
 eventstack
 eventstack_init(void)
 {
   eventstack es;
-  es.events = NULL;
-  es.indices = NULL;
-  es.stacksize = es.indexcount = 0;
+  es.indices = es.events = sequence_init();
   return es;
 }
 
@@ -41,35 +55,26 @@ eventstack_init(void)
 void
 eventstack_clear(eventstack* stackptr)
 {
-  free(stackptr->events);
-  stackptr->stacksize = 0;
-  stackptr->events = NULL;
+  sequence_free(stackptr->events);
+  sequence_free(stackptr->indices);
+  stackptr->events = stackptr->indices = sequence_init();
 }
 
 void
 eventstack_addevent(eventstack* stackptr, event e)
 {
-  event* neweventsptr = malloc((stackptr->stacksize+1)*sizeof(event));
-  if(stackptr->events)
-    memcpy(neweventsptr,stackptr->events,sizeof(event)*stackptr->stacksize);
-  stackptr->events = neweventsptr;
-  stackptr->events[stackptr->stacksize] = e;
-  stackptr->stacksize++;
+  sequence_append(&stackptr->events,make_event_obj(e));
 }
 
 event
 eventstack_getfirstevent(eventstack* stackptr)
 {
-  if(!stackptr->stacksize)
+  if(!stackptr->events.objcount)
     return make_event(SCM_UNDEFINED, SCM_UNDEFINED);
   else
     {
-      event* newevents = malloc(sizeof(event)*(stackptr->stacksize-1));
-      event event = stackptr->events[0];
-      memcpy(newevents,stackptr->events+1,(stackptr->stacksize-1)*sizeof(event));
-      free(stackptr->events);
-      stackptr->stacksize--;
-      stackptr->events = newevents;
+      event event = get_obj_event(stackptr->events.data[0]);
+      sequence_remove_at(&stackptr->events,0);
       return event;
     }
 }
@@ -77,9 +82,9 @@ eventstack_getfirstevent(eventstack* stackptr)
 int
 find_empty_luser(eventstack es)
 {
-    for(int i = 0; i < es.indexcount; i++)
+    for(int i = 0; i < es.indices.objcount; i++)
       {
-         if(es.indices[i] == -1)
+         if(*((int*)es.indices.data[i].data) == -1)
            return i;
       }
   return -1;
@@ -91,18 +96,12 @@ eventstack_open(eventstack* es)
   int index = find_empty_luser(*es);
   if(index != -1)
     {
-      es->indices[index] = 0;
+      *((int*)es->indices.data[index].data) = 0;
       return index;
     }
   else
     {
-       unsigned long int* newindices = malloc(sizeof(unsigned long int)*(es->indexcount+1));
-      memcpy(newindices,es->indices,sizeof(unsigned long int)*es->indexcount);
-      newindices[es->indexcount] = 0; 
-      es->indexcount++;
-      free(es->indices);
-      es->indices = newindices;
-      return es->indexcount - 1;
+      return sequence_append(&es->indices,make_int_obj(0));
     }
 }
 
@@ -110,16 +109,16 @@ eventstack_open(eventstack* es)
 void
 eventstack_close(eventstack* es, unsigned long int luser)
 {
-  es->indices[luser] = -1;
+  *((int*)es->indices.data[luser].data) = -1;
 }
 
 int 
 eventstack_get_index_of_user(eventstack es, unsigned long int luser)
 {
-  if(luser >= es.indexcount)
+  if(luser >= es.indices.objcount)
     return -1;
   else
-    return es.indices[luser];
+    return *((int*)es.indices.data[luser].data);
 }
 
 /*
@@ -129,10 +128,10 @@ event
 eventstack_get_first_of_user(eventstack* es, unsigned long int luser)
 {
   int index = eventstack_get_index_of_user(*es,luser);
-    if(index != -1 && index < es->stacksize)
+    if(index != -1 && index < es->events.objcount)
       {
-        es->indices[luser]++;
-        return es->events[index];
+        (*((int*)es->indices.data[luser].data))++;
+        return *((event*)es->events.data[index].data);
       }
     else
       return make_event(SCM_EOL, SCM_EOL);
