@@ -122,12 +122,52 @@ eventstack_get_index_of_user(eventstack es, unsigned long int luser)
 }
 
 /*
-  TODO: Add automatic destruction of first element in case all indices are > 0
+A simple function to clean up surplus indices and events.
 */
+
+void
+eventstack_clean_stack(eventstack* es)
+{
+  int index,lowest = -1;
+  for(int i = 0;i < es->indices.objcount; i++)
+    {
+      index = get_obj_int(es->indices.data[i]);
+      if(!index)
+        {
+          lowest = -1;
+          break;
+        }
+      else if(index == -1)
+        continue;
+      else
+        {
+          if(index < lowest || lowest == -1)
+           lowest = index;
+        }
+    }
+  if(lowest > 0)
+    {
+      /*
+        Performance note: This bit here's sluggish, there should be a sequence_remove_upto, which I'll get around to some other time
+      */
+      
+      for(int j = 0; j < lowest; j++)
+        {
+          sequence_remove_at(&es->events,0);
+        }
+      for(int j = 0; j < es->indices.objcount; j++)
+        {
+          *((int*)es->indices.data[j].data) -= lowest;
+        }
+    }
+}
+
 event
 eventstack_get_first_of_user(eventstack* es, unsigned long int luser)
 {
-  int index = eventstack_get_index_of_user(*es,luser);
+  int index;
+  eventstack_clean_stack(es);
+  index = eventstack_get_index_of_user(*es,luser);
     if(index != -1 && index < es->events.objcount)
       {
         (*((int*)es->indices.data[luser].data))++;
