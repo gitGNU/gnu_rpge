@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "mobs.h"
 #include "tile.h"
 #include "window.h"
+#include "text.h"
 #include <libguile.h>
 #include <SDL/SDL.h>
 
@@ -63,5 +64,6 @@ SCM guile_set_global_userdata(SCM newdata);
 void guile_exec_script_with_argv(char* filename, SCM argv);
 SCM guile_API_exec_script_with_argv(SCM filename, SCM argv);
 SCM guile_get_argv();
+SCM guile_open_font(SCM filename, SCM size);
 
 #endif

@@ -286,3 +286,9 @@ guile_get_argv()
   else
     return SCM_EOL;
 }
+
+SCM
+guile_open_font(SCM filename, SCM size)
+{
+  return scm_from_int(open_font(scm_to_locale_string(filename),scm_to_int(size)));
+}

@@ -110,6 +110,7 @@ main (int argc, char **argv)
   SDL_Event *event = malloc (sizeof (SDL_Event));
   int next, now;
   SDL_Init (SDL_INIT_EVERYTHING);
+  TTF_Init ();
   screen = SDL_SetVideoMode (800, 640, 32, SDL_HWSURFACE);
   if (screen == NULL)
     {
@@ -144,10 +145,11 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("set-global-data",1,0,0,guile_set_global_userdata);
   scm_c_define_gsubr ("load-with-argv",2,0,0,guile_API_exec_script_with_argv);
   scm_c_define_gsubr ("get-argv",0,0,0,guile_get_argv);
+  scm_c_define_gsubr ("open-font",2,0,0,guile_open_font);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   global_usereventstack = eventstack_init();
-  windows = images = mobs = argvs = sequence_init();
+  windows = images = mobs = argvs = fonts = sequence_init();
   while (1)
     {
       SCM_TICK;
