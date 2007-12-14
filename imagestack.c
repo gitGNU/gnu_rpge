@@ -51,7 +51,7 @@ find_image(char* filename)
         }
       else
         {
-          if(((image*)images.data[i].data)->filename )
+          if(!((image*)images.data[i].data)->filename )
             return i;
         }
     }

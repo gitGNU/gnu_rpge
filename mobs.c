@@ -62,7 +62,7 @@ push_mob_on_array (mob m)
   int indexempty = find_empty_mob ();
   if (indexempty != -1)
     {
-      mobs.data[indexempty] = make_mob_obj(m);
+      *((mob*)mobs.data[indexempty].data) = m;
       return indexempty;
     }
   else
