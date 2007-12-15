@@ -33,6 +33,7 @@ typedef struct
 {
   TTF_Font* font;
   char* filename;
+  unsigned int size;
 } font;
 
 extern sequence texts;
