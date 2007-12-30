@@ -21,7 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 sequence fonts;
 sequence texts;
 
-font make_font(TTF_Font* fontptr, char* filename)
+font
+make_font(TTF_Font* fontptr, char* filename)
 {
   font returnfont;
   returnfont.font = fontptr;
@@ -29,13 +30,15 @@ font make_font(TTF_Font* fontptr, char* filename)
   return returnfont;
 }
 
-char object_font_filename_and_size_eq(object font1, object font2)
+char
+object_font_filename_and_size_eq(object font1, object font2)
 {
   return (!strcmp(((font*)font1.data)->filename,((font*)font2.data)->filename) &&
           ((font*)font1.data)->size == ((font*)font2.data)->size);
 }
 
-object make_font_obj(font f)
+object
+make_font_obj(font f)
 {
   object o;
   o.data = malloc (sizeof(font));
@@ -44,7 +47,19 @@ object make_font_obj(font f)
   return o;
 }
 
-int open_font(char* filename, int size)
+int
+find_empty_font(void)
+{
+  for(int i = 0; i < fonts.objcount; i++)
+    {
+      if(!((font*)fonts.data[i].data)->size)
+        return i;
+    }
+  return -1;
+}
+
+int
+open_font(char* filename, int size)
 {
   font font_to_add;
   int index;
@@ -64,8 +79,26 @@ int open_font(char* filename, int size)
         return -1;
       else
         {
-          *((font*)o.data) = font_to_add;
-          return sequence_append(&fonts, o);
+          int empty_font = find_empty_font();
+          if(empty_font != -1)
+            {
+              free(o.data);
+              *((font*)fonts.data[empty_font].data) = font_to_add;
+              return empty_font;
+            }
+          else
+            {
+              *((font*)o.data) = font_to_add;
+              return sequence_append(&fonts, o);
+            }
         }
     }
 }
+
+void
+close_font(int index)
+{
+  if(index >= 0 && index < fonts.objcount)
+    ((font*)fonts.data[index].data)->size = 0;
+}
+

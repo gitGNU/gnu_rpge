@@ -146,6 +146,7 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("load-with-argv",2,0,0,guile_API_exec_script_with_argv);
   scm_c_define_gsubr ("get-argv",0,0,0,guile_get_argv);
   scm_c_define_gsubr ("open-font",2,0,0,guile_open_font);
+  scm_c_define_gsubr ("close-font",1,0,0,guile_close_font);
   scm_c_primitive_load ("table.guile");
   scm_c_primitive_load ("utils.guile");
   global_usereventstack = eventstack_init();

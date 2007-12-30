@@ -65,5 +65,6 @@ void guile_exec_script_with_argv(char* filename, SCM argv);
 SCM guile_API_exec_script_with_argv(SCM filename, SCM argv);
 SCM guile_get_argv();
 SCM guile_open_font(SCM filename, SCM size);
+SCM guile_close_font(SCM index);
 
 #endif

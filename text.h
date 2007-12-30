@@ -40,5 +40,6 @@ extern sequence texts;
 extern sequence fonts;
 
 int open_font(char* filename, int size);
+void close_font(int index);
 
 #endif
