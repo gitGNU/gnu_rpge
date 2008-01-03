@@ -20,12 +20,16 @@ You should have received a copy of the GNU General Public License
 #define VIDEO_INC_GUARD
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_ttf.h>
 #include "constants.h"
 #include "mobs.h"
 #include "tile.h"
+#include "text.h"
+#include "window.h"
 
 SDL_Surface* load_image (char* filename);
 void apply_surface (int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip);
 void render_screen(SDL_Surface* dest);
 void render_tilegrid(SDL_Surface* dest, tile** grid, int width, int height);
+void render_text(SDL_Surface* dest,text t);
 #endif

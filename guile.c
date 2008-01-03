@@ -299,3 +299,20 @@ guile_close_font(SCM index)
   close_font(scm_to_int(index));
   return SCM_UNSPECIFIED;
 }
+
+SCM
+guile_make_text(SCM x, SCM y, SCM string, SCM font, SCM red, SCM green, SCM blue)
+{
+  SDL_Color c;
+  c.r = scm_to_uint8(red);
+  c.g = scm_to_uint8(green);
+  c.b = scm_to_uint8(blue);
+  return scm_from_int(add_text(make_text(scm_to_uint(x),scm_to_uint(y),scm_to_locale_string(string),scm_to_int(font),c)));
+}
+
+SCM
+guile_destroy_text(SCM textindex)
+{
+  remove_text(scm_to_int(textindex));
+  return SCM_UNSPECIFIED;
+}

@@ -32,6 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define TYPE_UINT32 5
 #define TYPE_ARGV 6
 #define TYPE_FONT 7
+#define TYPE_STRING 8
+#define TYPE_TEXT 9
   
 typedef struct
 {
@@ -59,5 +61,7 @@ object make_int_obj(int i);
 int get_obj_int(object o);
 object make_uint32_obj (Uint32 u);
 Uint32 get_obj_uint32(object o);
+object make_string_obj(char*);
+char* get_obj_string(object);
 
 #endif

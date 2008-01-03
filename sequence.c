@@ -189,3 +189,19 @@ get_obj_uint32(object o)
 {
   return *((Uint32*)o.data);
 }
+
+object
+make_string_obj(char* string)
+{
+  object o;
+  o.data = malloc(sizeof(char*));
+  *((char**)o.data)=string;
+  o.typeinfo = TYPE_STRING;
+  return o;
+}
+
+char*
+get_obj_string(object o)
+{
+  return *((char**)o.data);
+}

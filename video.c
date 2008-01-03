@@ -72,6 +72,30 @@ apply_surface ( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL
 }
 
 void
+render_text(SDL_Surface* dest, text t)
+{
+  unsigned int x = t.x, y = t.y;
+  TTF_Font* fon = ((font*)fonts.data[t.fontindex].data)->font;
+  int lineskip = TTF_FontLineSkip(fon);
+  for(int i = 0; i < t.buffers.objcount; i++)
+    {
+      SDL_Surface* text = TTF_RenderText_Blended(fon, *((char**)t.buffers.data[i].data),t.color);
+      apply_surface(x,y,text,dest,NULL);
+      SDL_FreeSurface(text);
+      y+=lineskip;
+    }
+}
+
+void
+render_texts(SDL_Surface* dest)
+{
+  for(int i = 0; i < texts.objcount; i++)
+    {
+      render_text(dest,*((text*)texts.data[i].data));
+    }
+}
+
+void
 render_screen(SDL_Surface* dest)
 {
   SDL_Rect clip = {0,0,main_grid.width*TILE_WIDTH,main_grid.height*TILE_HEIGHT};
@@ -80,4 +104,7 @@ render_screen(SDL_Surface* dest)
     {
       render_mob(dest,*((mob*)mobs.data[i].data));
     }
+  render_windows(dest);
+  render_texts(dest);
 }
+

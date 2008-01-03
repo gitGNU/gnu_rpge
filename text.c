@@ -102,3 +102,99 @@ close_font(int index)
     ((font*)fonts.data[index].data)->size = 0;
 }
 
+/*
+Technically, splitting width-based would be roughly more complicated, unless monospaced fonts are used. However, if we wish to properly support text in windows, we should do something about that some other time.
+
+WARNING: Texts do not manage the memory of their actual buffers, they ONLY manage the pointers (as per the sequence demand that any and all data of any and all objects should be freeable it's safer to store char**s as opposed to the buffers themselves). The buffers should be managed by their users at all times.
+*/
+
+text 
+make_text(unsigned int x, unsigned int y, char* string, int fontindex, SDL_Color color)
+{
+  text t;
+  t.x = x;
+  t.y = y;
+  t.fontindex = fontindex;
+  t.color = color;
+  if(string)
+    {
+      char* saveptr;
+      t.buffers = sequence_init();
+      char* str = strdup(string);
+      char* token = strtok_r(str,"\n",&saveptr);
+      if(token)
+        sequence_append(&t.buffers,make_string_obj(token));
+      else
+        {
+          return t;
+        }
+      while(token = strtok_r(NULL,"\n",&saveptr))
+        {
+          sequence_append(&t.buffers,make_string_obj(token));
+        }
+      return t;
+    }
+}
+
+void
+print_string_obj(object o)
+{
+  if(o.data)
+    {
+      puts(*((char**)o.data));
+    }
+}
+
+void
+print_text(text t)
+{
+  sequence_foreach(t.buffers,print_string_obj);
+}
+
+int
+find_empty_text(void)
+{
+  for(int i = 0; i < texts.objcount; i++)
+    {
+      if(((text*)texts.data[i].data)->fontindex == -1)
+        return i;
+    }
+  return -1;
+}
+
+object 
+make_text_obj(text t)
+{
+  object o;
+  o.data = malloc(sizeof(text));
+  *((text*)o.data) = t;
+  o.typeinfo = TYPE_TEXT;
+  return o;
+}
+
+text
+get_obj_text(object o)
+{
+  return *((text*)o.data);
+}
+
+int
+add_text(text t)
+{
+  int indexempty = find_empty_text();
+  if(indexempty != -1)
+    {
+      *((text*)texts.data[indexempty].data) = t;
+      return indexempty;
+    }
+  else
+    return sequence_append(&texts,make_text_obj(t));
+}
+
+void
+remove_text(int index)
+{
+  sequence_free(((text*)texts.data[index].data)->buffers);
+  ((text*)texts.data[index].data)->fontindex = -1;
+}
+

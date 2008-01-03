@@ -66,5 +66,7 @@ SCM guile_API_exec_script_with_argv(SCM filename, SCM argv);
 SCM guile_get_argv();
 SCM guile_open_font(SCM filename, SCM size);
 SCM guile_close_font(SCM index);
+SCM guile_make_text(SCM x, SCM y, SCM string, SCM font, SCM red, SCM green, SCM blue);
+SCM guile_destroy_text(SCM textindex);
 
 #endif

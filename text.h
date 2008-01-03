@@ -19,11 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #ifndef TEXT_H
 #define TEXT_H
 
+#include "stdio.h"
 #include "sequence.h"
 #include <SDL/SDL_ttf.h>
 
 typedef struct
 {
+  unsigned int x, y;
   sequence buffers; 
   int fontindex;
   SDL_Color color;
@@ -41,5 +43,9 @@ extern sequence fonts;
 
 int open_font(char* filename, int size);
 void close_font(int index);
+text make_text(unsigned int x, unsigned int y, char* string, int fontindex, SDL_Color color);
+void print_text(text t);
+int add_text(text t);
+void remove_text(int index);
 
 #endif
