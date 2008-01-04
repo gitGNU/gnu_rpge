@@ -27,10 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "text.h"
 #include <libguile.h>
 #include <SDL/SDL.h>
-
-/*
-Again, this really is driving me nuts and I do have source for a fix ready, but I'm not sure it will actually improve performance. So, see task list for details.
-*/
   
 typedef struct
 {
