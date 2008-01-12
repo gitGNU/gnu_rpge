@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define TYPE_FONT 7
 #define TYPE_STRING 8
 #define TYPE_TEXT 9
+#define TYPE_DISPATCH_PAIR 10
   
 typedef struct
 {

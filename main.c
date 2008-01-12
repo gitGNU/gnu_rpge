@@ -30,25 +30,15 @@ exec_guile_shell (void *unused_arg)
 }
 
 SCM
-get_type(SDL_Event e)
+get_keydown_symbol(SDL_Event e)
 {
-  switch(e.type)
-    {
-      case SDL_KEYDOWN:
-        return scm_from_locale_symbol("key-down");
-        break;
-      case SDL_KEYUP:
-        return scm_from_locale_symbol("key-up");
-        break;
-      default: 
-        return SCM_EOL;
-    }
+  return scm_from_locale_symbol("key-down");
 }
 
 SCM 
-get_keysym_symbol(SDL_keysym ks)
+get_keysym_symbol(SDL_Event e)
 {
-  short sym = ks.unicode;
+  short sym = e.key.keysym.unicode;
   char printable;
   if(!sym)
     return SCM_EOL; /*Return NIL for non-printable (control) chars*/
@@ -78,26 +68,13 @@ get_keysym_symbol(SDL_keysym ks)
     }
 }
 
-SCM
-get_data(SDL_Event e)
-{
-  switch(e.type)
-    {
-      case SDL_KEYDOWN:
-      case SDL_KEYUP:
-        return get_keysym_symbol(e.key.keysym);
-        break;
-      default:
-        return SCM_EOL;
-    }
-}
-
-void dispatch(SDL_Event e)
+void dispatch_event(SDL_Event e)
 {
   /*TODO: do something or other to extract the relevant data from an event and get a proper symbol to shove into the type, then send all this off to the global eventstack.
   */
   /*For now, we'll just switch in a hardcoded, boring fashion. Technically, this needs some method of autodispatching and some separation into event.c, but the autodispatch and such need a good few more mailing list discussions to prevent creeping featurism, even though supporting every single scheme under the sun in some actually useful way could be good. Of course, this gets rather hairy organization-wise. */
-  event ev = make_event(get_type(e),get_data(e));
+  SCM c = dispatch(e);
+  event ev = make_event(scm_car(c),scm_cdr(c));
   if(ev.type != SCM_EOL)
     eventstack_addevent(&global_usereventstack,ev);
 }
@@ -153,6 +130,7 @@ main (int argc, char **argv)
   scm_c_primitive_load ("utils.guile");
   global_usereventstack = eventstack_init();
   windows = images = mobs = argvs = fonts = sequence_init();
+  add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
   while (1)
     {
       SCM_TICK;
@@ -168,7 +146,7 @@ main (int argc, char **argv)
 	        return 0;
 	        break;
               default:
-                dispatch(*event);
+                dispatch_event(*event);
 	    }
 	}
       move_mobs ();
