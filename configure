@@ -3695,6 +3695,8 @@ _ACEOF
 
   LIBS="-lSDL $LIBS"
 
+else
+  echo 'Required library libSDL not found.'; exit
 fi
 
 
@@ -3766,6 +3768,8 @@ _ACEOF
 
   LIBS="-lSDL_image $LIBS"
 
+else
+  echo 'Required library libSDL_image not found'; exit
 fi
 
 
@@ -3837,6 +3841,8 @@ _ACEOF
 
   LIBS="-lguile $LIBS"
 
+else
+  echo 'Required library libguile not found'; exit
 fi
 
 
@@ -3908,6 +3914,8 @@ _ACEOF
 
   LIBS="-lSDL_ttf $LIBS"
 
+else
+  echo 'Required library libSDL_ttf not found'; exit
 fi
 
 
@@ -4695,7 +4703,9 @@ done
 
 # Checks for library functions.
 
-for ac_func in memset,strdup
+
+
+for ac_func in memset strdup calloc
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
 { echo "$as_me:$LINENO: checking for $ac_func" >&5
