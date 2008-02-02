@@ -4,3 +4,5 @@
 
 table.guile
 utils.guile
+mobutils.scm
+test.scm

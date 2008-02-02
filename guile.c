@@ -200,7 +200,9 @@ guile_get_global_event(SCM userindex)
 SCM
 guile_set_mob_userdata(SCM index, SCM newdata)
 {
+  scm_gc_unprotect_object(((mob*)mobs.data[scm_to_int(index)].data)->userdata);
   ((mob*)mobs.data[scm_to_int(index)].data)->userdata=newdata;
+  scm_gc_protect_object(((mob*)mobs.data[scm_to_int(index)].data)->userdata);
   return SCM_UNSPECIFIED;
 }
 
@@ -219,7 +221,9 @@ guile_get_global_userdata(void)
 SCM
 guile_set_global_userdata(SCM newdata)
 {
+  scm_gc_unprotect_object(global_userdata);
   global_userdata = newdata;
+  scm_gc_protect_object(global_userdata);
   return SCM_UNSPECIFIED;
 }
 

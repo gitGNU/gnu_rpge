@@ -126,10 +126,11 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("close-font",1,0,0,guile_close_font);
   scm_c_define_gsubr ("make-text",7,0,0,guile_make_text);
   scm_c_define_gsubr ("destroy-text",1,0,0,guile_destroy_text);
-  exec_config_file(".RPGE");
   global_usereventstack = eventstack_init();
   windows = images = mobs = argvs = fonts = sequence_init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
+  scm_gc_protect_object(global_userdata);
+  exec_config_file(".RPGE");
   while (1)
     {
       SCM_TICK;
