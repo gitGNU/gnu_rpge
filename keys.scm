@@ -15,13 +15,18 @@
 ;You should have received a copy of the GNU General Public License
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
- 
-(set-global-data (init-table))
-(init-tilegrid 50 40)
-(set-all-tiles (create-tile "test_tile2.png" (make-rect 0 0 16 16) block-none))
-(set-mob-bootstrap-proc! (lambda (X) (display 'foo) (newline)))
-(display (get-global-data))
-(newline)
-(define m (make-mob 0 0 "test_sprite.png"))
-(add-to-table! (get-global-data) 'bindings (init-table))
-(bind-key 'right (lambda () (move-mob m 1 0 16)))
+
+(define index (open-global-events))
+
+(define (branch event)
+  ;case analysis for now, too lazy to throw in a dispatcher just to test
+  (cond ((eq? (car event) 'key-down)
+	 (if (eq? (cdr event) 'd) (begin (display `lol) (newline))))
+	))
+
+(define (check-for-events)
+  (let ((event (get-global-event index)))
+    (cond  ((not (null? event)) (branch event))))
+  (check-for-events))
+
+(check-for-events)

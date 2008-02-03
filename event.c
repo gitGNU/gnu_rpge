@@ -24,6 +24,8 @@ make_event(SCM type, SCM data)
   event e;
   e.type = type;
   e.data = data;
+  scm_gc_protect_object(type);
+  scm_gc_protect_object(data);
   return e;
 }
 
@@ -148,12 +150,14 @@ eventstack_clean_stack(eventstack* es)
   if(lowest > 0)
     {
       /*
-        Performance note: This bit here's sluggish, there should be a sequence_remove_upto, which I'll get around to some other time
+        Performance note: This bit here's sluggish, there should be a sequence_remove_upto, which I'll get around to some other time. Also deprotects objects in the events.
       */
       
       for(int j = 0; j < lowest; j++)
         {
-          sequence_remove_at(&es->events,0);
+          scm_gc_unprotect_object(((event*)es->events.data[0].data)->type);
+          scm_gc_unprotect_object(((event*)es->events.data[0].data)->data);
+          sequence_remove_at(&(es->events),0);
         }
       for(int j = 0; j < es->indices.objcount; j++)
         {

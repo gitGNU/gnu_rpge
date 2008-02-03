@@ -1,4 +1,4 @@
-;Copyright 2008 Remco Bras
+;Copyright  2008 Remco Bras
 ;
 ;This file is part of the RPGE.
 ;
@@ -16,12 +16,15 @@
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
  
-(set-global-data (init-table))
-(init-tilegrid 50 40)
-(set-all-tiles (create-tile "test_tile2.png" (make-rect 0 0 16 16) block-none))
-(set-mob-bootstrap-proc! (lambda (X) (display 'foo) (newline)))
-(display (get-global-data))
-(newline)
-(define m (make-mob 0 0 "test_sprite.png"))
-(add-to-table! (get-global-data) 'bindings (init-table))
-(bind-key 'right (lambda () (move-mob m 1 0 16)))
+(define (get-bindings)
+  (get-from-table (get-global-data) 'bindings))
+
+(define (bind-key key proc)
+  (add-to-table! (get-bindings) 'key proc))
+
+(define (get-binding key)
+  (get-from-table (get-bindings) 'key))
+
+(define (remove-binding key)
+  (remove-from-table! (get-bindings) 'key))
+

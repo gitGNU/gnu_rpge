@@ -28,3 +28,5 @@
 (define block-down 32)
 (define block-all-directions (+ block-left block-right block-up block-down))
 (define block-all-undirectional (+ block-all block-all-directions))
+(define (load-in-thread filename)
+	(make-thread load filename))
