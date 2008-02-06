@@ -24,4 +24,7 @@
 (newline)
 (define m (make-mob 0 0 "test_sprite.png"))
 (add-to-table! (get-global-data) 'bindings (init-table))
-(bind-key 'd (lambda () (move-mob m 1 0 16)))
+(bind-key 'd (lambda() (move-mob m 1 0 16)))
+(bind-key 'a (lambda() (move-mob m -1 0 16)))
+(bind-key 's (lambda() (move-mob m 0 1 16)))
+(bind-key 'w (lambda() (move-mob m 0 -1 16)))
