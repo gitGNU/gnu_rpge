@@ -19,9 +19,10 @@
 (define index (open-global-events))
 
 (define (branch event)
-  ;case analysis for now, too lazy to throw in a dispatcher just to test
   (cond ((eq? (car event) 'key-down)
-	 (if (eq? (cdr event) 'd) (begin (display `lol) (newline))))
+	 (let ((binding (get-binding (cdr event))))
+           (if (not (null? binding))
+               (binding))))
 	))
 
 (define (check-for-events)

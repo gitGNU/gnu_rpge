@@ -20,11 +20,11 @@
   (get-from-table (get-global-data) 'bindings))
 
 (define (bind-key key proc)
-  (add-to-table! (get-bindings) 'key proc))
+  (add-to-table! (get-bindings) key proc))
 
 (define (get-binding key)
-  (get-from-table (get-bindings) 'key))
+  (get-from-table (get-bindings) key))
 
 (define (remove-binding key)
-  (remove-from-table! (get-bindings) 'key))
+  (remove-from-table! (get-bindings) key))
 
