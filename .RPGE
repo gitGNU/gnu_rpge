@@ -6,4 +6,5 @@ table.guile
 utils.guile
 mobutils.scm
 key-funcs.scm
+stats.scm
 test.scm

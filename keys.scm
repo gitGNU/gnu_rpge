@@ -22,8 +22,7 @@
   (cond ((eq? (car event) 'key-down)
 	 (let ((binding (get-binding (cdr event))))
            (if (not (null? binding))
-               (binding))))
-	))
+               (binding))))))
 
 (define (check-for-events)
   (let ((event (get-global-event index)))
