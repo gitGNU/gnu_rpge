@@ -19,6 +19,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "mobs.h"
 sequence mobs;
 
+inline object
+make_move_descriptor_obj (move_descriptor md)
+{
+  object o;
+  o.data = malloc(sizeof(move_descriptor));
+  o.typeinfo = TYPE_MOVE_DESCRIPTOR;
+  *((move_descriptor*)o.data)=md;
+  return o;  
+}
+
+inline move_descriptor
+get_obj_move_descriptor (object o)
+{
+  return *((move_descriptor*)o.data);
+}
+
 mob
 create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
 {
@@ -81,6 +97,12 @@ remove_mob (int index)
     }
 }
 
+inline char
+moving(mob m)
+{
+  return (m.xmoveamount && m.xmoverate) || (m.ymoveamount && m.ymoverate);
+}
+
 void
 animate_mob (mob * m)
 {
@@ -131,6 +153,12 @@ animate_mobs ()
 void
 move_mob (mob * m)
 {
+  if(!moving(*m) && m->move_descriptors.objcount)
+    {
+      move_descriptor md = *((move_descriptor*)m->move_descriptors.data[0].data);
+      mob_move_all(m,md.tilex,md.tiley,md.frames);
+      sequence_remove_at(&m->move_descriptors,0);
+    }
   if (m->xmoveamount)
     {
       if (abs (m->xmoveamount) < abs (m->xmoverate))
@@ -238,4 +266,18 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
 	}
     }
   mob_set_movement (m, xam, xrate, yam, yrate);
+}
+
+void mob_add_movement(mob* m, int xtile, int ytile, int frames)
+{
+  if(!moving(*m))
+    mob_move_all(m,xtile,ytile,frames);
+  else
+    {
+      move_descriptor md;
+      md.tilex = xtile;
+      md.tiley = ytile;
+      md.frames = frames;
+      sequence_append(&(m->move_descriptors),make_move_descriptor_obj(md));
+    }
 }

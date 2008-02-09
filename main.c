@@ -126,6 +126,7 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("close-font",1,0,0,guile_close_font);
   scm_c_define_gsubr ("make-text",7,0,0,guile_make_text);
   scm_c_define_gsubr ("destroy-text",1,0,0,guile_destroy_text);
+  scm_c_define_gsubr ("add-mob-movement",4,0,0,guile_add_mob_movement);
   global_usereventstack = eventstack_init();
   windows = images = mobs = argvs = fonts = sequence_init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));

@@ -43,7 +43,13 @@ typedef struct
   int ymoverate;
   int ymoveamount;
   SCM userdata;
+  sequence move_descriptors;
 } mob;
+
+typedef struct
+{
+  int tilex, tiley, frames;
+}  move_descriptor;
 
 extern sequence mobs;
 

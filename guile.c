@@ -320,3 +320,10 @@ guile_destroy_text(SCM textindex)
   remove_text(scm_to_int(textindex));
   return SCM_UNSPECIFIED;
 }
+
+SCM
+guile_add_mob_movement(SCM mob, SCM xtile, SCM ytile, SCM frames)
+{
+  mob_add_movement(mobs.data[scm_to_int(mob)].data,scm_to_int(xtile),scm_to_int(ytile),scm_to_int(frames));
+  return SCM_UNSPECIFIED;
+}
