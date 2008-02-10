@@ -19,21 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "guile.h"
 
 sequence argvs;
-inline object
-make_thread_argv_obj (thread_argv foo)
-{
-  object o;
-  o.data = malloc (sizeof (thread_argv));
-  o.typeinfo = TYPE_THREAD_ARGV;
-  *((thread_argv *) o.data) = foo;
-  return o;
-}
-
-inline thread_argv
-get_obj_thread_argv (object o)
-{
-  return *((thread_argv *) o.data);
-}
+convertors(thread_argv);
 
 SCM
 scm_ncar (SCM list, int n)

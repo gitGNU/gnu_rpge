@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 sequence fonts;
 sequence texts;
+convertors(font);
+convertors(text);
 
 font
 make_font(TTF_Font* fontptr, char* filename)
@@ -35,16 +37,6 @@ object_font_filename_and_size_eq(object font1, object font2)
 {
   return (!strcmp(((font*)font1.data)->filename,((font*)font2.data)->filename) &&
           ((font*)font1.data)->size == ((font*)font2.data)->size);
-}
-
-object
-make_font_obj(font f)
-{
-  object o;
-  o.data = malloc (sizeof(font));
-  *((font*)o.data)=f;
-  o.typeinfo = TYPE_FONT;
-  return o;
 }
 
 int
@@ -160,22 +152,6 @@ find_empty_text(void)
         return i;
     }
   return -1;
-}
-
-object 
-make_text_obj(text t)
-{
-  object o;
-  o.data = malloc(sizeof(text));
-  *((text*)o.data) = t;
-  o.typeinfo = TYPE_TEXT;
-  return o;
-}
-
-text
-get_obj_text(object o)
-{
-  return *((text*)o.data);
 }
 
 int
