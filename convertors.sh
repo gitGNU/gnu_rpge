@@ -20,6 +20,8 @@
 #convertors.sh: Implement the convertors(type) and convertor_headers(type) sed-based macros.
 #
 
+cp $1{,.backup}
+
 sed 's/convertors(\(.*\));/inline object\
                          make_\1_obj(\1 foo)\
                          {\

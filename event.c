@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "event.h"
 
+convertors(event);
+
 event
 make_event(SCM type, SCM data)
 {
@@ -27,22 +29,6 @@ make_event(SCM type, SCM data)
   scm_gc_protect_object(type);
   scm_gc_protect_object(data);
   return e;
-}
-
-object
-make_event_obj(event e)
-{
-  object o;
-  o.typeinfo = TYPE_EVENT;
-  o.data = malloc(sizeof(event));
-  *((event*)o.data) = e;
-  return o;
-}
-
-event
-get_obj_event(object o)
-{
-  return  *((event*)o.data);
 }
 
 eventstack

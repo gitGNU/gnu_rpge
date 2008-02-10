@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "window.h"
 
 sequence windows;
+convertors(window);
 
 window
 create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename,unsigned int spritew,unsigned int spriteh)
@@ -32,22 +33,6 @@ create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, ch
   win.tilew = spritew;
   win.tileh = spriteh;
   return win;
-}
-
-object
-make_window_obj(window w)
-{
-  object o;
-  o.data = malloc(sizeof(window));
-  o.typeinfo = TYPE_WINDOW;
-  *((window*)o.data)=w;
-  return o;
-}
-
-window
-get_obj_window(object o)
-{
-  return *((window*)o.data);
 }
 
 void

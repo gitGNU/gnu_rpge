@@ -162,6 +162,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 RPGE_SOURCES = main.c video.c video.h main.h mobs.h mobs.c imagestack.h imagestack.c tile.h tile.c guile.h guile.c constants.h event.c event.h window.h window.c sequence.c sequence.h text.c text.h dispatch.c dispatch.h config_file.c config_file.h
 EXTRA_DIST = test.png test_sprite.png test_tile2.png
+SUFFIXES = .c
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -262,13 +263,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/video.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/window.Po@am__quote@
-
-.c.o:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(COMPILE) -c $<
 
 .c.obj:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
@@ -558,6 +552,8 @@ uninstall-am: uninstall-binPROGRAMS
 	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-binPROGRAMS
 
+.c.o:
+	./convertors.sh $< && $(CC) $(CFLAGS) $(AM_CFLAGS) -c $< && cp $<{.backup,} && rm $<.backup
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

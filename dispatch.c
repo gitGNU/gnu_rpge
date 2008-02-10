@@ -21,11 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 #include "dispatch.h"
+sequence event_dispatch_pairs = { 0, 0 };
 
-sequence event_dispatch_pairs = {0,0};
+convertors(dispatch_pair);
 
-dispatch_pair 
-make_dispatch_pair(Uint32 eventtype, SCM (* typeproc)(SDL_Event) , SCM(* dataproc)(SDL_Event) )
+dispatch_pair
+make_dispatch_pair (Uint32 eventtype, SCM (*typeproc) (SDL_Event),
+		    SCM (*dataproc) (SDL_Event))
 {
   dispatch_pair dp;
   dp.eventid = eventtype;
@@ -34,77 +36,65 @@ make_dispatch_pair(Uint32 eventtype, SCM (* typeproc)(SDL_Event) , SCM(* datapro
   return dp;
 }
 
-object
-make_dp_obj(dispatch_pair dp)
-{
-  object o;
-  o.typeinfo = TYPE_DISPATCH_PAIR;
-  o.data = malloc(sizeof(dispatch_pair));
-  *((dispatch_pair*)o.data) = dp;
-  return o;
-}
-
-dispatch_pair
-get_obj_dp(object o)
-{
-  return *((dispatch_pair*)o.data);
-}
-
 void
-add_dispatch_pair(dispatch_pair dp)
+add_dispatch_pair (dispatch_pair dp)
 {
-  sequence_append(&event_dispatch_pairs,make_dp_obj(dp));
+  sequence_append (&event_dispatch_pairs, make_dispatch_pair_obj (dp));
 }
 
 /*
 Although dispatch technically does not allow for multiple dispatches over the same event type, we may eventually implement such (and add_dispatch_pair doesn't block them anyway), so we might as well make this one handle that case.
 */
 char
-obj_dp_eq_proc(object obj1, object obj2)
+obj_dp_eq_proc (object obj1, object obj2)
 {
-  return (((dispatch_pair*)obj1.data)->eventid == ((dispatch_pair*)obj2.data)->eventid) &&
-         (((dispatch_pair*)obj1.data)->typefunc == ((dispatch_pair*)obj2.data)->typefunc)   &&
-         (((dispatch_pair*)obj1.data)->datafunc == ((dispatch_pair*)obj2.data)->datafunc);
+  return (((dispatch_pair *) obj1.data)->eventid ==
+	  ((dispatch_pair *) obj2.data)->eventid)
+    && (((dispatch_pair *) obj1.data)->typefunc ==
+	((dispatch_pair *) obj2.data)->typefunc)
+    && (((dispatch_pair *) obj1.data)->datafunc ==
+	((dispatch_pair *) obj2.data)->datafunc);
 }
 
 void
-remove_dispatch_pair(dispatch_pair dp)
+remove_dispatch_pair (dispatch_pair dp)
 {
-  object compobj = make_dp_obj(dp);
-  sequence_remove(&event_dispatch_pairs,compobj,obj_dp_eq_proc);
-  free(compobj.data);
+  object compobj = make_dispatch_pair_obj (dp);
+  sequence_remove (&event_dispatch_pairs, compobj, obj_dp_eq_proc);
+  free (compobj.data);
 }
 
 char
-obj_dp_type_eq_proc(object key, object element)
+obj_dp_type_eq_proc (object key, object element)
 {
-  return *((Uint32*)key.data) == ((dispatch_pair*)element.data)->eventid;
+  return *((Uint32 *) key.data) == ((dispatch_pair *) element.data)->eventid;
 }
 
 dispatch_pair
-get_dispatch_pair(Uint32 type)
+get_dispatch_pair (Uint32 type)
 {
-  object key = make_uint32_obj(type);
-  object element = sequence_find(event_dispatch_pairs,key,obj_dp_type_eq_proc);
-  if(element.data)
+  object key = make_Uint32_obj (type);
+  object element =
+    sequence_find (event_dispatch_pairs, key, obj_dp_type_eq_proc);
+  if (element.data)
     {
-      dispatch_pair data = *((dispatch_pair*)element.data);
-      free(key.data);
+      dispatch_pair data = *((dispatch_pair *) element.data);
+      free (key.data);
       return data;
     }
   else
     {
-      return make_dispatch_pair(0,NULL,NULL);
+      return make_dispatch_pair (0, NULL, NULL);
     }
 }
 
 SCM
-dispatch(SDL_Event e)
+dispatch (SDL_Event e)
 {
   Uint32 type = e.type;
-  dispatch_pair dp = get_dispatch_pair(e.type);
-  if(dp.typefunc && dp.datafunc)
-    return scm_cons(dp.typefunc(e),dp.datafunc(e));
+  dispatch_pair dp = get_dispatch_pair (e.type);
+  if (dp.typefunc && dp.datafunc)
+    return scm_cons (dp.typefunc (e), dp.datafunc (e));
   else
-    return scm_cons(SCM_EOL,SCM_EOL);
+    return scm_cons (SCM_EOL, SCM_EOL);
 }

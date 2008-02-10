@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "imagestack.h"
 
 sequence images = {0,0};
+convertors(image);
 
 image
 make_image (SDL_Surface* data, char* filename)
@@ -27,16 +28,6 @@ make_image (SDL_Surface* data, char* filename)
   i.data = data;
   i.filename = filename;
   return i;
-}
-
-object
-make_image_obj(image i)
-{
-  object o;
-  o.typeinfo = TYPE_IMAGE;
-  o.data = malloc(sizeof(image));
-  *((image*)o.data)=i;
-  return o;
 }
 
 int 
@@ -85,7 +76,7 @@ remove_image (char* filename)
   int index = find_image(filename);
   if(index == -1 || !images.objcount || !images.data)
     return;
-  //Should free the filename here, tends to cause crashes
+  //Should free the filename here, tends to cause crashes, SHOULD also free the surface, need to look into why this doesn't do that.
   ((image*)images.data[index].data)->data = NULL;
   ((image*)images.data[index].data)->filename = NULL;
   images.data[index].data = NULL; 

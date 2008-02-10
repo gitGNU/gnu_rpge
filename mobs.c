@@ -19,21 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "mobs.h"
 sequence mobs;
 
-inline object
-make_move_descriptor_obj (move_descriptor md)
-{
-  object o;
-  o.data = malloc(sizeof(move_descriptor));
-  o.typeinfo = TYPE_MOVE_DESCRIPTOR;
-  *((move_descriptor*)o.data)=md;
-  return o;  
-}
-
-inline move_descriptor
-get_obj_move_descriptor (object o)
-{
-  return *((move_descriptor*)o.data);
-}
+convertors(move_descriptor);
+convertors(mob);
 
 mob
 create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
@@ -50,16 +37,6 @@ create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
   mobby.userdata = SCM_EOL;
   scm_gc_protect_object(mobby.userdata);
   return mobby;
-}
-
-object 
-make_mob_obj(mob m)
-{
-  object o;
-  o.typeinfo = TYPE_MOB;
-  o.data = malloc(sizeof(mob));
-  *((mob*)o.data) = m;
-  return o;
 }
 
 int

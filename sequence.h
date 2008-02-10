@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define TYPE_TEXT 9
 #define TYPE_DISPATCH_PAIR 10
 #define TYPE_MOVE_DESCRIPTOR 11
+#define TYPE_THREAD_ARGV 12
   
 typedef struct
 {
@@ -61,8 +62,8 @@ void sequence_free (sequence seq);
 object sequence_reduce(sequence seq, object (* proc)(object, object));
 object make_int_obj(int i);
 int get_obj_int(object o);
-object make_uint32_obj (Uint32 u);
-Uint32 get_obj_uint32(object o);
+object make_Uint32_obj (Uint32 u);
+Uint32 get_obj_Uint32(object o);
 object make_string_obj(char*);
 char* get_obj_string(object);
 

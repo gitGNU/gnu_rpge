@@ -19,6 +19,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "guile.h"
 
 sequence argvs;
+inline object
+make_thread_argv_obj (thread_argv foo)
+{
+  object o;
+  o.data = malloc (sizeof (thread_argv));
+  o.typeinfo = TYPE_THREAD_ARGV;
+  *((thread_argv *) o.data) = foo;
+  return o;
+}
+
+inline thread_argv
+get_obj_thread_argv (object o)
+{
+  return *((thread_argv *) o.data);
+}
 
 SCM
 scm_ncar (SCM list, int n)
@@ -116,8 +131,9 @@ SCM
 guile_move_mob_all (SCM mobindex, SCM tilecountx, SCM tilecounty,
 		    SCM frametotal)
 {
-  mob_move_all ((mob*)mobs.data[scm_to_int (mobindex)].data, scm_to_int (tilecountx),
-		scm_to_int (tilecounty), scm_to_int (frametotal));
+  mob_move_all ((mob *) mobs.data[scm_to_int (mobindex)].data,
+		scm_to_int (tilecountx), scm_to_int (tilecounty),
+		scm_to_int (frametotal));
   return scm_from_int (0);
 }
 
@@ -125,7 +141,7 @@ SCM
 guile_set_mob_animation (SCM mobindex, SCM animation, SCM start,
 			 SCM targetframe, SCM framesbetween, SCM loop)
 {
-  mob_set_animation ((mob*)mobs.data[scm_to_int (mobindex)].data,
+  mob_set_animation ((mob *) mobs.data[scm_to_int (mobindex)].data,
 		     scm_to_int (animation), scm_to_int (start),
 		     scm_to_int (targetframe), scm_to_int (framesbetween),
 		     scm_to_bool (loop));
@@ -135,7 +151,7 @@ guile_set_mob_animation (SCM mobindex, SCM animation, SCM start,
 SCM
 guile_stop_mob_animation (SCM mobindex)
 {
-  mob_stop_animation ((mob*)mobs.data[scm_to_int (mobindex)].data);
+  mob_stop_animation ((mob *) mobs.data[scm_to_int (mobindex)].data);
   return scm_from_int (0);
 }
 
@@ -170,60 +186,63 @@ guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,
 }
 
 SCM
-guile_destroy_window(SCM index)
+guile_destroy_window (SCM index)
 {
-  windowstack_remove(scm_to_int(index));
-  return scm_from_int(0);
+  windowstack_remove (scm_to_int (index));
+  return scm_from_int (0);
 }
 
 SCM
-guile_open_global_eventstack()
+guile_open_global_eventstack ()
 {
-  return scm_from_int(eventstack_open(&global_usereventstack));
+  return scm_from_int (eventstack_open (&global_usereventstack));
 }
 
 SCM
-guile_close_global_eventstack(SCM userindex)
+guile_close_global_eventstack (SCM userindex)
 {
-  eventstack_close(&global_usereventstack,scm_to_int(userindex));
+  eventstack_close (&global_usereventstack, scm_to_int (userindex));
   return SCM_UNSPECIFIED;
 }
 
 SCM
-guile_get_global_event(SCM userindex)
+guile_get_global_event (SCM userindex)
 {
-  event e = eventstack_get_first_of_user(&global_usereventstack, scm_to_int(userindex));
-  return scm_cons(e.type,e.data);
+  event e = eventstack_get_first_of_user (&global_usereventstack,
+					  scm_to_int (userindex));
+  return scm_cons (e.type, e.data);
 }
 
 
 SCM
-guile_set_mob_userdata(SCM index, SCM newdata)
+guile_set_mob_userdata (SCM index, SCM newdata)
 {
-  scm_gc_unprotect_object(((mob*)mobs.data[scm_to_int(index)].data)->userdata);
-  ((mob*)mobs.data[scm_to_int(index)].data)->userdata=newdata;
-  scm_gc_protect_object(((mob*)mobs.data[scm_to_int(index)].data)->userdata);
+  scm_gc_unprotect_object (((mob *) mobs.data[scm_to_int (index)].data)->
+			   userdata);
+  ((mob *) mobs.data[scm_to_int (index)].data)->userdata = newdata;
+  scm_gc_protect_object (((mob *) mobs.data[scm_to_int (index)].data)->
+			 userdata);
   return SCM_UNSPECIFIED;
 }
 
 SCM
-guile_get_mob_userdata(SCM index)
+guile_get_mob_userdata (SCM index)
 {
-  return ((mob*)mobs.data[scm_to_int(index)].data)->userdata;
+  return ((mob *) mobs.data[scm_to_int (index)].data)->userdata;
 }
 
-SCM 
-guile_get_global_userdata(void)
+SCM
+guile_get_global_userdata (void)
 {
   return global_userdata;
 }
 
 SCM
-guile_set_global_userdata(SCM newdata)
+guile_set_global_userdata (SCM newdata)
 {
-  scm_gc_unprotect_object(global_userdata);
+  scm_gc_unprotect_object (global_userdata);
   global_userdata = newdata;
-  scm_gc_protect_object(global_userdata);
+  scm_gc_protect_object (global_userdata);
   return SCM_UNSPECIFIED;
 }
 
@@ -232,7 +251,7 @@ Technically, the following is a simple, though somewhat useful scheme to pass a 
 */
 
 thread_argv
-make_threadargv(Uint32 threadid, SCM argv)
+make_threadargv (Uint32 threadid, SCM argv)
 {
   thread_argv ta;
   ta.threadid = threadid;
@@ -240,90 +259,89 @@ make_threadargv(Uint32 threadid, SCM argv)
   return ta;
 }
 
-object
-make_thread_argv_obj(thread_argv ta)
+char
+guile_argv_threadids_equalp (object argv, object threadid)
 {
-  object o;
-  o.typeinfo = TYPE_ARGV;
-  o.data = malloc(sizeof(thread_argv));
-  *((thread_argv*)o.data)=ta;
-  return o;
-}
-
-thread_argv
-get_obj_thread_argv(object o)
-{
-  return *((thread_argv*)o.data);
-}
-
-char guile_argv_threadids_equalp(object argv, object threadid)
-{
-  return get_obj_uint32(threadid) == get_obj_thread_argv(argv).threadid;
+  return get_obj_Uint32 (threadid) == get_obj_thread_argv (argv).threadid;
 }
 
 void
-guile_exec_script_with_argv(char* filename, SCM argv)
+guile_exec_script_with_argv (char *filename, SCM argv)
 {
-  Uint32 threadid = SDL_ThreadID();
-  int index = sequence_position(argvs,make_uint32_obj(threadid),guile_argv_threadids_equalp);
-  if(index != -1)
-    argvs.data[index] = make_thread_argv_obj(make_threadargv(threadid,argv));
+  Uint32 threadid = SDL_ThreadID ();
+  int index = sequence_position (argvs, make_Uint32_obj (threadid),
+				 guile_argv_threadids_equalp);
+  if (index != -1)
+    argvs.data[index] =
+      make_thread_argv_obj (make_threadargv (threadid, argv));
   else
-    index = sequence_append(&argvs,make_thread_argv_obj(make_threadargv(threadid,argv)));
-  scm_c_primitive_load(filename);
-  sequence_remove_at(&argvs,index);
+    index =
+      sequence_append (&argvs,
+		       make_thread_argv_obj (make_threadargv
+					     (threadid, argv)));
+  scm_c_primitive_load (filename);
+  sequence_remove_at (&argvs, index);
 }
 
 SCM
-guile_API_exec_script_with_argv(SCM filename, SCM argv)
+guile_API_exec_script_with_argv (SCM filename, SCM argv)
 {
-  guile_exec_script_with_argv(scm_to_locale_string(filename),argv);
+  guile_exec_script_with_argv (scm_to_locale_string (filename), argv);
   return SCM_UNSPECIFIED;
 }
 
 SCM
-guile_get_argv()
+guile_get_argv ()
 {
-  int index = sequence_position(argvs,make_uint32_obj(SDL_ThreadID()),guile_argv_threadids_equalp);
-  if(index != -1)
-    return ((thread_argv*)argvs.data[index].data)->argv;
+  int index = sequence_position (argvs, make_Uint32_obj (SDL_ThreadID ()),
+				 guile_argv_threadids_equalp);
+  if (index != -1)
+    return ((thread_argv *) argvs.data[index].data)->argv;
   else
     return SCM_EOL;
 }
 
 SCM
-guile_open_font(SCM filename, SCM size)
+guile_open_font (SCM filename, SCM size)
 {
-  return scm_from_int(open_font(scm_to_locale_string(filename),scm_to_int(size)));
+  return
+    scm_from_int (open_font
+		  (scm_to_locale_string (filename), scm_to_int (size)));
 }
 
 SCM
-guile_close_font(SCM index)
+guile_close_font (SCM index)
 {
-  close_font(scm_to_int(index));
+  close_font (scm_to_int (index));
   return SCM_UNSPECIFIED;
 }
 
 SCM
-guile_make_text(SCM x, SCM y, SCM string, SCM font, SCM red, SCM green, SCM blue)
+guile_make_text (SCM x, SCM y, SCM string, SCM font, SCM red, SCM green,
+		 SCM blue)
 {
   SDL_Color c;
-  c.r = scm_to_uint8(red);
-  c.g = scm_to_uint8(green);
-  c.b = scm_to_uint8(blue);
-  return scm_from_int(add_text(make_text(scm_to_uint(x),scm_to_uint(y),scm_to_locale_string(string),scm_to_int(font),c)));
+  c.r = scm_to_uint8 (red);
+  c.g = scm_to_uint8 (green);
+  c.b = scm_to_uint8 (blue);
+  return
+    scm_from_int (add_text
+		  (make_text
+		   (scm_to_uint (x), scm_to_uint (y),
+		    scm_to_locale_string (string), scm_to_int (font), c)));
 }
 
 SCM
-guile_destroy_text(SCM textindex)
+guile_destroy_text (SCM textindex)
 {
-  remove_text(scm_to_int(textindex));
+  remove_text (scm_to_int (textindex));
   return SCM_UNSPECIFIED;
 }
 
 SCM
-guile_add_mob_movement(SCM mob, SCM xtile, SCM ytile, SCM frames)
+guile_add_mob_movement (SCM mob, SCM xtile, SCM ytile, SCM frames)
 {
-  mob_add_movement(mobs.data[scm_to_int(mob)].data,scm_to_int(xtile),scm_to_int(ytile),scm_to_int(frames));
+  mob_add_movement (mobs.data[scm_to_int (mob)].data, scm_to_int (xtile),
+		    scm_to_int (ytile), scm_to_int (frames));
   return SCM_UNSPECIFIED;
 }
