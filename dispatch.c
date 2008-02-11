@@ -65,7 +65,7 @@ remove_dispatch_pair (dispatch_pair dp)
 }
 
 char
-obj_dp_type_eq_proc (object key, object element)
+obj_dp_type_eq_proc (object element, object key)
 {
   return *((Uint32 *) key.data) == ((dispatch_pair *) element.data)->eventid;
 }
@@ -93,6 +93,7 @@ dispatch (SDL_Event e)
 {
   Uint32 type = e.type;
   dispatch_pair dp = get_dispatch_pair (e.type);
+  printf("%x %x %x\n",dp.eventid,dp.typefunc,dp.datafunc);
   if (dp.typefunc && dp.datafunc)
     return scm_cons (dp.typefunc (e), dp.datafunc (e));
   else

@@ -24,7 +24,7 @@ cp $1{,.backup}
 
 sed 's/convertors[:space:]*(\([[:alnum:]_]*\));/convertors(\1,\1);/g' $1 -i
 
-sed 's/convertors[:space:]*(\([[:alnum:]_*]*\),\([[:alnum:]_]*\));/inline object\
+sed 's/convertors[:space:]*(\([[:alnum:]_*]*\),\([[:alnum:]_]*\));/object\
                          make_\2_obj(\1 foo)\
                          {\
                            object o;\
@@ -33,11 +33,11 @@ sed 's/convertors[:space:]*(\([[:alnum:]_*]*\),\([[:alnum:]_]*\));/inline object
                            *((\1*)o.data)=foo;\
                            return o;\
                          }\
-                         inline \1\
+                         \1\
                          get_obj_\2 (object o)\
                          {\
                            return *((\1*)o.data);\
                          }/g' $1 -i
                          
-sed 's/convertor_headers(\(.*\));/inline object make_\1_obj(\1 foo);\
-                                  inline \1 get_obj_\1 (object o);/g' $1 -i
+sed 's/convertor_headers(\(.*\));/object make_\1_obj(\1 foo);\
+                                  \1 get_obj_\1 (object o);/g' $1 -i

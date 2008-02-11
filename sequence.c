@@ -30,6 +30,13 @@ sequence_init (void)
   return s;
 }
 
+object
+null_obj()
+{
+  object o = {0,0};
+  return o;
+}
+
 int
 sequence_append (sequence * seq, object data)
 {
@@ -75,6 +82,7 @@ sequence_find (sequence seq, object data, char (*eqproc) (object, object))
       if (i != -1)
 	return seq.data[i];
     }
+  return null_obj();
 }
 
 void
