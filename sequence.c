@@ -19,22 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "sequence.h"
 convertors(int);
 convertors(Uint32);
-
-inline object
-make_string_obj (char *foo)
-{
-  object o;
-  o.data = malloc (sizeof (char*));
-  o.typeinfo = TYPE_STRING;
-  *((char **) o.data) = foo;
-  return o;
-}
-
-inline char *
-get_obj_string (object o)
-{
-  return *((char **) o.data);
-}
+convertors(char*,string);
 
 sequence
 sequence_init (void)
