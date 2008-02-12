@@ -84,7 +84,12 @@ int
 main (int argc, char **argv)
 {
   char* initfile = ".RPGE", option_char;
-  while((option_char = getopt(argc,argv,"vhf:")) != -1)
+  int longopt_index = 0;
+  struct option options[] = {
+  {"version",0,NULL,'v'},
+  {"help",0,NULL,'h'}
+  };
+  while((option_char = getopt_long(argc,argv,"vhf:",options,&longopt_index)) != -1)
     {
       switch(option_char)
         {
