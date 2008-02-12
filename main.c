@@ -83,6 +83,24 @@ void dispatch_event(SDL_Event e)
 int
 main (int argc, char **argv)
 {
+  char* initfile = ".RPGE", option_char;
+  while((option_char = getopt(argc,argv,"vhf:")) != -1)
+    {
+      switch(option_char)
+        {
+          case 'v':
+            puts(VERSION_STRING);
+            exit(0);
+            break;
+          case 'h':
+            puts(HELP_STRING);
+            exit(0);
+            break;
+          case 'f':
+            initfile = strdup(optarg);
+            break;
+        }
+    }
   SDL_Surface *screen;
   SDL_Event *event = malloc (sizeof (SDL_Event));
   int next, now;
@@ -131,7 +149,7 @@ main (int argc, char **argv)
   windows = images = mobs = argvs = fonts = sequence_init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
   scm_gc_protect_object(global_userdata);
-  exec_config_file(".RPGE");
+  exec_config_file(initfile);
   while (1)
     {
       SCM_TICK;
