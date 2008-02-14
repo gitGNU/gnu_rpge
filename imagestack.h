@@ -15,6 +15,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
+
+/*
+imagestack.h: Define imagestack structs and declare imagestack functions so images can be loaded only once.
+*/
 #ifndef IMGSTACK_H
 #define IMGSTACK_H
 #include "video.h"

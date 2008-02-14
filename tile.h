@@ -15,12 +15,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
+
+/*
+ tile.h: Define the tile and tilelayer structures, declare tile usage procedures.
+*/
 #ifndef TILE_H
 #define TILE_H
 
 #include <SDL/SDL.h>
 #include "lib/xalloc.h"
 
+/*These are defined such that they match individual bits, which conveniently also work properly when added. The former property is great for C, the latter is good for GUILE. This does put an upper bound of approximately 32 on our number of allowed variations of blocking, but needing those should be rare.*/
 #define BLOCK_LEFT 0x4
 #define BLOCK_RIGHT 0x8
 #define BLOCK_UP 0x10

@@ -21,6 +21,7 @@ convertors(int);
 convertors(Uint32);
 convertors(char*,string);
 
+/*Return empty sequences and objects, for initialization and/or defaulting purposes*/
 sequence
 sequence_init (void)
 {
@@ -37,6 +38,8 @@ null_obj()
   return o;
 }
 
+/*Reflects LISP append! in appending an object to a sequence in-place, rather than on a copy of the sequence. As a special quirk, it returns the index the object was placed at, for the purposes of returning such indices to GUILE.*/
+
 int
 sequence_append (sequence * seq, object data)
 {
@@ -52,6 +55,9 @@ sequence_append (sequence * seq, object data)
     }
 }
 
+/*
+Both sequence_position and sequence_find take a predicate, which should take two objects and return char. The default predicate, which checks for holding the exact same pointer, is used in case eqproc is NULL. Note that these predicates are always called with the data in the sequence as the first argument and the data passed to _find or _position as the second argument. In case you wish to avoid superfluous memory usage by passing objects of specific types into these procedures, presume that those are the second argument to your predicate. This may make certain predicates somewhat hard to understand or quite non-generic.
+*/
 char
 obj_identity_eq (object o1, object o2)
 {
@@ -101,6 +107,9 @@ sequence_remove (sequence * seq, object data, char (*eqproc) (object, object))
     }
 }
 
+/*
+RPGE's versions of map and foreach act rather like the scheme equivalent, in the sense that map replaces the object in the sequence and foreach does not (and expects void from the procedure passed to it). However, this edition of map does not clean the old object up properly, wherefore it is the duty of the proc to take care of this.
+*/
 sequence
 sequence_map (sequence seq, object (*proc) (object))
 {
@@ -133,6 +142,9 @@ sequence_free (sequence seq)
   free (seq.data);
 }
 
+/*
+This algorithm calls a procedure on the zeroth and first element of a sequence, then on the result of that and the second element and so on until the end of the sequence is reached. This is very useful for things like adding up sequences of vectors, finding maximum values in a list of integers and so on. sequence_reduce, unlike common LISP implementations of this algorithm, does not take an optional argument to be used as a starting object instead of the zeroth object.
+*/
 object
 sequence_reduce (sequence seq, object (*proc) (object, object))
 {

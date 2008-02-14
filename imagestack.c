@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 sequence images = {0,0};
 convertors(image);
 
+/*
+The SDL_Surface* data is usually passed from load_image in video.c or a similar procedure, forcing it to be properly optimized for blitting on our output surface.
+*/
 image
 make_image (SDL_Surface* data, char* filename)
 {
@@ -30,6 +33,9 @@ make_image (SDL_Surface* data, char* filename)
   return i;
 }
 
+/*
+The explicit check for being passed NULL seems redundant, but needs to be covered to make find_empty easier to write. Other than that, this procedure gracefully handles holes in the images sequence, a necessary feature to keep indices used for images therein constant.
+*/
 int 
 find_image(char* filename)
 {
@@ -55,6 +61,9 @@ find_empty()
   return find_image(NULL);
 }
 
+/*
+A convenience function to make loading images easier. It takes advantage of holes in the images sequence, filling them up. Indices returned from this procedure are guaranteed to be constant, barring corruption of the sequence itself.
+*/
 int 
 push_image_on_stack(char* filename)
 {
@@ -76,7 +85,7 @@ remove_image (char* filename)
   int index = find_image(filename);
   if(index == -1 || !images.objcount || !images.data)
     return;
-  //Should free the filename here, tends to cause crashes, SHOULD also free the surface, need to look into why this doesn't do that.
+  /*Should free the filename here, tends to cause crashes, SHOULD also free the surface, need to look into why this doesn't do that.*/
   ((image*)images.data[index].data)->data = NULL;
   ((image*)images.data[index].data)->filename = NULL;
   images.data[index].data = NULL; 

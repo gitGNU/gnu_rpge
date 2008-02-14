@@ -20,6 +20,7 @@
 #convertors.sh: Implement the convertors(type) and convertor_headers(type) sed-based macros.
 #
 
+#Save the macro-using file, allowing the user to work with the macro in place, rather than the expansion.
 cp $1{,.backup}
 
 sed 's/convertors[:space:]*(\([[:alnum:]_]*\));/convertors(\1,\1);/g' $1 -i

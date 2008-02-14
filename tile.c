@@ -16,8 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
+/*
+tile.c: Implement the functions related to tiles and tilelayers. 
+*/
 #include "tile.h"
 
+/*This is the now used main tilegrid, in the future, this should be interfaced to guile using a sequence, allowing people to swap tilegrids on the fly, to speed up loading and unloading battle maps and other things for applications that need them.*/
 tilelayer main_grid;
 
 tile 
@@ -30,6 +34,7 @@ make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking)
   return t;
 }
 
+/*Note: The caller should handle the memory allocated here. Currently, there is only one tilegrid at all times, this can (and will) change in later versions, in which that property shall become significant.*/
 tile**
 init_tilegrid(unsigned int width,unsigned int height)
 {
@@ -61,6 +66,7 @@ tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridhei
   return grid;
 }
 
+/*These convenience functions exist merely to make life easier for users (and guile.c). How they should be rewritten in case we're dealing with any number of tilelayers is something to be seen later.*/
 tile** set_tile(unsigned int x, unsigned int y, tile replacement)
 {
   if(main_grid.tilegrid)
@@ -84,6 +90,8 @@ tile** set_all_tiles(tile replacement)
   else
     return NULL;
 }  
+
+/*This one should be generalised to any tilelayer, but note that it renders the entire tilegrid in advance. This is an optimization hack, to avoid thousands of runtime blits every frame. */
 SDL_Surface*
 remake_tilegrid()
 {
