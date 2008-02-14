@@ -29,7 +29,7 @@ char*
 getline(FILE* stream)
 {
    unsigned int size = 0;
-   char* string = (char*) calloc(BLOCK_SIZE,sizeof(char)), *status = NULL;
+   char* string = (char*) xcalloc(BLOCK_SIZE,sizeof(char)), *status = NULL;
    while(1)
      {
        status = fgets(string+size,BLOCK_SIZE,stream);
@@ -49,7 +49,7 @@ getline(FILE* stream)
              string[size-1] = '\0';
              return string;
            }
-         string = realloc(string,size+BLOCK_SIZE);
+         string = xrealloc(string,size+BLOCK_SIZE);
      }
 }
 

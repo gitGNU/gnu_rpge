@@ -2,5 +2,7 @@ Currently, RPGE is written and maintained by Remco Bras, who wrote the initial v
 
 Significant contributors at this time are:
   -Michael de Lang, who wrote the initial version of video.c and the initial bits of GUILE support.
+  
+RPGE uses the xalloc module from the Gnulib project, included in the lib subdir of the source tree.
 
 In the future, this file shall proceed to list the people who contributed to the project.

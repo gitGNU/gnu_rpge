@@ -33,10 +33,10 @@ make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking)
 tile**
 init_tilegrid(unsigned int width,unsigned int height)
 {
-  tile** grid =  malloc(sizeof(tile*)*width);
+  tile** grid =  xmalloc(sizeof(tile*)*width);
   for(int i = 0; i < width; i++)
     {
-      grid[i] = malloc(sizeof(tile)*height);
+      grid[i] = xmalloc(sizeof(tile)*height);
     }
   return grid;
 }

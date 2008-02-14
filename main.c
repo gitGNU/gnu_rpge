@@ -107,7 +107,7 @@ main (int argc, char **argv)
         }
     }
   SDL_Surface *screen;
-  SDL_Event *event = malloc (sizeof (SDL_Event));
+  SDL_Event *event = xmalloc (sizeof (SDL_Event));
   int next, now;
   SDL_Init (SDL_INIT_EVERYTHING);
   TTF_Init ();

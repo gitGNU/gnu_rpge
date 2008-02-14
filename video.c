@@ -19,10 +19,16 @@ You should have received a copy of the GNU General Public License
 #include "video.h"
 
 void
+render_mob_with_offsets(SDL_Surface* dest, mob mobby, int xoffset, int yoffset)
+{
+  SDL_Rect imageclippy = {mobby.animation * SPRITE_WIDTH, mobby.frame * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT};  
+  apply_surface(mobby.x-xoffset,mobby.y-yoffset,((image*)images.data[mobby.imgindex].data)->data,dest,&imageclippy);
+}
+
+void
 render_mob(SDL_Surface* dest, mob mobby)
 {
-  SDL_Rect imageclippy = {mobby.animation * SPRITE_WIDTH, mobby.frame * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT};
-  apply_surface(mobby.x,mobby.y,((image*)images.data[mobby.imgindex].data)->data,dest,&imageclippy);
+  render_mob_with_offsets(dest,mobby,0,0);
 }
 
 void

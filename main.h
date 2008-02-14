@@ -27,6 +27,7 @@ You should have received a copy of the GNU General Public License
 #include <SDL/SDL_image.h>
 #include <libguile.h>
 #include <getopt.h>
+#include "lib/xalloc.h"
 #include "tile.h"
 #include "video.h"
 #include "mobs.h"

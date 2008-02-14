@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define TILE_H
 
 #include <SDL/SDL.h>
-
+#include "lib/xalloc.h"
 
 #define BLOCK_LEFT 0x4
 #define BLOCK_RIGHT 0x8

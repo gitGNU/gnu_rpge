@@ -1,5 +1,5 @@
 /*
-Copyright Remco Bras 2007
+Copyright Remco Bras 2008
 This file is part of RPGE.
 
 RPGE is free software; you can redistribute it and/or modify
@@ -17,15 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 /*
-config_file.h: Here because config_file.c needs an accompanying header.
+camera.c: Implement camera offset math, to be used in rendering. 
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <libguile.h>
-#include "lib/xalloc.h"
-#define BLOCK_SIZE 256
+#include "camera.h"
 
-char* getline(FILE* stream);
-void exec_config_file(char* filename);
+inline int
+get_camera_xoffset(camera c, int screenwidth)
+{
+  return c.tilex*TILE_WIDTH - screenwidth/2;
+}
+
+inline int
+get_camera_yoffset(camera c, int screenheight)
+{
+  return c.tiley*TILE_WIDTH -screenheight/2;
+}

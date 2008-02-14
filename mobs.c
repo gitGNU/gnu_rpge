@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "mobs.h"
 sequence mobs;
-
 convertors(move_descriptor);
 convertors(mob);
 
@@ -211,17 +210,45 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
   int yrate = ytiles * TILE_HEIGHT / frames;
   int xam = 0;
   int yam = 0;
-  int mobtilexold, mobtilex = m->x / TILE_WIDTH, mobtileyold, mobtiley = m->y / TILE_HEIGHT;
-  char block = 0;
+  int mobtilexold, mobtilex = m->x / TILE_WIDTH, mobtileyold, mobtiley = m->y / TILE_HEIGHT, mobxnew = m->x, mobynew = m->y;
+  char block = 0, oob_down,oob_up,oob_right,oob_left;
   for (int i = 1; i <= frames; i++)
     {
+      mobxnew += xrate;
+      mobynew += yrate;
       mobtilexold = mobtilex;
       mobtileyold = mobtiley;
-      mobtilex = (m->x + (i * xrate)) / TILE_WIDTH;
-      mobtiley = (m->y + (i * yrate)) / TILE_HEIGHT;
-      //tile boundary reached, check
-      if ((mobtilex != mobtilexold || mobtiley != mobtileyold) && !(mobtilex < 0 || mobtilex > main_grid.width || mobtiley < 0 || mobtiley > main_grid.height))
+      mobtilex = mobxnew / TILE_WIDTH;
+      mobtiley = mobynew / TILE_HEIGHT;
+      if((oob_left = (mobxnew < 0)) ||
+         (oob_up =  (mobynew < 0)) ||
+         (oob_right = (mobxnew + TILE_WIDTH > main_grid.width * TILE_WIDTH)) ||
+         (oob_down =  (mobynew + TILE_HEIGHT > main_grid.height * TILE_HEIGHT)))
 	{
+          if(oob_left)
+            {
+	      xam += xrate + mobxnew;
+            }
+          else if(oob_right)
+	    {
+              xam += xrate - (mobxnew+TILE_WIDTH-main_grid.width*TILE_WIDTH) -1/*satefy margin*/;
+            }
+	  else if(oob_up)
+	    {
+	      yam += yrate + mobynew;
+	    }
+          else if(oob_down)
+	    {
+	      yam += yrate - (mobynew+TILE_HEIGHT-main_grid.height*TILE_HEIGHT) -1/*safety margin #2*/;
+	    }
+	  if(!(oob_left || oob_right))
+	    yam += yrate;
+	  if(!(oob_down || oob_up))
+	    xam += xrate;
+	  break;
+        }
+      if (mobtilex != mobtilexold || mobtiley != mobtileyold)
+	{     
 	  block = main_grid.tilegrid[mobtilex][mobtiley].blocking;
 	  if ((mobtilex < mobtilexold && (block & BLOCK_RIGHT)) ||
 	      (mobtilex > mobtilexold && (block & BLOCK_LEFT)) ||

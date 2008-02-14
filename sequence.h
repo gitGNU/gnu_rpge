@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <string.h>
 #include <stdio.h>
 #include <SDL/SDL.h>
-  
+#include "lib/xalloc.h"
 #define TYPE_IMAGE 0  
 #define TYPE_MOB 1
 #define TYPE_EVENT 2

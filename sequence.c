@@ -40,7 +40,7 @@ null_obj()
 int
 sequence_append (sequence * seq, object data)
 {
-  object *result = realloc (seq->data, (seq->objcount + 1) * sizeof (object));
+  object *result = xrealloc (seq->data, (seq->objcount + 1) * sizeof (object));
   if (!result)
     return -1;
   else
@@ -95,7 +95,7 @@ sequence_remove (sequence * seq, object data, char (*eqproc) (object, object))
       free (seq->data[i].data);
       memcpy (seq->data + i, seq->data + i + 1,
 	      sizeof (object) * (seq->objcount - i - 1));
-      newdata = realloc (seq->data, sizeof (object) * (seq->objcount - 1));
+      newdata = xrealloc (seq->data, sizeof (object) * (seq->objcount - 1));
       seq->data = newdata;
       seq->objcount--;
     }
@@ -160,7 +160,7 @@ sequence_remove_at (sequence * seq, int index)
       free (seq->data[index].data);
       memcpy (seq->data + index, seq->data + index + 1,
 	      sizeof (object) * (seq->objcount - index - 1));
-      newobjs = realloc (seq->data, sizeof (object) * (seq->objcount - 1));
+      newobjs = xrealloc (seq->data, sizeof (object) * (seq->objcount - 1));
       seq->data = newobjs;
       seq->objcount--;
     }

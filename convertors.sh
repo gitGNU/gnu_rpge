@@ -28,7 +28,7 @@ sed 's/convertors[:space:]*(\([[:alnum:]_*]*\),\([[:alnum:]_]*\));/object\
                          make_\2_obj(\1 foo)\
                          {\
                            object o;\
-                           o.data=malloc(sizeof(\1));\
+                           o.data=xmalloc(sizeof(\1));\
                            o.typeinfo = TYPE_\U\2\E;\
                            *((\1*)o.data)=foo;\
                            return o;\

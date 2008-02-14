@@ -1,5 +1,5 @@
 /*
-Copyright Remco Bras 2007
+Copyright Remco Bras 2008
 This file is part of RPGE.
 
 RPGE is free software; you can redistribute it and/or modify
@@ -17,15 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 /*
-config_file.h: Here because config_file.c needs an accompanying header.
+camera.h: Define and declare the required stuff to deal with cameras.
+May be smobbed later or otherwise interfaced to GUILE.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <libguile.h>
-#include "lib/xalloc.h"
-#define BLOCK_SIZE 256
+#include "constants.h"
 
-char* getline(FILE* stream);
-void exec_config_file(char* filename);
+typedef struct
+{
+  int tilex, tiley;
+} camera;
+
+extern camera global_camera;
+
+int get_camera_xoffset(camera c, int screenwidth);
+int get_camera_yoffset(camera y, int screenheight);
