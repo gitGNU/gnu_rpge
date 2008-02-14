@@ -1,5 +1,5 @@
 /*
-Copyright Remco Bras and Michael de Lang 2007.
+Copyright Remco Bras and Michael de Lang 2007,2008.
 This file is part of RPGE.
 
 RPGE is free software; you can redistribute it and/or modify
@@ -62,5 +62,6 @@ void  move_mobs();
 void  mob_set_movement(mob* m, int xam, double xrate, int yam, double yrate);
 void  mob_move_all (mob * m, int xtiles, int ytiles, int frames);
 void  mob_stop_animation(mob* m);
+void  mob_add_movement(mob* m, int xtile, int ytile, int frames);
 
 #endif

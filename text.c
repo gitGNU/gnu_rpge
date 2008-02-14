@@ -1,5 +1,5 @@
 /*
-Copyright Remco Bras 2007
+Copyright Remco Bras 2007,2008
 This file is part of RPGE
 
 RPGE is free software; you can redistribute it and/or modify
