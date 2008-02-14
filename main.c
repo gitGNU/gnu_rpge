@@ -95,11 +95,11 @@ main (int argc, char **argv)
         {
           case 'v':
             puts(VERSION_STRING);
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
           case 'h':
             puts(HELP_STRING);
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
           case 'f':
             initfile = strdup(optarg);
