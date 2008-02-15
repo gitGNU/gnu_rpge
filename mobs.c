@@ -202,7 +202,14 @@ mob_set_movement (mob * m, int xam, double xrate, int yam, double yrate)
 }
 
 
-//Warning, extremely inaccurate function.
+/*This function acts as a preprocessor to move_mob, so move_mob doesn't have to worry
+  about blocking tiles and the like. The downside of this is that, in theory, mobs moving
+  over tiles while those tiles are being changed will exhibit some erroneous behavior.
+  It is possible to marginalize this by queueing up short movements rather than long
+  sweeping motions and taking care to not change tiles under the feet of any moving mobs.
+  The one thing we should expect to change a lot is the set of positions of mobs, wherefore
+  it is the duty of move_mob to perform checks for mob collision. 
+*/
 void
 mob_move_all (mob * m, int xtiles, int ytiles, int frames)
 {
@@ -210,7 +217,7 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
   int yrate = ytiles * TILE_HEIGHT / frames;
   int xam = 0;
   int yam = 0;
-  int mobtilexold, mobtilex = m->x / TILE_WIDTH, mobtileyold, mobtiley = m->y / TILE_HEIGHT, mobxnew = m->x, mobynew = m->y;
+  int mobtilexold, mobtilex = (m->x + HALF_TILE_WIDTH) / TILE_WIDTH, mobtileyold, mobtiley = (m->y + HALF_TILE_HEIGHT) / TILE_HEIGHT, mobxnew = m->x, mobynew = m->y;
   char block = 0, oob_down,oob_up,oob_right,oob_left;
   for (int i = 1; i <= frames; i++)
     {
@@ -218,8 +225,8 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
       mobynew += yrate;
       mobtilexold = mobtilex;
       mobtileyold = mobtiley;
-      mobtilex = mobxnew / TILE_WIDTH;
-      mobtiley = mobynew / TILE_HEIGHT;
+      mobtilex = xrate > 0? mobxnew/TILE_HEIGHT+1: xrate < 0? mobxnew/TILE_HEIGHT : (mobxnew+HALF_TILE_WIDTH)/TILE_WIDTH;
+      mobtiley = yrate > 0? mobynew/TILE_HEIGHT+1: yrate < 0? mobynew/TILE_HEIGHT : (mobynew+HALF_TILE_HEIGHT)/TILE_HEIGHT;
       if((oob_left = (mobxnew < 0)) ||
          (oob_up =  (mobynew < 0)) ||
          (oob_right = (mobxnew + TILE_WIDTH > main_grid.width * TILE_WIDTH)) ||
@@ -227,24 +234,28 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
 	{
           if(oob_left)
             {
-	      xam += xrate + mobxnew;
+	      xam += xrate - mobxnew;
             }
           else if(oob_right)
 	    {
-              xam += xrate - (mobxnew+TILE_WIDTH-main_grid.width*TILE_WIDTH) -1/*satefy margin*/;
+              xam += xrate - (mobxnew+TILE_WIDTH-main_grid.width*TILE_WIDTH)-1;
             }
 	  else if(oob_up)
 	    {
-	      yam += yrate + mobynew;
+	      yam += yrate - mobynew;
 	    }
           else if(oob_down)
 	    {
-	      yam += yrate - (mobynew+TILE_HEIGHT-main_grid.height*TILE_HEIGHT) -1/*safety margin #2*/;
+	      yam += yrate - (mobynew+TILE_HEIGHT-main_grid.height*TILE_HEIGHT)-1;
 	    }
-	  if(!(oob_left || oob_right))
-	    yam += yrate;
-	  if(!(oob_down || oob_up))
-	    xam += xrate;
+	  if(oob_left || oob_right)
+            {
+	      yam += yrate;
+            }
+	  if(oob_down || oob_up)
+            {
+              xam += xrate;
+            }
 	  break;
         }
       if (mobtilex != mobtilexold || mobtiley != mobtileyold)

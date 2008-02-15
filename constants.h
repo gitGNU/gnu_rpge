@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define FRAMES_PER_SECOND 40
 #define TILE_WIDTH 16
 #define TILE_HEIGHT TILE_WIDTH
+#define HALF_TILE_WIDTH 8
+#define HALF_TILE_HEIGHT HALF_TILE_WIDTH
 #define SPRITE_WIDTH TILE_WIDTH
 #define SPRITE_HEIGHT TILE_HEIGHT
 

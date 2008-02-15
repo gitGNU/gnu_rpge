@@ -33,3 +33,4 @@
 (bind-key 'a (lambda() (add-mob-movement m -1 0 16)))
 (bind-key 's (lambda() (add-mob-movement m 0 1 16)))
 (bind-key 'w (lambda() (add-mob-movement m 0 -1 16)))
+(set-tile 5 5 (create-tile "test.png" (make-rect 0 0 16 16) block-all-undirectional))

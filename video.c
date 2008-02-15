@@ -32,21 +32,33 @@ render_mob(SDL_Surface* dest, mob mobby)
 }
 
 void
+render_tile_with_offsets(SDL_Surface* dest,int x, int y, tile tily, int xoffset, int yoffset)
+{
+  apply_surface(x*TILE_WIDTH-xoffset,y*TILE_HEIGHT-yoffset,((image*)images.data[tily.tilesheetindex].data)->data,dest,&tily.sheetclippinginfo);
+}
+
+void
 render_tile(SDL_Surface* dest, int x, int y, tile tily)
 {
-  apply_surface(x*TILE_WIDTH,y*TILE_HEIGHT,((image*)images.data[tily.tilesheetindex].data)->data,dest,&tily.sheetclippinginfo);
+  render_tile_with_offsets(dest,x,y,tily,0,0);
+}
+
+void
+render_tilegrid_with_offsets(SDL_Surface* dest, tile** grid, int width, int height,int xoffset, int yoffset)
+{
+ for(int i = 0; i < width; i++)
+    {
+      for(int j = 0; j < height; j++)
+        {
+          render_tile_with_offsets(dest,i,j,grid[i][j],xoffset,yoffset);
+        }
+    }
 }
 
 void
 render_tilegrid(SDL_Surface* dest, tile** grid, int width, int height)
 {
-  for(int i = 0; i < width; i++)
-    {
-      for(int j = 0; j < height; j++)
-        {
-          render_tile(dest,i,j,grid[i][j]);
-        }
-    }
+  render_tilegrid_with_offsets(dest,grid,width,height,0,0); 
 }
 
 SDL_Surface*
