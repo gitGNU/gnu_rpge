@@ -1,0 +1,178 @@
+\input texinfo @c -*-texinfo-*-
+
+@c %**start of header
+@setfilename RPGE.info
+@settitle Role Playing Game Engine
+@c %**end of header
+
+@copying
+  Copyright @copyright{}  2007,2008  Remco Bras.
+  Permission is granted to copy, distribute and/or modify this document
+  under the terms of the GNU Free Documentation License, Version 1.2
+  or any later version published by the Free Software Foundation;
+  with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+  Texts.  A copy of the license is included in the section entitled "GNU
+  Free Documentation License".
+@end copying
+
+@titlepage
+  @title Role Playing Game Engine
+  @subtitle Version 0.0.1
+  @author Remco Bras
+  @page 
+  @vskip 0pt plus 1filll
+  @insertcopying
+@end titlepage  
+
+@contents
+
+@node Top, Obtaining RPGE, (dir), (dir)
+@ifnottex
+@top Role Playing Game Engine
+This manual is for RPGE, version 0.0.1.
+@end ifnottex
+
+@menu
+* Obtaining RPGE::              
+* Invoking RPGE::               
+* RPGE's view of the world::    
+* Communication in RPGE::       
+* GNU Free Documentation License::  
+@end menu
+
+@node Obtaining RPGE, Invoking RPGE, Top, Top
+@chapter Obtaining RPGE
+
+@menu
+* Getting a copy::              
+* Installation::                
+@end menu
+
+@node Getting a copy, Installation, Obtaining RPGE, Obtaining RPGE
+@section Getting a copy
+
+RPGE can be obtained using anonymous git or from the web. In case you wish to use anonymous git, the following
+command creates a local copy of the RPGE git repository:
+@code{git clone git://git.savannah.nongnu.org/rpge.git}.
+Those who prefer the web can download a copy of a release from RPGE's download area at Savannah, located at @indicateurl{http://download.savannah.nongnu.org/releases/rpge/}.
+Either of these options will allow you to receive a copy of RPGE, but keep in mind that the sources in git will be more current, but probably also buggier than the releases. 
+
+@node Installation,  , Getting a copy, Obtaining RPGE
+@section Installation
+To install RPGE, your system will, at the time of writing (users of Git are advised to check the file 'README' in the root of the source tree for possibly updated information),
+need the following:
+@itemize @bullet
+@item An ISO C99-compliant C compiler that does not attempt to link when passed the -c option
+@item A make program compatible with Makefiles produced by GNU configure scripts
+@item A UNIX shell to execute GNU configure scripts
+@item GNU sed
+@item The SimpleDirectmediaLayer libraries and development files, including the sdl-image and sdl-ttf libraries
+@item GUILE, including the development files and libraries
+@end itemize
+
+If you have the above dependencies, you can install RPGE by moving to the directory containing the source code and running @code{./configure && make} to build RPGE.
+Once the build is complete and error-free, RPGE can be installed by running @code{make install} as a user with administrator privileges.
+
+@node Invoking RPGE, RPGE's view of the world, Obtaining RPGE, Top
+@chapter Invoking RPGE
+
+@menu
+* A summary of command-line options::  
+* RPGE initialization files::   
+@end menu
+
+@node A summary of command-line options, RPGE initialization files, Invoking RPGE, Invoking RPGE
+@section A summary of command-line options
+RPGE is invoked on the command-line using @code{RPGE @var{options}} in which options is one or more of the following, with their required arguments:
+@itemize
+@item -v or --version: Prints version information and exits.
+@item -h or --help: Prints a summary of usage and options and exits.
+@item -f @var{file}: Changes the default initialization file handled at startup from .RPGE to @var{file}
+@end itemize
+
+@node RPGE initialization files,  , A summary of command-line options, Invoking RPGE
+@section RPGE initialization files
+Once started, RPGE parses command-line options, initializes the libraries it uses and, before entering the frame loop, processes an initialization file.
+This file, .RPGE by default, contains the names of files containing Scheme code for RPGE to execute, one per line, in sequence. Any lines starting with
+'#' are ignored. 
+
+This facility is used in the sample files to include several common Scheme files. It is advised to use these files, since they provide common interfaces for matters like
+dealing with events, handling the statistics of mobs and a generic table type. However, it is certainly possible and sometimes useful to replace them. Keep in mind that
+anything that depends on other files should be loaded after them. 
+
+Currently, RPGE executes everything in the config file in the same thread as the main loop. This may change later, perhaps being replaced by waiting until the user tells 
+RPGE he is done loading the state of his application. The reason for this is that it would enable leaving code running from startup. As it stands however, this is unsupported
+and attempts to make threads from within startup code have thus far failed. Therefore, a user of a user-created application has to load code to process keystrokes himself,
+a rather suboptimal situation to say the least. 
+
+@node RPGE's view of the world, Communication in RPGE, Invoking RPGE, Top
+@chapter RPGE's view of the world
+
+@menu
+* Overview::                    
+* Tiles::                       
+* Mobs::                        
+@end menu
+
+@node Overview, Tiles, RPGE's view of the world, RPGE's view of the world
+@section Overview
+In RPGE, a world is essentially a flat, 2-dimensional surface, divided into tiles. These tiles are small, rectangular areas, with configurable widths and heights. 
+On these tiles, objects called mobs can move around in any way they wish, possibly blocked by certain tiles while freely passing over others. 
+These mobs are each rendered as a so-called sprite, a 2-dimensional picture. The picture to render is determined by the file loaded for the mob and its animation status.
+
+In the future, this model could be expanded to allow any number of concurrent 'worlds' on a single RPGE instance, something that could be especially useful if RPGE were 
+ever networked. At present though, there is only one world and parallel universes are merely science-fiction. 
+
+@node Tiles, Mobs, Overview, RPGE's view of the world
+@section Tiles
+RPGE tiles need a little more discussion, since they have some interesting properties that users may want to be aware of. First, all tiles in the tilegrid are independent. 
+Changing the data of a single tile does not change the data of the others, with one important exception. The one exception is that changing the image data used by a tile
+directly (something only possible through either runtime reloading of images or modifying the RPGE source, there is no API function) changes the image data used by all tiles
+using the image of the same filename and index. 
+
+Second, RPGE differentiates between the various directions a mob arrives at a tile from. For example, if a mob is moving right when it hits a blocking tile, that tile will
+only block if the BLOCK_LEFT flag is set. Similarly, for a mob arriving at any tile, the blocking flag for the corresponding edge is checked. 
+
+Third, RPGE has the facilities in place to differentiate between two types of mobs (dubbed 'ground' and 'air' mobs) and block none, one or both of those. However, these flags
+are unused at the time of writing. 
+
+Fourth, though tilegrids can be changed at runtime, one has to be relatively careful when doing so, due to an implementation quirk of RPGE. RPGE preprocesses the specifics of
+which tiles will block a mob throughout its movement, wherefore moving a mob over a rather long distance while changing the tilegrid may result in invalidating the preprocessing
+, which RPGE will not change. For example, a mob may stop at a tile that used to be blocking even though that tile was changed to not block. Among several techniques to deal 
+with this are modifying RPGE to get rid of this quirk, changing the tilegrid only while no mobs are moving and taking care to not move mobs over great distances.
+
+@node Mobs,  , Tiles, RPGE's view of the world
+@section Mobs
+Mobs, like tiles, have some interesting properties. The most important of these is the ability to add any data you want to any mob you want. This data, dubbed the 'mob user data
+', can be queried and set from GUILE. By default, it is the empty list marker and protected from the garbage collector. Since RPGE only allows a single GUILE value of user data
+for every mob, it is recommended to fill this space with a list, table or other compound data structure so you can put arbitrarily large amounts of data in this space. The
+example statistics system and other systems that work with mob user data will presume this data is a table. It is also worth noting that the default mob bootstrap procedure
+sets this data to an empty table.
+
+This bootstrap procedure is another property of mobs that users can use to enhance mobs. Since systems using mob user data may need initialization, RPGE provides this procedure,
+which is called by the GUILE procedure make-mob only, not by the primitive create-mob, to set the initial value of this data. The procedure may however do any arbitrary amount
+of processing or data creation, as long as it takes a single argument representing the mob being created. 
+
+Closer to the C side of things, mobs are currently considered as wide and as high as a single tile. Therefore, RPGE will render sprites of SPRITE_WIDTH width and SPRITE_HEIGHT
+height, both of those macros being equal to the respective dimensions of tiles. When determining what sprite to render, RPGE looks up the image data associated with the image
+index given in the mob (images are loaded globally in RPGE, to save space) and takes a rect of the specified width and height, starting at a starting point determined by the
+current animation of the mob. Animations are laid out horizontally in the image data, being right next to each other and SPRITE_WIDTH wide each. Individual frames of a certain
+animation are in its column, right below each other with no padding. Essentially, RPGE treats the image data as a frame grid, indexed in the horizontal direction by the index
+of the mob's current animation and in the vertical direction by the index of the mob's current frame. Animations can loop automatically if that is desired. 
+
+In addition to being animated, mobs can move. RPGE provides two primitives for making mobs move, the generic move-mob which immediately changes the direction and
+movement of a mob, regardless of any current velocity. Since this is not very practical if you want mobs to move along a path specified by keying it in asynchronously,
+RPGE natively supports queueing up movements, which is done using mob-add-movement. If the mob is not moving, this procedure has the same effect as move-mob. Otherwise,
+the movement is queued up in a FIFO buffer, the first element of which is started when the mob is done with its current movement, and so on. 
+
+Finally, mobs support RPGE's event mechanism, which is currently hardly being used. In the future, this could be used to send an event whenever a mob completes a motion or,
+more generally, changes its motion. This would be useful for animation purposes. 
+
+@node Communication in RPGE, GNU Free Documentation License, RPGE's view of the world, Top
+@chapter Communication in RPGE
+
+@node GNU Free Documentation License,  , Communication in RPGE, Top
+@unnumbered GNU Free Documentation License
+@include fdl.texi
+
+@bye
