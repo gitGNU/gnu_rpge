@@ -229,8 +229,8 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
       mobtiley = yrate > 0? mobynew/TILE_HEIGHT+1: yrate < 0? mobynew/TILE_HEIGHT : (mobynew+HALF_TILE_HEIGHT)/TILE_HEIGHT;
       if((oob_left = (mobxnew < 0)) ||
          (oob_up =  (mobynew < 0)) ||
-         (oob_right = (mobxnew + TILE_WIDTH > main_grid.width * TILE_WIDTH)) ||
-         (oob_down =  (mobynew + TILE_HEIGHT > main_grid.height * TILE_HEIGHT)))
+         (oob_right = (mobxnew + TILE_WIDTH >= main_grid.width * TILE_WIDTH)) ||
+         (oob_down =  (mobynew + TILE_HEIGHT >= main_grid.height * TILE_HEIGHT)))
 	{
           if(oob_left)
             {
@@ -238,7 +238,7 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
             }
           else if(oob_right)
 	    {
-              xam += xrate - (mobxnew+TILE_WIDTH-main_grid.width*TILE_WIDTH)-1;
+              xam += xrate - (mobxnew+TILE_WIDTH-main_grid.width*TILE_WIDTH)-1/*1-pixel safety margin #1*/;
             }
 	  else if(oob_up)
 	    {
@@ -246,13 +246,13 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
 	    }
           else if(oob_down)
 	    {
-	      yam += yrate - (mobynew+TILE_HEIGHT-main_grid.height*TILE_HEIGHT)-1;
+	      yam += yrate - (mobynew+TILE_HEIGHT-main_grid.height*TILE_HEIGHT)-1/*1-pixel safety margin #1*/;
 	    }
-	  if(oob_left || oob_right)
+	  if(!(oob_down || oob_up))
             {
 	      yam += yrate;
             }
-	  if(oob_down || oob_up)
+	  if(!(oob_left || oob_right))
             {
               xam += xrate;
             }
