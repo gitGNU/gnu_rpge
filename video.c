@@ -89,6 +89,7 @@ apply_surface ( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL
     SDL_BlitSurface ( source, clip, destination, &offset );
 }
 
+/*This may or may not be buggy, thanks to SDL's mysterious issues with coordinates of top-left corners. If your text appears at the negative of its coordinates, try calling apply_surface with -x and -y instead.*/
 void
 render_text(SDL_Surface* dest, text t)
 {
