@@ -26,13 +26,13 @@ camera global_camera = {0,0};
 inline int
 get_camera_xoffset(camera c, int screenwidth)
 {
-  return c.tilex*TILE_WIDTH - screenwidth/2;
+  return -c.tilex*TILE_WIDTH + screenwidth/2;
 }
 
 inline int
 get_camera_yoffset(camera c, int screenheight)
 {
-  return c.tiley*TILE_HEIGHT -screenheight/2;
+  return -c.tiley*TILE_HEIGHT + screenheight/2;
 }
 
 
