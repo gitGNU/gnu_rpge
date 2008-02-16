@@ -331,3 +331,27 @@ guile_add_mob_movement (SCM mob, SCM xtile, SCM ytile, SCM frames)
 		    scm_to_int (ytile), scm_to_int (frames));
   return SCM_UNSPECIFIED;
 }
+
+SCM
+guile_get_camera_x()
+{
+  return scm_from_int(global_camera.tilex);
+}
+
+SCM
+guile_get_camera_y()
+{
+  return scm_from_int(global_camera.tiley);
+}
+
+SCM 
+guile_set_camera_x(SCM newvalue)
+{
+  global_camera.tilex = scm_to_int(newvalue);
+}
+
+SCM
+guile_set_camera_y(SCM newvalue)
+{
+  global_camera.tiley = scm_to_int(newvalue);
+}

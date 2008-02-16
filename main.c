@@ -111,7 +111,7 @@ main (int argc, char **argv)
   int next, now;
   SDL_Init (SDL_INIT_EVERYTHING);
   TTF_Init ();
-  screen = SDL_SetVideoMode (800, 640, 32, SDL_HWSURFACE);
+  screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE);
   if (screen == NULL)
     {
       fprintf (stderr, "SDL_SetVideoMode failed: %s\n", SDL_GetError ());
@@ -150,6 +150,10 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("make-text",7,0,0,guile_make_text);
   scm_c_define_gsubr ("destroy-text",1,0,0,guile_destroy_text);
   scm_c_define_gsubr ("add-mob-movement",4,0,0,guile_add_mob_movement);
+  scm_c_define_gsubr ("get-camera-x",0,0,0,guile_get_camera_x);
+  scm_c_define_gsubr ("get-camera-y",0,0,0,guile_get_camera_y);
+  scm_c_define_gsubr ("set-camera-x",1,0,0,guile_set_camera_x);
+  scm_c_define_gsubr ("set-camera-y",1,0,0,guile_set_camera_y);
   global_usereventstack = eventstack_init();
   windows = images = mobs = argvs = fonts = sequence_init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));

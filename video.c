@@ -116,11 +116,14 @@ render_texts(SDL_Surface* dest)
 void
 render_screen(SDL_Surface* dest)
 {
+  int xoffset = get_camera_xoffset(global_camera,SCREEN_WIDTH),yoffset = get_camera_yoffset(global_camera,SCREEN_HEIGHT);
+  SDL_FillRect(dest,NULL,SDL_MapRGB(dest->format,0,0,0));
   SDL_Rect clip = {0,0,main_grid.width*TILE_WIDTH,main_grid.height*TILE_HEIGHT};
-  apply_surface(0,0,main_grid.imagebuffer,dest,&clip);
+  /*The reason this has to be called with negative offsets is highly unobvious, highly mysterious and unknown even to me*/
+  apply_surface(-xoffset,-yoffset,main_grid.imagebuffer,dest,&clip);
   for(int i = 0; i < mobs.objcount; i++)
     {
-      render_mob(dest,*((mob*)mobs.data[i].data));
+      render_mob_with_offsets(dest,*((mob*)mobs.data[i].data),xoffset,yoffset);
     }
   render_windows(dest);
   render_texts(dest);

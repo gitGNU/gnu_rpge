@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "tile.h"
 #include "window.h"
 #include "text.h"
+#include "camera.h"
 #include <libguile.h>
 #include <SDL/SDL.h>
   
@@ -65,5 +66,8 @@ SCM guile_close_font(SCM index);
 SCM guile_make_text(SCM x, SCM y, SCM string, SCM font, SCM red, SCM green, SCM blue);
 SCM guile_destroy_text(SCM textindex);
 SCM guile_add_mob_movement(SCM mob, SCM xtile, SCM ytile, SCM frames);
-
+SCM guile_set_camera_x(SCM newvalue);
+SCM guile_set_camera_y(SCM newvalue);
+SCM guile_get_camera_x();
+SCM guile_get_camera_y();
 #endif

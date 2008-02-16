@@ -18,10 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 /*
 camera.h: Define and declare the required stuff to deal with cameras.
-May be smobbed later or otherwise interfaced to GUILE.
+May be smobbed later or otherwise inline interfaced to GUILE.
 */
 
 #include "constants.h"
+
+#ifndef CAMERA_H
+#define CAMERA_H
 
 typedef struct
 {
@@ -30,5 +33,9 @@ typedef struct
 
 extern camera global_camera;
 
-int get_camera_xoffset(camera c, int screenwidth);
-int get_camera_yoffset(camera y, int screenheight);
+inline int get_camera_xoffset(camera c, int screenwidth);
+inline int get_camera_yoffset(camera y, int screenheight);
+inline int set_camera_x(camera c, int value);
+inline int set_camera_y(camera c, int value);
+
+#endif 

@@ -21,6 +21,7 @@ camera.c: Implement camera offset math, to be used in rendering.
 */
 
 #include "camera.h"
+camera global_camera = {0,0};
 
 inline int
 get_camera_xoffset(camera c, int screenwidth)
@@ -31,5 +32,19 @@ get_camera_xoffset(camera c, int screenwidth)
 inline int
 get_camera_yoffset(camera c, int screenheight)
 {
-  return c.tiley*TILE_WIDTH -screenheight/2;
+  return c.tiley*TILE_HEIGHT -screenheight/2;
+}
+
+
+/*These two seem quite useless, but they are somewhat useful for GUILE and for abstraction purposes */
+inline int
+set_camera_x(camera c, int value)
+{
+  c.tilex = value;
+}
+
+inline int
+set_camera_y(camera c, int value)
+{
+  c.tiley = value;
 }
