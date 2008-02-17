@@ -45,7 +45,8 @@ render_window(SDL_Surface* dest,window w)
       clip.y = 0;
       clip.w = w.width;
       clip.h = w.height;
-      return apply_surface(w.x,w.y,((image*)images.data[w.imageindex].data)->data,dest,&clip);
+      apply_surface(w.x,w.y,((image*)images.data[w.imageindex].data)->data,dest,&clip);
+      return;
     }
   else
     {
@@ -131,7 +132,7 @@ int windowstack_addwindow(window w)
     }
   else
     {
-      sequence_append(&windows,make_window_obj(w));
+      return sequence_append(&windows,make_window_obj(w));
     }
 }
 

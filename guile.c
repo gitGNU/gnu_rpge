@@ -348,10 +348,12 @@ SCM
 guile_set_camera_x(SCM newvalue)
 {
   global_camera.tilex = scm_to_int(newvalue);
+  return SCM_UNSPECIFIED;
 }
 
 SCM
 guile_set_camera_y(SCM newvalue)
 {
   global_camera.tiley = scm_to_int(newvalue);
+  return SCM_UNSPECIFIED;
 }

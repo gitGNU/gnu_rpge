@@ -5,6 +5,6 @@ EXTRA_DIST = test.png test_sprite.png test_tile2.png
 SUFFIXES=.c
 SUBDIRS=lib
 ACLOCAL_AMFLAGS= -I m4
-AMCFLAGS= -I$(top_srcdir)/lib -I$(top_builddir)/lib
+AM_CFLAGS= -I$(top_srcdir)/lib -I$(top_builddir)/lib -Wall
 .c.o:
 	./convertors.sh $< && $(CC) $(CFLAGS) $(AM_CFLAGS) -c $< && cp $<{.backup,} && rm $<.backup

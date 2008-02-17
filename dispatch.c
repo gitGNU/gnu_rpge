@@ -91,7 +91,6 @@ get_dispatch_pair (Uint32 type)
 SCM
 dispatch (SDL_Event e)
 {
-  Uint32 type = e.type;
   dispatch_pair dp = get_dispatch_pair (e.type);
   if (dp.typefunc && dp.datafunc)
     return scm_cons (dp.typefunc (e), dp.datafunc (e));

@@ -37,13 +37,13 @@ get_camera_yoffset(camera c, int screenheight)
 
 
 /*These two seem quite useless, but they are somewhat useful for GUILE and for abstraction purposes */
-inline int
+inline void
 set_camera_x(camera c, int value)
 {
   c.tilex = value;
 }
 
-inline int
+inline void
 set_camera_y(camera c, int value)
 {
   c.tiley = value;

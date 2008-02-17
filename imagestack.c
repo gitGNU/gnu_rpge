@@ -73,9 +73,13 @@ push_image_on_stack(char* filename)
       images.data[indexempty] = make_image_obj(make_image(load_image(filename),filename));
       return indexempty;
     }
+  else if(index != -1)
+    {
+      return index;
+    }
   else
     {
-       return sequence_append(&images,make_image_obj(make_image(load_image(filename),filename)));
+      return sequence_append(&images,make_image_obj(make_image(load_image(filename),filename)));
     }
 }
 
