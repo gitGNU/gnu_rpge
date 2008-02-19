@@ -20,9 +20,9 @@ You should have received a copy of the GNU General Public License
 #include <SDL/SDL.h>
 #include <stdlib.h>
 #include <libguile.h>
-#include "video.h"
-#include "imagestack.h"
 #include "sequence.h"
+#include "constants.h"
+#include "event.h"
 
 typedef struct
 {
@@ -63,5 +63,8 @@ void  mob_set_movement(mob* m, int xam, double xrate, int yam, double yrate);
 void  mob_move_all (mob * m, int xtiles, int ytiles, int frames);
 void  mob_stop_animation(mob* m);
 void  mob_add_movement(mob* m, int xtile, int ytile, int frames);
+void  mob_stop_movement(mob* m);
 
+/*Self-dependent include and indirectly self-dependent include*/
+#include "tile.h"
 #endif

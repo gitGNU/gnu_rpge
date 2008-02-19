@@ -36,6 +36,7 @@ typedef struct
   sequence indices;
 } eventstack;
 
+extern eventstack global_usereventstack; //holds all generic game events, with the minor exception of quitting events.
 
 eventstack eventstack_init();
 void eventstack_clear(eventstack* stackptr);

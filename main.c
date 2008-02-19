@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "main.h"
 
-eventstack global_usereventstack;
 SCM global_userdata = SCM_EOL;
 
 int

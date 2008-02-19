@@ -31,6 +31,7 @@ make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking)
   t.tilesheetindex = tilesheet;
   t.sheetclippinginfo = clipping;
   t.blocking = blocking;
+  t.occupant = NULL;
   return t;
 }
 
@@ -105,4 +106,28 @@ remake_tilegrid()
     SDL_FillRect(main_grid.imagebuffer,NULL,SDL_MapRGB(main_grid.imagebuffer->format,0,0,0));
   render_tilegrid(main_grid.imagebuffer,main_grid.tilegrid,main_grid.width,main_grid.height);
   return main_grid.imagebuffer;
+}
+
+inline char 
+occupied(int tilex, int tiley)
+{
+  return main_grid.tilegrid[tilex][tiley].occupant != NULL;
+}
+
+inline void 
+set_occupant(int tilex, int tiley, mob* new_occupant)
+{
+  main_grid.tilegrid[tilex][tiley].occupant = new_occupant;
+}
+
+inline mob* 
+get_occupant(int tilex, int tiley)
+{
+  return main_grid.tilegrid[tilex][tiley].occupant;
+}
+
+inline void
+reset_occupant(int tilex, int tiley)
+{
+  main_grid.tilegrid[tilex][tiley].occupant = NULL;
 }

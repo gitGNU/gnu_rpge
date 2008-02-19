@@ -35,6 +35,7 @@ create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
 	  sizeof (SDL_Surface *));
   mobby.userdata = SCM_EOL;
   scm_gc_protect_object(mobby.userdata);
+  mobby.move_descriptors = sequence_init();
   return mobby;
 }
 
@@ -49,6 +50,13 @@ find_empty_mob ()
   return -1;
 }
 
+void
+set_mob_occupants(mob* m)
+{
+  int tilex = (m->x+SPRITE_WIDTH/2)/TILE_WIDTH, tiley = (m->y+SPRITE_HEIGHT/2)/TILE_HEIGHT;
+  set_occupant(tilex,tiley,m);
+}
+
 int
 push_mob_on_array (mob m)
 {
@@ -56,11 +64,14 @@ push_mob_on_array (mob m)
   if (indexempty != -1)
     {
       *((mob*)mobs.data[indexempty].data) = m;
+      set_mob_occupants(mobs.data[indexempty].data);
       return indexempty;
     }
   else
     {
-      return sequence_append(&mobs,make_mob_obj(m));
+      int index = sequence_append(&mobs,make_mob_obj(m));
+      set_mob_occupants(mobs.data[index].data);
+      return index;
     }
 }
 
@@ -126,9 +137,35 @@ animate_mobs ()
     }
 }
 
+inline void
+mob_stop_movement(mob* m)
+{
+  m->xmoveamount = m->xmoverate = m->ymoveamount = m->ymoverate = 0;
+}
+
+void
+add_mob_collision_event(mob* mob1, mob* mob2)
+{
+  int index1 = -1, index2 = -1;
+  for(int i = 0; i < mobs.objcount ; i++)
+    {
+      if(mobs.data[i].data == mob1)
+        index1 = i;
+      else if(mobs.data[i].data == mob2)
+        index2 = i;
+    }
+  eventstack_addevent(&global_usereventstack,make_event(scm_from_locale_symbol("collision"),scm_cons(scm_from_int(index1),scm_from_int(index2))));
+}
+
+/*
+This procedure regulates all mob movement. The bits dealing with the amounts and rates are relatively straightforward. On top of those, 
+it is the job of move_mob to deal with movement descriptors, i.e. once a mob is done moving and it has more movements queued up, it should
+start on those. Furthermore, move_mob handles tile bounds checking for occupant purposes. This last bit is somewhat complicated.
+*/
 void
 move_mob (mob * m)
 {
+  int oldx = m->x, oldy = m->y;
   if(!moving(*m) && m->move_descriptors.objcount)
     {
       move_descriptor md = *((move_descriptor*)m->move_descriptors.data[0].data);
@@ -160,6 +197,30 @@ move_mob (mob * m)
 	  m->y += m->ymoverate;
 	  m->ymoveamount -= m->ymoverate;
 	}
+    }
+  if(m->x != oldx || m->y != oldy)
+    {
+      /*
+      Process occupants of tiles. Note that occupants are stored as pointers to the mob, i.e. as pointers to the
+      actual mob data in the sequence mobs. Also note that, since GUILE cannot use those, the add_mob_collision_event does a double
+      loop over the mobs sequence to find both mobs and use their indices for the event. These events are added globally,
+      since they cannot really be said to be the exclusive domain of any of the two mobs.
+      */
+      int tilex = m->x > oldx ? (m->x+SPRITE_WIDTH)/TILE_WIDTH : m->x < oldx ? m->x/TILE_WIDTH : (m->x+SPRITE_WIDTH/2)/TILE_WIDTH;
+      int tiley = m->y > oldy ? (m->y+SPRITE_HEIGHT)/TILE_HEIGHT : m->y < oldy ? m->y/TILE_HEIGHT : (m->y+SPRITE_HEIGHT/2)/TILE_HEIGHT;
+      int old_tilex = (oldx+SPRITE_WIDTH/2)/TILE_WIDTH, old_tiley = (oldy+SPRITE_HEIGHT/2)/TILE_HEIGHT;
+      mob* occupant = NULL;
+      if(!(occupant = get_occupant(tilex,tiley)) || occupant == m)
+        {
+          reset_occupant(old_tilex,old_tiley);
+          set_mob_occupants(m);
+        }
+      else
+        {
+          mob_stop_movement(m);
+          mob_stop_movement(occupant);
+          add_mob_collision_event(m,occupant);
+        }
     }
 }
 
@@ -201,7 +262,6 @@ mob_set_movement (mob * m, int xam, double xrate, int yam, double yrate)
   m->ymoverate = yrate;
 }
 
-
 /*This function acts as a preprocessor to move_mob, so move_mob doesn't have to worry
   about blocking tiles and the like. The downside of this is that, in theory, mobs moving
   over tiles while those tiles are being changed will exhibit some erroneous behavior.
@@ -225,6 +285,7 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
       mobynew += yrate;
       mobtilexold = mobtilex;
       mobtileyold = mobtiley;
+      /*The following makes sure the right edge is checked, i.e. the edge most likely to move to a new tile*/
       mobtilex = xrate > 0? mobxnew/TILE_HEIGHT+1: xrate < 0? mobxnew/TILE_HEIGHT : (mobxnew+HALF_TILE_WIDTH)/TILE_WIDTH;
       mobtiley = yrate > 0? mobynew/TILE_HEIGHT+1: yrate < 0? mobynew/TILE_HEIGHT : (mobynew+HALF_TILE_HEIGHT)/TILE_HEIGHT;
       if((oob_left = (mobxnew < 0)) ||

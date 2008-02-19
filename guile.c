@@ -69,6 +69,7 @@ list_to_tile (SCM tilelist)
   clip.h = scm_to_uint16 (scm_nth (tilelist, 5));
   t.blocking = scm_to_char (scm_nth (tilelist, 6));
   t.sheetclippinginfo = clip;
+  t.occupant = NULL;
   return t;
 }
 

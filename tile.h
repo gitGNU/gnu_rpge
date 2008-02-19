@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include <SDL/SDL.h>
 #include "lib/xalloc.h"
+#include "mobs.h"
 
 /*These are defined such that they match individual bits, which conveniently also work properly when added. The former property is great for C, the latter is good for GUILE. This does put an upper bound of approximately 32 on our number of allowed variations of blocking, but needing those should be rare.*/
 #define BLOCK_LEFT 0x4
@@ -42,6 +43,7 @@ typedef struct
   int tilesheetindex; //in the as-of-yet barely functional global imagestack
   SDL_Rect sheetclippinginfo;//the part of the tilesheet containing the actual tile
   char blocking; 
+  mob* occupant; /*This is a pointer to simplify matters*/
 } tile;
 
 typedef struct
@@ -61,7 +63,11 @@ tile** tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile r
 tile** tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridheight, tile replacement);
 tile** set_all_tiles(tile replacement);
 tile** set_tile(unsigned int x, unsigned int y, tile replacement);
+char occupied(int tilex, int tiley);
+void set_occupant(int tilex, int tiley, mob* new_occupant);
+mob* get_occupant(int tilex, int tiley);
+void reset_occupant(int tilex, int tiley);
 
-//Includes which depend on this file
+/*Includes which depend on this file*/
 #include "video.h"
 #endif

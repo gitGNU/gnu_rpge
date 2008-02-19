@@ -27,7 +27,7 @@
 (define (check-for-events)
   (let ((event (get-global-event index)))
     (cond  
-      ((not (null? event)) (branch event))))
+    ((not (null? (car event))) (branch event))))
   (usleep 250000)
   (check-for-events))
 
