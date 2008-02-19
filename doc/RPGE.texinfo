@@ -26,29 +26,36 @@
 
 @contents
 
-@node Top, Obtaining RPGE, (dir), (dir)
+@node Top, About RPGE and obtaining it, (dir), (dir)
 @ifnottex
 @top Role Playing Game Engine
 This manual is for RPGE, version 0.0.1.
 @end ifnottex
 
 @menu
-* Obtaining RPGE::              
+* About RPGE and obtaining it::  
 * Invoking RPGE::               
 * RPGE's view of the world::    
 * Communication in RPGE::       
 * GNU Free Documentation License::  
 @end menu
 
-@node Obtaining RPGE, Invoking RPGE, Top, Top
-@chapter Obtaining RPGE
+@node About RPGE and obtaining it, Invoking RPGE, Top, Top
+@chapter About RPGE and obtaining it
 
 @menu
+* About RPGE and this manual::  
 * Getting a copy::              
 * Installation::                
 @end menu
 
-@node Getting a copy, Installation, Obtaining RPGE, Obtaining RPGE
+@node About RPGE and this manual, Getting a copy, About RPGE and obtaining it, About RPGE and obtaining it
+@section About RPGE and this manual
+RPGE is a GNU package, providing an engine for two-dimensional graphical role playing games. It is driven and extended by writing programs in GUILE, a dialect of Scheme.
+This manual is for RPGE 0.0.1 and aims to document the parts of the workings of RPGE that people using it should know about, the way RPGE is driven using GUILE and
+how RPGE can be obtained, installed and otherwise used. 
+
+@node Getting a copy, Installation, About RPGE and this manual, About RPGE and obtaining it
 @section Getting a copy
 
 RPGE can be obtained using anonymous git or from the web. In case you wish to use anonymous git, the following
@@ -57,7 +64,7 @@ command creates a local copy of the RPGE git repository:
 Those who prefer the web can download a copy of a release from RPGE's download area at Savannah, located at @indicateurl{http://download.savannah.nongnu.org/releases/rpge/}.
 Either of these options will allow you to receive a copy of RPGE, but keep in mind that the sources in git will be more current, but probably also buggier than the releases. 
 
-@node Installation,  , Getting a copy, Obtaining RPGE
+@node Installation,  , Getting a copy, About RPGE and obtaining it
 @section Installation
 To install RPGE, your system will, at the time of writing (users of Git are advised to check the file 'README' in the root of the source tree for possibly updated information),
 need the following:
@@ -73,7 +80,7 @@ need the following:
 If you have the above dependencies, you can install RPGE by moving to the directory containing the source code and running @code{./configure && make} to build RPGE.
 Once the build is complete and error-free, RPGE can be installed by running @code{make install} as a user with administrator privileges.
 
-@node Invoking RPGE, RPGE's view of the world, Obtaining RPGE, Top
+@node Invoking RPGE, RPGE's view of the world, About RPGE and obtaining it, Top
 @chapter Invoking RPGE
 
 @menu

@@ -19,7 +19,12 @@ You should have received a copy of the GNU General Public License
 #ifndef MAIN_INC_GUARD
 #define MAIN_INC_GUARD
 
-#define VERSION_STRING "RPGE 0.0.1\nCopyright (C) 2008 Remco Bras\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law."
+#define VERSION_STRING "GNU RPGE 0.0.1\n\
+Copyright (C) 2008 Remco Bras\n\
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\n\
+This is free software: you are free to change and redistribute it.\n\
+There is NO WARRANTY, to the extent permitted by law.\n\
+This program is part of the GNU project, released under the aegis of GNU."
 #define HELP_STRING "Usage: RPGE <options>"
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE -1
