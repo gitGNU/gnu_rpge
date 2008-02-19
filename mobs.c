@@ -80,6 +80,9 @@ remove_mob (int index)
 {
   if (index < mobs.objcount)
     {
+      mob m = *((mob*)mobs.data[index].data);
+      int tilex = (m.x+SPRITE_WIDTH/2)/SPRITE_WIDTH,tiley = (m.y+SPRITE_HEIGHT/2)/SPRITE_HEIGHT;
+      reset_occupant(tilex,tiley);
       ((mob*)mobs.data[index].data)->imgindex = -1;
     }
 }

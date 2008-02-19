@@ -21,6 +21,8 @@ You should have received a copy of the GNU General Public License
 void
 render_mob_with_offsets(SDL_Surface* dest, mob mobby, int xoffset, int yoffset)
 {
+  if(mobby.imgindex == -1)
+    return;
   SDL_Rect imageclippy = {mobby.animation * SPRITE_WIDTH, mobby.frame * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT};  
   apply_surface(mobby.x+xoffset,mobby.y+yoffset,((image*)images.data[mobby.imgindex].data)->data,dest,&imageclippy);
 }
