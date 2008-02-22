@@ -52,7 +52,9 @@ eventstack_clear (eventstack * stackptr)
 void
 eventstack_addevent (eventstack * stackptr, event e)
 {
-  sequence_append (&stackptr->events, make_event_obj (e));
+  /*Only add events if someone cares to get them.*/
+  if(stackptr->indices.objcount)
+    sequence_append (&stackptr->events, make_event_obj (e));
 }
 
 event

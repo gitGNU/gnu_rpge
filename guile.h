@@ -70,4 +70,6 @@ SCM guile_set_camera_x(SCM newvalue);
 SCM guile_set_camera_y(SCM newvalue);
 SCM guile_get_camera_x();
 SCM guile_get_camera_y();
+SCM guile_open_mob_eventstack(SCM mobindex);
+SCM guile_get_mob_event(SCM mobindex, SCM luser);
 #endif

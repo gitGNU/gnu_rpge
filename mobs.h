@@ -44,6 +44,7 @@ typedef struct
   int ymoveamount;
   SCM userdata;
   sequence move_descriptors;
+  eventstack events; /*For events limited to this mob only*/
 } mob;
 
 typedef struct

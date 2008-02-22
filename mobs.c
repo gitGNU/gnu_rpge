@@ -36,6 +36,7 @@ create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
   mobby.userdata = SCM_EOL;
   scm_gc_protect_object(mobby.userdata);
   mobby.move_descriptors = sequence_init();
+  mobby.events = eventstack_init();
   return mobby;
 }
 
@@ -160,6 +161,13 @@ add_mob_collision_event(mob* mob1, mob* mob2)
   eventstack_addevent(&global_usereventstack,make_event(scm_from_locale_symbol("collision"),scm_cons(scm_from_int(index1),scm_from_int(index2))));
 }
 
+void
+add_mob_tilechange_event(mob* m, int oldx, int oldy, int newx, int newy)
+{
+  SCM type = scm_from_locale_symbol("tile-change"), data = scm_cons(scm_cons(scm_from_int(oldx),scm_from_int(oldy)),scm_cons(scm_from_int(newx),scm_from_int(newy)));
+  eventstack_addevent(&(m->events),make_event(type,data));
+}
+
 /*
 This procedure regulates all mob movement. The bits dealing with the amounts and rates are relatively straightforward. On top of those, 
 it is the job of move_mob to deal with movement descriptors, i.e. once a mob is done moving and it has more movements queued up, it should
@@ -216,6 +224,9 @@ move_mob (mob * m)
       if(!(occupant = get_occupant(tilex,tiley)) || occupant == m)
         {
           reset_occupant(old_tilex,old_tiley);
+          /*Add an event on the mob, so users can do whatever they want with this information*/
+          if(tilex != old_tilex || tiley != old_tiley)
+	    add_mob_tilechange_event(m,old_tilex,old_tiley,tilex,tiley);
           set_mob_occupants(m);
         }
       else

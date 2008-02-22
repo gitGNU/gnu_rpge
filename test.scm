@@ -34,3 +34,4 @@
 (bind-key 's (lambda() (add-mob-movement m 0 1 16)(set-camera-y (1+ (get-camera-y)))))
 (bind-key 'w (lambda() (add-mob-movement m 0 -1 16)(set-camera-y (- (get-camera-y) 1))))
 (set-tile 5 5 (create-tile "test.png" (make-rect 0 0 16 16) block-all-undirectional))
+(define n (make-mob 5 0 "test_sprite.png"))

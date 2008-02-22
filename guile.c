@@ -358,3 +358,16 @@ guile_set_camera_y(SCM newvalue)
   global_camera.tiley = scm_to_int(newvalue);
   return SCM_UNSPECIFIED;
 }
+
+SCM 
+guile_open_mob_eventstack(SCM mobindex)
+{
+  return scm_from_uint(eventstack_open(&(((mob*)mobs.data[scm_to_int(mobindex)].data)->events)));
+}
+
+SCM
+guile_get_mob_event(SCM mobindex, SCM luser)
+{
+  event e = eventstack_get_first_of_user(&((mob*)mobs.data[scm_to_int(mobindex)].data)->events,scm_to_uint(luser));
+  return scm_cons(e.type,e.data);
+}

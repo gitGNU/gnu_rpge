@@ -153,6 +153,8 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("get-camera-y",0,0,0,guile_get_camera_y);
   scm_c_define_gsubr ("set-camera-x",1,0,0,guile_set_camera_x);
   scm_c_define_gsubr ("set-camera-y",1,0,0,guile_set_camera_y);
+  scm_c_define_gsubr ("open-mob-events",1,0,0,guile_open_mob_eventstack);
+  scm_c_define_gsubr ("get-mob-event",2,0,0,guile_get_mob_event);
   global_usereventstack = eventstack_init();
   windows = images = mobs = argvs = fonts = sequence_init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
