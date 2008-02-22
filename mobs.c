@@ -217,15 +217,16 @@ move_mob (mob * m)
       loop over the mobs sequence to find both mobs and use their indices for the event. These events are added globally,
       since they cannot really be said to be the exclusive domain of any of the two mobs.
       */
-      int tilex = m->x > oldx ? (m->x+SPRITE_WIDTH)/TILE_WIDTH : m->x < oldx ? m->x/TILE_WIDTH : (m->x+SPRITE_WIDTH/2)/TILE_WIDTH;
-      int tiley = m->y > oldy ? (m->y+SPRITE_HEIGHT)/TILE_HEIGHT : m->y < oldy ? m->y/TILE_HEIGHT : (m->y+SPRITE_HEIGHT/2)/TILE_HEIGHT;
+      int tilex_center = (m->x+SPRITE_WIDTH/2)/TILE_WIDTH, tiley_center = (m->y+SPRITE_HEIGHT/2)/TILE_HEIGHT;
+      int tilex = m->x > oldx ? (m->x+SPRITE_WIDTH)/TILE_WIDTH : m->x < oldx ? m->x/TILE_WIDTH : tilex_center;
+      int tiley = m->y > oldy ? (m->y+SPRITE_HEIGHT)/TILE_HEIGHT : m->y < oldy ? m->y/TILE_HEIGHT : tiley_center;
       int old_tilex = (oldx+SPRITE_WIDTH/2)/TILE_WIDTH, old_tiley = (oldy+SPRITE_HEIGHT/2)/TILE_HEIGHT;
       mob* occupant = NULL;
       if(!(occupant = get_occupant(tilex,tiley)) || occupant == m)
         {
           reset_occupant(old_tilex,old_tiley);
           /*Add an event on the mob, so users can do whatever they want with this information*/
-          if(tilex != old_tilex || tiley != old_tiley)
+          if(tilex_center != old_tilex || tiley_center != old_tiley)
 	    add_mob_tilechange_event(m,old_tilex,old_tiley,tilex,tiley);
           set_mob_occupants(m);
         }
