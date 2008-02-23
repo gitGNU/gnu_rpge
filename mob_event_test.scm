@@ -17,7 +17,7 @@
 ;
 
 (define (check-mob-events)
-  (map (lambda (pair)
+  (for-each (lambda (pair)
           (let ((mob (car pair)) (index (cdr pair)))
             (let ((event (get-mob-event mob index)))
               (cond ((null? (car event))  '())

@@ -120,10 +120,15 @@ make_text(unsigned int x, unsigned int y, char* string, int fontindex, SDL_Color
         {
           return t;
         }
-      while(token = strtok_r(NULL,"\n",&saveptr))
+      while((token = strtok_r(NULL,"\n",&saveptr)))
         {
           sequence_append(&t.buffers,make_string_obj(token));
         }
+      return t;
+    }
+  else
+    {
+      t.buffers = sequence_init();
       return t;
     }
 }
