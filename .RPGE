@@ -7,4 +7,5 @@ utils.guile
 mobutils.scm
 key-funcs.scm
 stats.scm
+mob_events.scm
 test.scm
