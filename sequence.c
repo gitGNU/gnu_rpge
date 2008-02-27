@@ -17,9 +17,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 #include "sequence.h"
-convertors(int);
-convertors(Uint32);
-convertors(char*,string);
+inline object
+                         make_int_obj(int foo)
+                         {
+                           object o;
+                           o.data=xmalloc(sizeof(int));
+                           o.typeinfo = TYPE_INT;
+                           *((int*)o.data)=foo;
+                           return o;
+                         }
+                         inline int
+                         get_obj_int (object o)
+                         {
+                           return *((int*)o.data);
+                         }
+inline object
+                         make_Uint32_obj(Uint32 foo)
+                         {
+                           object o;
+                           o.data=xmalloc(sizeof(Uint32));
+                           o.typeinfo = TYPE_UINT32;
+                           *((Uint32*)o.data)=foo;
+                           return o;
+                         }
+                         inline Uint32
+                         get_obj_Uint32 (object o)
+                         {
+                           return *((Uint32*)o.data);
+                         }
+inline object
+                         make_string_obj(char* foo)
+                         {
+                           object o;
+                           o.data=xmalloc(sizeof(char*));
+                           o.typeinfo = TYPE_STRING;
+                           *((char**)o.data)=foo;
+                           return o;
+                         }
+                         inline char*
+                         get_obj_string (object o)
+                         {
+                           return *((char**)o.data);
+                         }
 
 /*Return empty sequences and objects, for initialization and/or defaulting purposes*/
 sequence
@@ -108,10 +147,22 @@ sequence_remove (sequence * seq, object data, char (*eqproc) (object, object))
 }
 
 /*
-RPGE's versions of map and foreach act rather like the scheme equivalent, in the sense that map replaces the object in the sequence and foreach does not (and expects void from the procedure passed to it). However, this edition of map does not clean the old object up properly, wherefore it is the duty of the proc to take care of this.
+RPGE's versions of map and foreach act rather like the scheme equivalent, in the sense that map replaces the object in the sequence and foreach does not (and expects void from the procedure passed to it). However, this edition of map does not clean the old object up properly, wherefore it is the duty of the proc to take care of this. Since map_destructive is... intriguing in that it modifies the sequence in-place, a non-destructive variant is provided. Note that, for performance reasons, it's better to use the destructive variant if you're about to dump the old data anyway. In that case, do yourself a favor and have proc delete the old object as you will lose any reference to its data contained in seq once the destructive variant is done.
 */
+
 sequence
-sequence_map (sequence seq, object (*proc) (object))
+sequence_map(sequence seq, object (*proc) (object))
+{
+  sequence new = sequence_init();
+  for (int i = 0; i < seq.objcount; i++)
+    {
+      sequence_append(&new,proc (seq.data[i]));
+    }
+  return new;
+}
+
+sequence
+sequence_map_destructive (sequence seq, object (*proc) (object))
 {
   for (int i = 0; i < seq.objcount; i++)
     {

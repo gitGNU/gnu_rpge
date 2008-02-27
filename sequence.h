@@ -57,6 +57,7 @@ object sequence_find (sequence seq, object data, char (* eqproc) (object, object
 void sequence_remove_at(sequence *seq, int index);
 void sequence_remove (sequence *seq, object data, char (* eqproc) (object, object));
 sequence sequence_map (sequence seq, object (*proc) (object));
+sequence sequence_map_destructive (sequence seq, object (*proc) (object));
 void sequence_foreach (sequence seq, void (*proc) (object));
 void sequence_free (sequence seq);
 object sequence_reduce(sequence seq, object (* proc)(object, object));
