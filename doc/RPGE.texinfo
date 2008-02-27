@@ -37,6 +37,7 @@ This manual is for RPGE, version 0.0.1.
 * Invoking RPGE::               
 * RPGE's view of the world::    
 * Communication in RPGE::       
+* API Reference::               
 * GNU Free Documentation License::  
 @end menu
 
@@ -175,10 +176,20 @@ the movement is queued up in a FIFO buffer, the first element of which is starte
 Finally, mobs support RPGE's event mechanism, which is currently hardly being used. In the future, this could be used to send an event whenever a mob completes a motion or,
 more generally, changes its motion. This would be useful for animation purposes. 
 
-@node Communication in RPGE, GNU Free Documentation License, RPGE's view of the world, Top
+@node Communication in RPGE, API Reference, RPGE's view of the world, Top
 @chapter Communication in RPGE
+In RPGE, there are two kinds of communication, being communication between RPGE itself and the scripts running in it and communication between the scripts themselves.  The latter type of communication can be handled in any way the users want, just like in any multithreaded program. Communication between RPGE and the engine is not so freeform, but is similar to communication in GTK, Xlib or a similar system.
 
-@node GNU Free Documentation License,  , Communication in RPGE, Top
+This communication is handled by so-called events, which live on things called 'eventstacks'. Regardless of the specific stack, events themselves are simple messages, basically consisting of something to identify the particular type of message and whatever the user should know about it.
+
+Another property of eventstacks one should be aware of is that they need to be opened before usage. Once opened, it is guaranteed that the user receives any event that arrives after the stack was opened. A stack without users does not accumulate any events at all. Regardless of this last property, it is advised to add any useful event to the appropriate stack, even if users are not guaranteed. 
+
+Stacks themselves live in RPGE, being assigned to either a certain object or just being global. There is currently one global stack and every single mob has a stack of its own. Global stacks should be used for events that are not related to anything that has a stack of its own and is a single object, for example a collision between two mobs or a keypress. Stacks assigned to the object are for events related to the object exclusively, for example an event sent when a mob moves across a tile boundary. 
+
+@node API Reference, GNU Free Documentation License, Communication in RPGE, Top
+@appendix API Reference
+
+@node GNU Free Documentation License,  , API Reference, Top
 @unnumbered GNU Free Documentation License
 @include fdl.texi
 
