@@ -17,48 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 #include "sequence.h"
-inline object
-                         make_int_obj(int foo)
-                         {
-                           object o;
-                           o.data=xmalloc(sizeof(int));
-                           o.typeinfo = TYPE_INT;
-                           *((int*)o.data)=foo;
-                           return o;
-                         }
-                         inline int
-                         get_obj_int (object o)
-                         {
-                           return *((int*)o.data);
-                         }
-inline object
-                         make_Uint32_obj(Uint32 foo)
-                         {
-                           object o;
-                           o.data=xmalloc(sizeof(Uint32));
-                           o.typeinfo = TYPE_UINT32;
-                           *((Uint32*)o.data)=foo;
-                           return o;
-                         }
-                         inline Uint32
-                         get_obj_Uint32 (object o)
-                         {
-                           return *((Uint32*)o.data);
-                         }
-inline object
-                         make_string_obj(char* foo)
-                         {
-                           object o;
-                           o.data=xmalloc(sizeof(char*));
-                           o.typeinfo = TYPE_STRING;
-                           *((char**)o.data)=foo;
-                           return o;
-                         }
-                         inline char*
-                         get_obj_string (object o)
-                         {
-                           return *((char**)o.data);
-                         }
+convertors(int);
+convertors(Uint32);
+convertors(char*,string);
 
 /*Return empty sequences and objects, for initialization and/or defaulting purposes*/
 sequence
