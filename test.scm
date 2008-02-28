@@ -22,9 +22,7 @@
 (set-mob-bootstrap-proc! (lambda (X) 
 			   (set-mob-data X (init-table)) 
 			   (stats-init X)
-                           (init-mob-bindings X)
-			   (display (get-mob-data X))
-			   (newline)))
+                           (init-mob-bindings X)))
 (define m (make-mob 0 0 "test_sprite.png"))
 (add-to-table! (get-global-data) 'bindings (init-table))
 (procedural-stats-init)
@@ -32,8 +30,6 @@
 ;Camera locking is now handled externally, so these are back to their old simplicity.
 ;Tell mob_event_test.scm to get a move on and track this mob.
 (add-tracked-mob! m)
-(display (get-global-data))
-(newline)
 (bind-mob-event m 'tile-change (lambda (event)(set-camera-x (caddr event)) (set-camera-y (cdddr event))))
 (bind-key 'd (lambda() (add-mob-movement m 1 0 16)))
 (bind-key 'a (lambda() (add-mob-movement m -1 0 16)))

@@ -371,3 +371,10 @@ guile_get_mob_event(SCM mobindex, SCM luser)
   event e = eventstack_get_first_of_user(&((mob*)mobs.data[scm_to_int(mobindex)].data)->events,scm_to_uint(luser));
   return scm_cons(e.type,e.data);
 }
+
+SCM
+guile_close_mob_eventstack(SCM mobindex, SCM luser)
+{
+  eventstack_close(&(((mob*)mobs.data[scm_to_int(mobindex)].data)->events),scm_to_uint(luser));
+  return SCM_UNSPECIFIED;
+}

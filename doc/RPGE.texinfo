@@ -188,6 +188,93 @@ Stacks themselves live in RPGE, being assigned to either a certain object or jus
 
 @node API Reference, GNU Free Documentation License, Communication in RPGE, Top
 @appendix API Reference
+This section describes the entire RPGE GUILE API, all the way from primitives to the stuff implemented in the examples that are part of the RPGE distribution.
+
+@menu
+* Primitives::                  
+@end menu
+
+@node Primitives,  , API Reference, API Reference
+@section Primitives
+
+Primitives related to mobs:
+@itemize
+@item @code{(create-mob @var{x} @var{y} @var{sprite})}:
+
+Creates a mob on the tilegrid at point (@var{x},@var{y}). Note that @var{x} and @var{y} are tile coordinates, not pixel coordinates. The mob is rendered using @var{sprite},
+specified as a string containing the filename of the sprite to be loaded. Animation data and the like are defaulted to zero.
+
+@item @code{(move-mob @var{mob} @var{x} @var{y} @var{frames})}:
+
+Move @var{mob}, over @var{frames} frames, @var{x} tiles to the right and @var{y} tiles down. This modifies the movement data of the mob, canceling any current movement.
+
+@item @code{(add-mob-movement @var{mob} @var{x} @var{y} @var{frames})}:
+
+Queue up the movement that would be done by the mob if move-mob was called with the same arguments. Queued up movements are executed in order once the mob is done moving.
+
+@item  @code{(set-mob-animation @var{mob} @var{animation} @var{start} @var{target} @var{framesbetween} @var{loop})}:
+
+Animate @var{mob}, using animation @var{animation}, starting at frame @var{start}, ending at frame @var{target}, changing to the next frame every @var{framesbetween} frames.
+If @var{loop} is true, the animation loops until stopped. Note that frames and animations are specified by indices, which start at zero.
+
+@item @code{(stop-mob-animation @var{mob})}
+
+Immediately stop the animation of @var{mob} in its current state.
+
+@item @code{(get-mob-data @var{mob})}
+
+Returns the piece of global data associated with @var{mob}.
+
+@item @code{(set-mob-data @var{mob} @var{value})}
+
+Set the piece of global data associated with @var{mob} to @var{value}.
+
+@item @code{(open-mob-events @var{mob})}
+
+Open the eventstack of @var{mob} and return the user index associated with this action.
+
+@item @code{(get-mob-event @var{mob} @var{user})}
+
+Get the next event on @var{mob} for @var{user}, in which @var{user} is an index returned by open-mob-events.
+
+@item @code{(close-mob-evetns @var{mob} @var{user})}
+
+Close the eventstack on @var{mob} for @var{user}, indicating that @var{user} does not want to receive any new events on this stack.
+
+@item @code{(destroy-mob @var{mob})}
+
+Destroy @var{mob}.
+
+@end itemize
+
+Primitives related to tiles and grids thereof:
+
+@itemize
+
+@item @code{(create-tile @var{sprite} @var{clipping-rect} @var{blocking})}
+
+Creates a tile, using @var{sprite} as the filename to load a sprite from, @var{clipping-rect} as a list representing a rectangular clipping area,
+containing the part of the sprite image that should be used for rendering, and @var{blocking} as an identifier indicating which mobs are blocked.
+The types of blocking RPGE currently checks for are block-<direction>, where direction is left, right up or down. The particular direction
+indicates the edge the mob to be blocked hits, i.e. a tile with block-right for @var{blocking} blocks mobs attempting to cross its right edge.
+There is a single combined constant combining all four directions, conveniently named block-all-directions. Other variations can be obtained by
+simply adding individual constants.
+
+@item @code{(init-tilegrid @var{width} @var{height})}
+
+Resets the main tilegrid to a new grid of dimensions @var{width} and @var{height}. This should be called once, when initializing the game map.
+Note that the tilegrid created by this procedure does not have any tiles set and all tiles should be set manually.
+
+@item @code{(set-tile @var{x} @var{y} @var{tile})}
+
+Sets the tile at (@var{x},@var{y}) to @var{tile}.
+
+@item @code{(set-all-tiles @var{tile})}
+
+Sets all tiles to @var{tile}.
+
+
+@end itemize
 
 @node GNU Free Documentation License,  , API Reference, Top
 @unnumbered GNU Free Documentation License

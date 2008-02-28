@@ -42,7 +42,5 @@
             
 (define (execute-mob-binding mob event)
   (let ((proc (get-mob-binding mob (car event))))
-    (display proc)
-    (newline)
     (if (null? proc) '()
         (proc event))))

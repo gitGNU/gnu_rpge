@@ -22,8 +22,6 @@
             (let ((event (get-mob-event mob index)))
               (cond ((null? (car event))  '())
                     (else
-                      (display event)
-                      (newline)
                       (execute-mob-binding mob event)))))) 
        (cdr (tracked-mob-table)))
   (usleep 250000)
