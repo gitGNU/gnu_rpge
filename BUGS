@@ -1,0 +1,14 @@
+This file records all known RPGE limitations and bugs. Any bugs herein are things that may need urgent attention.
+
+-RPGE's build system, implemented through convertors.sh and an automake suffix rule, is not generic enough. It depends on A: building RPGE
+from the main source directory instead of a subdirectory not containing the sources (breaking make distcheck), B: GNU sed (usage of \U and \E)
+C: gcc (usage of -c). B could be avoided by uglifying macros, but that is most definitely unaesthetic. A and C are both issues with 
+Remco's understanding of automake. Currently, he hasn't figured out how to write a suffix rule in such a way that automake understands it 
+does have multiple lines and bash doesn't choke on it even if it does happen to contain conditionals (apparently, bash doesn't like escaped
+newlines in a conditional). Similarly, he hasn't figured out how to get Automake to be kind enough to just do what it usually does to turn .c 
+files into .o files, with some extra preprocessing. The best way to do this would be adding hooks to suffix rules, but as is, it would be
+quite nice to have $(COMPILE) just compile, without attempting to link.
+
+-The GUILE API related to fonts, texts and windows is not generic enough. Furthermore, the mob animation API needs work.
+
+-There is no way for scripts to know when mobs stop moving or change their movement, should this exist anyway?
