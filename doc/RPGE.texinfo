@@ -62,7 +62,8 @@ how RPGE can be obtained, installed and otherwise used.
 RPGE can be obtained using anonymous git or from the web. In case you wish to use anonymous git, the following
 command creates a local copy of the RPGE git repository:
 @code{git clone git://git.savannah.nongnu.org/rpge.git}.
-Those who prefer the web can download a copy of a release from RPGE's download area at Savannah, located at @indicateurl{http://download.savannah.nongnu.org/releases/rpge/}.
+Those who prefer the web can download a copy of a release from the GNU mirrors, a list of which is kept at @indicateurl{http://www.gnu.org/prep/ftp.html}, or, if necessary,
+directly from @indicateurl{ftp://ftp.gnu.org} by FTP.
 Either of these options will allow you to receive a copy of RPGE, but keep in mind that the sources in git will be more current, but probably also buggier than the releases. 
 
 @node Installation,  , Getting a copy, About RPGE and obtaining it
@@ -171,7 +172,9 @@ of the mob's current animation and in the vertical direction by the index of the
 In addition to being animated, mobs can move. RPGE provides two primitives for making mobs move, the generic move-mob which immediately changes the direction and
 movement of a mob, regardless of any current velocity. Since this is not very practical if you want mobs to move along a path specified by keying it in asynchronously,
 RPGE natively supports queueing up movements, which is done using mob-add-movement. If the mob is not moving, this procedure has the same effect as move-mob. Otherwise,
-the movement is queued up in a FIFO buffer, the first element of which is started when the mob is done with its current movement, and so on. 
+the movement is queued up in a FIFO buffer, the first element of which is started when the mob is done with its current movement, and so on. This buffer is not cleared by calls
+to move-mob. If mobs collide however, the buffer is instantly cleared on both colliding mobs. The rationale behind this is that 
+RPGE should wait for users to issue new commands, since a collision implicitly is a result of being unable to execute movement commands.
 
 Finally, mobs support RPGE's event mechanism, which is currently hardly being used. In the future, this could be used to send an event whenever a mob completes a motion or,
 more generally, changes its motion. This would be useful for animation purposes. 

@@ -60,11 +60,11 @@ RPGE can be obtained using anonymous git or from the web. In case you
 wish to use anonymous git, the following command creates a local copy
 of the RPGE git repository: `git clone
 git://git.savannah.nongnu.org/rpge.git'.  Those who prefer the web can
-download a copy of a release from RPGE's download area at Savannah,
-located at <http://download.savannah.nongnu.org/releases/rpge/>.
-Either of these options will allow you to receive a copy of RPGE, but
-keep in mind that the sources in git will be more current, but probably
-also buggier than the releases.
+download a copy of a release from the GNU mirrors, a list of which is
+kept at <http://www.gnu.org/prep/ftp.html>, or, if necessary, directly
+from <ftp://ftp.gnu.org> by FTP.  Either of these options will allow
+you to receive a copy of RPGE, but keep in mind that the sources in git
+will be more current, but probably also buggier than the releases.
 
 
 File: RPGE.info,  Node: Installation,  Prev: Getting a copy,  Up: About RPGE and obtaining it
@@ -270,7 +270,11 @@ supports queueing up movements, which is done using mob-add-movement.
 If the mob is not moving, this procedure has the same effect as
 move-mob. Otherwise, the movement is queued up in a FIFO buffer, the
 first element of which is started when the mob is done with its current
-movement, and so on.
+movement, and so on. This buffer is not cleared by calls to move-mob.
+If mobs collide however, the buffer is instantly cleared on both
+colliding mobs. The rationale behind this is that RPGE should wait for
+users to issue new commands, since a collision implicitly is a result
+of being unable to execute movement commands.
 
    Finally, mobs support RPGE's event mechanism, which is currently
 hardly being used. In the future, this could be used to send an event
@@ -888,17 +892,17 @@ Node: Top496
 Node: About RPGE and obtaining it849
 Node: About RPGE and this manual1086
 Node: Getting a copy1688
-Node: Installation2417
-Node: Invoking RPGE3470
-Node: A summary of command-line options3701
-Node: RPGE initialization files4279
-Node: RPGE's view of the world5757
-Node: Overview5968
-Node: Tiles6870
-Node: Mobs8776
-Node: Communication in RPGE12009
-Node: API Reference13786
-Node: Primitives14142
-Node: GNU Free Documentation License18136
+Node: Installation2459
+Node: Invoking RPGE3512
+Node: A summary of command-line options3743
+Node: RPGE initialization files4321
+Node: RPGE's view of the world5799
+Node: Overview6010
+Node: Tiles6912
+Node: Mobs8818
+Node: Communication in RPGE12352
+Node: API Reference14129
+Node: Primitives14485
+Node: GNU Free Documentation License18479
 
 End Tag Table

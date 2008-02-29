@@ -168,6 +168,18 @@ add_mob_tilechange_event(mob* m, int oldx, int oldy, int newx, int newy)
   eventstack_addevent(&(m->events),make_event(type,data));
 }
 
+
+/*
+This can only be called safely from move_mob, since otherwise move_mob or something similar may attempt to reference it at any point in time.
+*/
+inline void
+clear_mob_movement_queue(mob* m)
+{
+  sequence_free(m->move_descriptors);
+  m->move_descriptors.objcount = 0;
+  m->move_descriptors.data = NULL;
+}
+
 /*
 This procedure regulates all mob movement. The bits dealing with the amounts and rates are relatively straightforward. On top of those, 
 it is the job of move_mob to deal with movement descriptors, i.e. once a mob is done moving and it has more movements queued up, it should
@@ -234,6 +246,13 @@ move_mob (mob * m)
         {
           mob_stop_movement(m);
           mob_stop_movement(occupant);
+          /*
+          Clear movement queues for occupant and m, so both mobs stop moving and stay still until ordered to move again by scripts.
+          This is done so there is no weird behavior like mobs doing any weird, queued up movements while they should be locked in 
+          a turn-based battle or something similar. The results of not doing this could be unpredictable and weird.
+          */
+          clear_mob_movement_queue(m);
+          clear_mob_movement_queue(occupant);
           add_mob_collision_event(m,occupant);
         }
     }
