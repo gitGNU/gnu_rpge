@@ -273,6 +273,31 @@ Sets the tile at (@var{x},@var{y}) to @var{tile}.
 
 Sets all tiles to @var{tile}.
 
+@end itemize
+
+Primitives related to windows:
+
+@itemize
+
+@item @code{(create-window @var{width} @var{height} @var{x} @var{y} @var{sprite} @var{spritewidth} @var{spriteheight})}
+
+Creates a window @var{width} pixels wide and @var{height} pixels high, with its top-left corner at (@var{x},@var{y}) (in pixel coordinates). The window is filled with
+a rectangular tile, @var{spritewidth} pixels wide and @var{spriteheight} pixels wide, taken from the image file @var{sprite}. Note that the tile is hardwired to have its 
+top-left corner at (0,0).
+
+@item @code{(remove-window @var{window})}
+
+Destroys @var{window}.
+
+@end itemize
+
+Font-related primitives:
+
+@itemize
+
+@item @code{(open-font @var{filename} @var{size})}
+
+Opens the font referenced by @var{filename}, with a font size of @var{size}.
 
 @end itemize
 

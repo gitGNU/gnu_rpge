@@ -24,11 +24,12 @@ convertors(font);
 convertors(text);
 
 font
-make_font(TTF_Font* fontptr, char* filename)
+make_font(TTF_Font* fontptr, char* filename,unsigned int size)
 {
   font returnfont;
   returnfont.font = fontptr;
   returnfont.filename = filename;
+  returnfont.size = size;
   return returnfont;
 }
 
