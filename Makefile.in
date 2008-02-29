@@ -790,7 +790,7 @@ uninstall-am: uninstall-binPROGRAMS
 	uninstall-binPROGRAMS
 
 .c.o:
-	$(top_srcdir)/convertors.sh $< && $(CC) $(CFLAGS) $(AM_CFLAGS) -c $< && cp $<{.backup,} && rm $<.backup
+	$(top_srcdir)/convertors.sh $< && $(CC) $(CFLAGS) $(AM_CFLAGS) -o $@ -c $< && cp $<{.backup,} && rm $<.backup
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

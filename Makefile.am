@@ -7,4 +7,4 @@ SUBDIRS=lib
 ACLOCAL_AMFLAGS= -I m4
 AM_CFLAGS= -I$(top_srcdir)/lib -I$(top_builddir)/lib -Wall
 .c.o:
-	$(top_srcdir)/convertors.sh $< && $(CC) $(CFLAGS) $(AM_CFLAGS) -c $< && cp $<{.backup,} && rm $<.backup
+	$(top_srcdir)/convertors.sh $< && $(CC) $(CFLAGS) $(AM_CFLAGS) -o $@ -c $< && cp $<{.backup,} && rm $<.backup
