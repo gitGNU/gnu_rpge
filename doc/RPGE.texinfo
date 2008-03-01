@@ -302,6 +302,10 @@ Font-related primitives:
 
 Opens the font referenced by @var{filename}, with a font size of @var{size}.
 
+@item @code{(close-font @var{font})}
+
+Closes @var{font}.
+
 @end itemize
 
 @node GNU Free Documentation License,  , API Reference, Top
