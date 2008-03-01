@@ -8,7 +8,8 @@ does have multiple lines and bash doesn't choke on it even if it does happen to 
 newlines in a conditional). Similarly, he hasn't figured out how to get Automake to be kind enough to just do what it usually does to turn .c 
 files into .o files, with some extra preprocessing. The best way to do this would be adding hooks to suffix rules, but as is, it would be
 quite nice to have $(COMPILE) just compile, without attempting to link.
+Additional comment: It seems it does work from a subdirectory, but make distcheck just forces us to do absolutely, completely, 100% nothing to either the build dir or the source dir, not letting us create new files.
 
--The GUILE API related to fonts, texts and windows is not generic enough. Furthermore, the mob animation API needs work.
+-The GUILE API related to fonts, texts and windows is not powerful enough. Furthermore, the mob animation API needs work.
 
 -There is no way for scripts to know when mobs stop moving or change their movement, should this exist anyway?
