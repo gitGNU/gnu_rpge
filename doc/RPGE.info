@@ -457,6 +457,73 @@ Primitives related to mobs:
      Closes FONT.
 
 
+   Text-related primitives:
+
+   * `(make-text X Y TEXT FONT RED GREEN BLUE)'
+
+     Create floating text at pixel coordinates (X,Y), rendering TEXT,
+     using FONT. The text is rendered in the color specified by
+     RED,GREEN and BLUE, where each variable represents the intensity
+     of the color that is its namesake, on a scale from 0 to 255,
+     inclusive.
+
+   * `(destroy-text TEXT)'
+
+     Destroy TEXT.
+
+
+   Primitives controlling the main camera:
+
+   * `(get-camera-x)'
+
+   * `(get-camera-y)'
+
+     These return the x and y-coordinates, respectively, of the main
+     camera, in tile coordinates.
+
+   * `(set-camera-x X)'
+
+   * `(set-camera-y Y)'
+
+     Set the coordinates of the main camera, in tile coordinates.
+
+
+   Global miscellaneous primitives:
+
+   * `(get-global-data)'
+
+     Returns the current value of the global data stored inside RPGE.
+
+   * `(set-global-data VALUE)'
+
+     Sets the current value of the global data, while protecting it
+     from the garbage collector. This should be called with something
+     like a list or a table, so it can be shared across scripts. The
+     default scripts set this to a table and store data in that.
+
+   * `(open-global-events)'
+
+     Opens the global eventstack, returning a user index.
+
+   * `(get-global-event USER)'
+
+     Returns the next global event in line for USER.
+
+   * `(close-global-events USER)'
+
+     Closes the global eventstack for USER.
+
+   * `(get-argv)'
+
+     Gets the current argument vector of the thread, roughly presumed
+     to be equal to the 'arguments' the script was 'called' with.
+
+   * `(load-with-argv SCRIPT ARGLIST)'
+
+     Execute SCRIPT in the current thread, passing it ARGLIST as its
+     arguments.
+
+
 
 File: RPGE.info,  Node: GNU Free Documentation License,  Prev: API Reference,  Up: Top
 
@@ -907,6 +974,6 @@ Node: Mobs8818
 Node: Communication in RPGE12352
 Node: API Reference14129
 Node: Primitives14485
-Node: GNU Free Documentation License18524
+Node: GNU Free Documentation License20226
 
 End Tag Table

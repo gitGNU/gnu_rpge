@@ -308,6 +308,76 @@ Closes @var{font}.
 
 @end itemize
 
+Text-related primitives:
+
+@itemize
+
+@item @code{(make-text @var{x} @var{y} @var{text} @var{font} @var{red} @var{green} @var{blue})}
+
+Create floating text at pixel coordinates (@var{x},@var{y}), rendering @var{text}, using @var{font}. The text is rendered in the color specified by @var{red},@var{green}
+and @var{blue}, where each variable represents the intensity of the color that is its namesake, on a scale from 0 to 255, inclusive.
+
+@item @code{(destroy-text @var{text})}
+
+Destroy @var{text}.
+
+@end itemize
+
+Primitives controlling the main camera:
+
+@itemize
+
+@item @code{(get-camera-x)}
+@item @code{(get-camera-y)}
+
+These return the x and y-coordinates, respectively, of the main camera, in tile coordinates. 
+
+@item @code{(set-camera-x @var{x})}
+@item @code{(set-camera-y @var{y})}
+
+Set the coordinates of the main camera, in tile coordinates. 
+
+@end itemize
+
+Global miscellaneous primitives:
+
+@itemize
+
+@item @code{(get-global-data)}
+
+Returns the current value of the global data stored inside RPGE.
+
+@item @code{(set-global-data @var{value})}
+
+Sets the current value of the global data, while protecting it from the garbage 
+collector. This should be called with something like a list or a table, so it can be
+shared across scripts. The default scripts set this to a table and store data in that.
+
+@item @code{(open-global-events)}
+
+Opens the global eventstack, returning a user index.
+
+@item @code{(get-global-event @var{user})}
+
+Returns the next global event in line for @var{user}.
+
+@item @code{(close-global-events @var{user})}
+
+Closes the global eventstack for @var{user}.
+
+@item @code{(get-argv)}
+
+Gets the current argument vector of the thread, roughly presumed to be equal to
+the 'arguments' the script was 'called' with.
+
+@item @code{(load-with-argv @var{script} @var{arglist})}
+
+Execute @var{script} in the current thread, passing it @var{arglist} as its 
+arguments.
+
+@end itemize
+
+
 @node GNU Free Documentation License,  , API Reference, Top
 @unnumbered GNU Free Documentation License
 @include fdl.texi

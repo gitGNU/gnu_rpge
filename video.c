@@ -95,7 +95,11 @@ void
 render_text(SDL_Surface* dest, text t)
 {
   unsigned int x = t.x, y = t.y;
-  TTF_Font* fon = ((font*)fonts.data[t.fontindex].data)->font;
+  TTF_Font* fon = NULL;
+  if(t.fontindex != -1)
+    fon = ((font*)fonts.data[t.fontindex].data)->font;
+  else
+    return;
   int lineskip = TTF_FontLineSkip(fon);
   for(int i = 0; i < t.buffers.objcount; i++)
     {
