@@ -1,6 +1,5 @@
 #!/bin/sh
 #Copyright 2008 Remco Bras
-#Copyright Remco Bras 2007
 #This file is part of RPGE.
 #
 #RPGE is free software; you can redistribute it and/or modify
@@ -20,10 +19,10 @@
 #convertors.sh: Implement the convertors(type) and convertor_headers(type) sed-based macros.
 #
 
-#Save the macro-using file, allowing the user to work with the macro in place, rather than the expansion.
-cp $1{,.backup}
-
-sed 's/convertors[:space:]*(\([[:alnum:]_]*\));/convertors(\1,\1);/g' $1 -i
+#Do the expansion, putting the result in.. a sed-generated replacement.
+FILENAME=`echo $1 | sed 's/\(.*\)\.cgen/\1.c/g'`
+cp $1 $FILENAME
+sed 's/convertors[:space:]*(\([[:alnum:]_]*\));/convertors(\1,\1);/g' $FILENAME -i
 
 sed 's/convertors[:space:]*(\([[:alnum:]_*]*\),\([[:alnum:]_]*\));/inline object\
                          make_\2_obj(\1 foo)\
@@ -38,7 +37,7 @@ sed 's/convertors[:space:]*(\([[:alnum:]_*]*\),\([[:alnum:]_]*\));/inline object
                          get_obj_\2 (object o)\
                          {\
                            return *((\1*)o.data);\
-                         }/g' $1 -i
+                         }/g' $FILENAME -i
                          
 sed 's/convertor_headers(\(.*\));/object make_\1_obj(\1 foo);\
-                                  \1 get_obj_\1 (object o);/g' $1 -i
+                                  \1 get_obj_\1 (object o);/g' $FILENAME -i

@@ -288,10 +288,10 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-RPGE_SOURCES = main.c video.c video.h main.h mobs.h mobs.c imagestack.h imagestack.c tile.h tile.c guile.h guile.c constants.h event.c event.h window.h window.c sequence.c sequence.h text.c text.h dispatch.c dispatch.h config_file.c config_file.h camera.c camera.h
+RPGE_SOURCES = main.c video.c video.h main.h mobs.h mobs.cgen imagestack.h imagestack.cgen tile.h tile.c guile.h guile.cgen constants.h event.cgen event.h window.h window.cgen sequence.cgen sequence.h text.cgen text.h dispatch.cgen dispatch.h config_file.c config_file.h camera.c camera.h
 RPGE_LDADD = lib/libgnu.a
-EXTRA_DIST = test.png test_sprite.png test_tile2.png convertors.sh foo.scm key-funcs.scm keys.scm mob_events.scm mob_event_test.scm mobutils.scm stats.scm test.scm .RPGE utils.guile table.guile doc/RPGE.info doc/RPGE.texinfo doc/fdl.texi doc/RPGE.pdf
-SUFFIXES = .c
+EXTRA_DIST = test.png test_sprite.png test_tile2.png convertors.sh foo.scm key-funcs.scm keys.scm mob_events.scm mob_event_test.scm mobutils.scm stats.scm test.scm .RPGE utils.guile table.guile doc/RPGE.info doc/RPGE.texinfo doc/fdl.texi doc/RPGE.pdf cleanup_loop.sh
+SUFFIXES = .cgen
 SUBDIRS = lib
 ACLOCAL_AMFLAGS = -I m4
 AM_CFLAGS = -I$(top_srcdir)/lib -I$(top_builddir)/lib -Wall
@@ -299,7 +299,7 @@ all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
-.SUFFIXES: .c .o .obj
+.SUFFIXES: .cgen .c .o .obj
 am--refresh:
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -396,6 +396,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/video.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/window.Po@am__quote@
+
+.c.o:
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(COMPILE) -c $<
 
 .c.obj:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
@@ -711,7 +718,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-local mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -757,7 +764,8 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-recursive
 
-mostlyclean-am: mostlyclean-compile mostlyclean-generic
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-local
 
 pdf: pdf-recursive
 
@@ -774,9 +782,9 @@ uninstall-am: uninstall-binPROGRAMS
 
 .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
 	all all-am am--refresh check check-am clean clean-binPROGRAMS \
-	clean-generic ctags ctags-recursive dist dist-all dist-bzip2 \
-	dist-gzip dist-shar dist-tarZ dist-zip distcheck distclean \
-	distclean-compile distclean-generic distclean-hdr \
+	clean-generic clean-local ctags ctags-recursive dist dist-all \
+	dist-bzip2 dist-gzip dist-shar dist-tarZ dist-zip distcheck \
+	distclean distclean-compile distclean-generic distclean-hdr \
 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-binPROGRAMS install-data install-data-am install-dvi \
@@ -785,12 +793,17 @@ uninstall-am: uninstall-binPROGRAMS
 	install-pdf install-pdf-am install-ps install-ps-am \
 	install-strip installcheck installcheck-am installdirs \
 	installdirs-am maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic pdf pdf-am \
-	ps ps-am tags tags-recursive uninstall uninstall-am \
-	uninstall-binPROGRAMS
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-local pdf pdf-am ps ps-am tags tags-recursive \
+	uninstall uninstall-am uninstall-binPROGRAMS
 
-.c.o:
-	$(top_srcdir)/convertors.sh $< && $(CC) $(CFLAGS) $(AM_CFLAGS) -o $@ -c $< && cp $<{.backup,} && rm $<.backup
+.cgen.c:
+	$(top_srcdir)/convertors.sh $< && echo $@ >> to_be_deleted.log
+
+mostlyclean-local:
+	$(top_srcdir)/cleanup_loop.sh $(top_srcdir)/to_be_deleted.log
+
+clean-local: mostlyclean-local
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
