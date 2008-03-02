@@ -21,8 +21,8 @@
 
 #Do the expansion, putting the result in.. a sed-generated replacement.
 FILENAME=`echo $1 | sed 's/\(.*\)\.cgen/\1.c/g'`
-cp $1 $FILENAME
-sed 's/convertors[:space:]*(\([[:alnum:]_]*\));/convertors(\1,\1);/g' $FILENAME -i
+cp $1 $FILENAME.tmp
+sed 's/convertors[:space:]*(\([[:alnum:]_]*\));/convertors(\1,\1);/g' $FILENAME.tmp -i
 
 sed 's/convertors[:space:]*(\([[:alnum:]_*]*\),\([[:alnum:]_]*\));/inline object\
                          make_\2_obj(\1 foo)\
@@ -37,7 +37,9 @@ sed 's/convertors[:space:]*(\([[:alnum:]_*]*\),\([[:alnum:]_]*\));/inline object
                          get_obj_\2 (object o)\
                          {\
                            return *((\1*)o.data);\
-                         }/g' $FILENAME -i
+                         }/g' $FILENAME.tmp -i
                          
 sed 's/convertor_headers(\(.*\));/object make_\1_obj(\1 foo);\
-                                  \1 get_obj_\1 (object o);/g' $FILENAME -i
+                                  \1 get_obj_\1 (object o);/g' $FILENAME.tmp -i
+                                  
+mv $FILENAME{.tmp,}
