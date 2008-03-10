@@ -88,6 +88,7 @@ Once the build is complete and error-free, RPGE can be installed by running @cod
 @menu
 * A summary of command-line options::  
 * RPGE initialization files::   
+* Caveats::                     
 @end menu
 
 @node A summary of command-line options, RPGE initialization files, Invoking RPGE, Invoking RPGE
@@ -99,7 +100,7 @@ RPGE is invoked on the command-line using @code{RPGE @var{options}} in which opt
 @item -f @var{file}: Changes the default initialization file handled at startup from .RPGE to @var{file}
 @end itemize
 
-@node RPGE initialization files,  , A summary of command-line options, Invoking RPGE
+@node RPGE initialization files, Caveats, A summary of command-line options, Invoking RPGE
 @section RPGE initialization files
 Once started, RPGE parses command-line options, initializes the libraries it uses and, before entering the frame loop, processes an initialization file.
 This file, .RPGE by default, contains the names of files containing Scheme code for RPGE to execute, one per line, in sequence. Any lines starting with
@@ -113,6 +114,18 @@ Currently, RPGE executes everything in the config file in the same thread as the
 RPGE he is done loading the state of his application. The reason for this is that it would enable leaving code running from startup. As it stands however, this is unsupported
 and attempts to make threads from within startup code have thus far failed. Therefore, a user of a user-created application has to load code to process keystrokes himself,
 a rather suboptimal situation to say the least. 
+
+@node Caveats,  , RPGE initialization files, Invoking RPGE
+@section Caveats
+
+RPGE uses the so-called safe-load procedure to load files mentioned in initialization files. This means that, prior to loading the file, RPGE locks the load-mutex
+mutex, blocking if another thread has locked it and incrementing the lock count if the current thread has and unlocks it afterwards. Loads do not happen concurrently,
+even if the main thread could theoretically run a load while a spawned thread is doing one. Since this causes trouble for scripts that run forever, such scripts
+should execute (unlock-mutex load-mutex) before entering their infinite loops. Not doing so breaks any and all usage of safe-load. 
+
+Spawning threads and using any multi-threaded programming technique supported by GUILE is possible in RPGE, but note that usage of threads may require adding
+(use-modules (ice-9 threads)) to the top of your script. If you wish to run other scripts concurrently with your own, the safest way to do so is to use safe-load in the new
+thread. The simplest way to do so is @code{(make-thread safe-load @var{filename})}.
 
 @node RPGE's view of the world, Communication in RPGE, Invoking RPGE, Top
 @chapter RPGE's view of the world
