@@ -15,7 +15,7 @@
 ;You should have received a copy of the GNU General Public License
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
- 
+(use-modules (ice-9 threads))
 (set-global-data (init-table))
 (init-tilegrid 50 40)
 (set-all-tiles (create-tile "test_tile2.png" (make-rect 0 0 16 16) block-none))
@@ -37,3 +37,5 @@
 (bind-key 'w (lambda() (add-mob-movement m 0 -1 16)))
 (set-tile 5 5 (create-tile "test.png" (make-rect 0 0 16 16) block-all-undirectional))
 (define n (make-mob 5 0 "test_sprite.png"))
+(make-thread safe-load "keys.scm")
+(make-thread safe-load "mob_event_test.scm")

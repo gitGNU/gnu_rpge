@@ -123,6 +123,8 @@ main (int argc, char **argv)
   */
   SDL_EnableUNICODE(1);
   scm_init_guile ();
+  /*Define the load mutex as a recursive mutex. This is necessary for safe loading*/
+  scm_c_define("load-mutex",scm_make_recursive_mutex());
   SDL_CreateThread (exec_guile_shell, 0);
   scm_c_define_gsubr ("create-mob", 3, 0, 0, guile_create_mob);
   scm_c_define_gsubr ("destroy-mob",1,0,0,guile_destroy_mob);
@@ -156,6 +158,7 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("open-mob-events",1,0,0,guile_open_mob_eventstack);
   scm_c_define_gsubr ("get-mob-event",2,0,0,guile_get_mob_event);
   scm_c_define_gsubr ("close-mob-events",2,0,0,guile_close_mob_eventstack);
+  scm_c_define_gsubr ("safe-load",1,0,0,guile_safe_load);
   global_usereventstack = eventstack_init();
   windows = images = mobs = argvs = fonts = sequence_init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));

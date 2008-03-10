@@ -26,5 +26,7 @@
        (cdr (tracked-mob-table)))
   (usleep 250000)
   (check-mob-events))
- 
+
+;unlock the load mutex so the next load can be executed.
+(unlock-mutex load-mutex) 
 (check-mob-events)

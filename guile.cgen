@@ -378,3 +378,19 @@ guile_close_mob_eventstack(SCM mobindex, SCM luser)
   eventstack_close(&(((mob*)mobs.data[scm_to_int(mobindex)].data)->events),scm_to_uint(luser));
   return SCM_UNSPECIFIED;
 }
+
+SCM 
+scm_c_safe_load(char* filename)
+{
+  SCM load_mutex = scm_variable_ref(scm_c_lookup("load-mutex"));
+  scm_lock_mutex(load_mutex);
+  scm_c_primitive_load(filename);
+  scm_unlock_mutex(load_mutex);
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_safe_load(SCM filename)
+{
+  return  scm_c_safe_load(scm_to_locale_string(filename));
+}

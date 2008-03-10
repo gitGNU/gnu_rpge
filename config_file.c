@@ -67,7 +67,7 @@ exec_config_file(char* filename)
   while((str = getline(file)))
     {
       if(str[0] != 0 && str[0] != '#')
-        scm_c_primitive_load(str);
+        scm_c_safe_load(str);
       free(str);
     }
 }

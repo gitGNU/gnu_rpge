@@ -31,4 +31,6 @@
   (usleep 250000)
   (check-for-events))
 
+;signal that the next load may be executed
+(unlock-mutex load-mutex)
 (check-for-events)

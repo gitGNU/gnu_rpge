@@ -73,4 +73,6 @@ SCM guile_get_camera_y();
 SCM guile_open_mob_eventstack(SCM mobindex);
 SCM guile_get_mob_event(SCM mobindex, SCM luser);
 SCM guile_close_mob_eventstack(SCM mobindex, SCM luser);
+SCM scm_c_safe_load(char* filename);
+SCM guile_safe_load(SCM filename);
 #endif
