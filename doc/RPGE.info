@@ -547,6 +547,11 @@ Primitives related to mobs:
      Execute SCRIPT in the current thread, passing it ARGLIST as its
      arguments.
 
+   * `(safe-load SCRIPT)'
+
+     Load SCRIPT safely, that is, avoid crashes due to concurrent load
+     starts and ends.
+
 
 
 File: RPGE.info,  Node: GNU Free Documentation License,  Prev: API Reference,  Up: Top
@@ -999,6 +1004,6 @@ Node: Mobs9991
 Node: Communication in RPGE13525
 Node: API Reference15302
 Node: Primitives15658
-Node: GNU Free Documentation License21399
+Node: GNU Free Documentation License21520
 
 End Tag Table

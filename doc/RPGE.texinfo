@@ -388,6 +388,11 @@ the 'arguments' the script was 'called' with.
 Execute @var{script} in the current thread, passing it @var{arglist} as its 
 arguments.
 
+@item @code{(safe-load @var{script})}
+
+Load @var{script} safely, that is, avoid crashes due to concurrent load starts
+and ends.
+
 @end itemize
 
 
