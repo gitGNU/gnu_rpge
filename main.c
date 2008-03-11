@@ -49,7 +49,7 @@ get_keysym_symbol(SDL_Event e)
         {
           printable = sym & 0x7F;
           switch(printable)
-            {
+           {
               case '\n':
                 return scm_from_locale_symbol("newline");
                 break;

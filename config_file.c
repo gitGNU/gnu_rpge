@@ -53,10 +53,38 @@ getline(FILE* stream)
      }
 }
 
+/*This function modifies its first argument, stripping comments (everything after the very first #, so multiline strings are unsupported) and trailing whitespace just
+  before the comment.
+*/
+void
+exclude_comments(char* str)
+{
+  while(*str)
+    {
+      if(*str == '#')
+	{
+	  *str = '\0';
+	  break;
+	}
+      str++;
+    }
+  /*Proceed to strip all space and space-like characters from the end of the string, starting at just before the trailing null*/
+  str--;
+  while(*str)
+    {
+      if(*str == ' ' || *str == '\t' || *str == '\n' || *str == '\v')
+	{
+	  *str = '\0';
+	  str--;
+	}
+      else
+	break;
+    }
+}
 
 /*Probably a misnomer, but this one executes all files named in a
 file,one name per line, excluding those lines which happen to start
-with '#'.*/
+with '#'. Furthermore, it filters out comments and superfluous trailing spaces after filenames.*/
 void
 exec_config_file(char* filename)
 {
@@ -67,7 +95,10 @@ exec_config_file(char* filename)
   while((str = getline(file)))
     {
       if(str[0] != 0 && str[0] != '#')
-        scm_c_safe_load(str);
+	{
+	  exclude_comments(str);
+	  scm_c_safe_load(str);
+	}
       free(str);
     }
 }
