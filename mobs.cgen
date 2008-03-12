@@ -58,6 +58,18 @@ set_mob_occupants(mob* m)
   set_occupant(tilex,tiley,m);
 }
 
+void
+set_mob_tile_x(mob* m,int val)
+{
+  m->x = val*TILE_WIDTH;
+}
+
+void
+set_mob_tile_y(mob* m, int val)
+{
+  m->y = val*TILE_HEIGHT;
+}
+
 int
 push_mob_on_array (mob m)
 {
@@ -239,8 +251,9 @@ move_mob (mob * m)
 	{
 	  mob_stop_movement(m);
 	  /*Do some fixing of coordinates, to make sure the top-left corner of the sprite is at the limit of the set of allowed positions*/
-	  m->x = m->x < 0? 0 : m->x >= main_grid.width*TILE_WIDTH -TILE_WIDTH? main_grid.width*TILE_WIDTH-TILE_WIDTH: m->x;
-	  m->y = m->y < 0? 0 : m->y >= main_grid.height*TILE_HEIGHT -TILE_HEIGHT? main_grid.height*TILE_HEIGHT-TILE_HEIGHT : m->y;
+	  m->x <  0 ? m->x = 0 : set_mob_tile_x(m,old_tilex);
+	  m->y <  0 ? m->y = 0 : set_mob_tile_y(m,old_tiley);
+
 	}
       else if(!(occupant = get_occupant(tilex,tiley)) || occupant == m)
         {
@@ -270,9 +283,9 @@ move_mob (mob * m)
 		  mob_stop_movement(m);
 		  /*Coordinate fixing, to make sure the mob is on the OLD tile properly.*/
 		  if(tilex != old_tilex)
-		    m->x = old_tilex*TILE_WIDTH;
+		    set_mob_tile_x(m,old_tilex);
 		  if(tiley != old_tiley)
-		    m->y = old_tiley*TILE_HEIGHT;
+		    set_mob_tile_y(m,old_tiley);
 		}
 	    }
           /*Add an event on the mob, so users can do whatever they want with this information*/
@@ -285,9 +298,9 @@ move_mob (mob * m)
           mob_stop_movement(m);
 	  /*Coordinate fixing, to make sure the mob is on the OLD tile properly.*/
 	  if(tilex != old_tilex)
-	    m->x = old_tilex*TILE_WIDTH;
+	    set_mob_tile_x(m,old_tilex);
 	  if(tiley != old_tiley)
-	    m->y = old_tiley*TILE_HEIGHT;
+	    set_mob_tile_y(m,old_tiley);
           mob_stop_movement(occupant);
           /*
           Clear movement queues for occupant and m, so both mobs stop moving and stay still until ordered to move again by scripts.
