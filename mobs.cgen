@@ -234,9 +234,47 @@ move_mob (mob * m)
       int tiley = m->y > oldy ? (m->y+SPRITE_HEIGHT)/TILE_HEIGHT : m->y < oldy ? m->y/TILE_HEIGHT : tiley_center;
       int old_tilex = (oldx+SPRITE_WIDTH/2)/TILE_WIDTH, old_tiley = (oldy+SPRITE_HEIGHT/2)/TILE_HEIGHT;
       mob* occupant = NULL;
-      if(!(occupant = get_occupant(tilex,tiley)) || occupant == m)
+      /*Check grid bounds*/
+      if(m->x < 0 || tilex >= main_grid.width || m->y < 0 || tiley >=main_grid.height)
+	{
+	  mob_stop_movement(m);
+	  /*Do some fixing of coordinates, to make sure the top-left corner of the sprite is at the limit of the set of allowed positions*/
+	  m->x = m->x < 0? 0 : m->x >= main_grid.width*TILE_WIDTH -TILE_WIDTH? main_grid.width*TILE_WIDTH-TILE_WIDTH: m->x;
+	  m->y = m->y < 0? 0 : m->y >= main_grid.height*TILE_HEIGHT -TILE_HEIGHT? main_grid.height*TILE_HEIGHT-TILE_HEIGHT : m->y;
+	}
+      else if(!(occupant = get_occupant(tilex,tiley)) || occupant == m)
         {
           reset_occupant(old_tilex,old_tiley);
+	  /* Do tile block checking since there was no collision*/
+	  if(old_tilex != tilex || old_tiley != tiley)
+	    {
+	      char blocking = main_grid.tilegrid[tilex][tiley].blocking;
+	      char stop = 0;
+	      /*Moving right,check left edge*/
+	      if(tilex > old_tilex)
+		{
+		  stop = blocking & BLOCK_LEFT? 1: 0;
+		}
+	      /*Moving left*/
+	      else
+		stop = blocking & BLOCK_RIGHT? 1 : 0;
+	      /*Moving down*/
+	      if(tiley > old_tiley)
+		stop = blocking & BLOCK_UP? 1 : 0;
+	      /*Moving up*/
+	      else
+		stop = blocking & BLOCK_DOWN? 1 : 0;
+	      /*This will be detected by edge checking before the center changes tiles*/
+	      if(stop)
+		{
+		  mob_stop_movement(m);
+		  /*Coordinate fixing, to make sure the mob is on the OLD tile properly.*/
+		  if(tilex != old_tilex)
+		    m->x = old_tilex*TILE_WIDTH;
+		  if(tiley != old_tiley)
+		    m->y = old_tiley*TILE_HEIGHT;
+		}
+	    }
           /*Add an event on the mob, so users can do whatever they want with this information*/
           if(tilex_center != old_tilex || tiley_center != old_tiley)
 	    add_mob_tilechange_event(m,old_tilex,old_tiley,tilex,tiley);
@@ -245,6 +283,11 @@ move_mob (mob * m)
       else
         {
           mob_stop_movement(m);
+	  /*Coordinate fixing, to make sure the mob is on the OLD tile properly.*/
+	  if(tilex != old_tilex)
+	    m->x = old_tilex*TILE_WIDTH;
+	  if(tiley != old_tiley)
+	    m->y = old_tiley*TILE_HEIGHT;
           mob_stop_movement(occupant);
           /*
           Clear movement queues for occupant and m, so both mobs stop moving and stay still until ordered to move again by scripts.
@@ -307,74 +350,10 @@ mob_set_movement (mob * m, int xam, double xrate, int yam, double yrate)
 void
 mob_move_all (mob * m, int xtiles, int ytiles, int frames)
 {
-  int xrate = xtiles * TILE_WIDTH / frames;
-  int yrate = ytiles * TILE_HEIGHT / frames;
-  int xam = 0;
-  int yam = 0;
-  int mobtilexold, mobtilex = (m->x + HALF_TILE_WIDTH) / TILE_WIDTH, mobtileyold, mobtiley = (m->y + HALF_TILE_HEIGHT) / TILE_HEIGHT, mobxnew = m->x, mobynew = m->y;
-  char block = 0, oob_down,oob_up,oob_right,oob_left;
-  for (int i = 1; i <= frames; i++)
-    {
-      mobxnew += xrate;
-      mobynew += yrate;
-      mobtilexold = mobtilex;
-      mobtileyold = mobtiley;
-      /*The following makes sure the right edge is checked, i.e. the edge most likely to move to a new tile*/
-      mobtilex = xrate > 0? mobxnew/TILE_HEIGHT+1: xrate < 0? mobxnew/TILE_HEIGHT : (mobxnew+HALF_TILE_WIDTH)/TILE_WIDTH;
-      mobtiley = yrate > 0? mobynew/TILE_HEIGHT+1: yrate < 0? mobynew/TILE_HEIGHT : (mobynew+HALF_TILE_HEIGHT)/TILE_HEIGHT;
-      if((oob_left = (mobxnew < 0)) ||
-         (oob_up =  (mobynew < 0)) ||
-         (oob_right = (mobxnew + TILE_WIDTH >= main_grid.width * TILE_WIDTH)) ||
-         (oob_down =  (mobynew + TILE_HEIGHT >= main_grid.height * TILE_HEIGHT)))
-	{
-          if(oob_left)
-            {
-	      xam += xrate - mobxnew;
-            }
-          else if(oob_right)
-	    {
-              xam += xrate - (mobxnew+TILE_WIDTH-main_grid.width*TILE_WIDTH)-1/*1-pixel safety margin #1*/;
-            }
-	  else if(oob_up)
-	    {
-	      yam += yrate - mobynew;
-	    }
-          else if(oob_down)
-	    {
-	      yam += yrate - (mobynew+TILE_HEIGHT-main_grid.height*TILE_HEIGHT)-1/*1-pixel safety margin #1*/;
-	    }
-	  if(!(oob_down || oob_up))
-            {
-	      yam += yrate;
-            }
-	  if(!(oob_left || oob_right))
-            {
-              xam += xrate;
-            }
-	  break;
-        }
-      if (mobtilex != mobtilexold || mobtiley != mobtileyold)
-	{     
-	  block = main_grid.tilegrid[mobtilex][mobtiley].blocking;
-	  if ((mobtilex < mobtilexold && (block & BLOCK_RIGHT)) ||
-	      (mobtilex > mobtilexold && (block & BLOCK_LEFT)) ||
-	      (mobtiley < mobtileyold && (block & BLOCK_DOWN)) ||
-	      (mobtiley > mobtileyold && (block & BLOCK_UP)))
-            {
-	      break;
-            }
-          else
-            {
-              xam += xrate;
-              yam += yrate;
-            }
-	}
-      else
-	{
-	  xam += xrate;
-	  yam += yrate;
-	}
-    }
+  int xam = xtiles*TILE_WIDTH;
+  int yam = ytiles*TILE_HEIGHT;
+  int xrate = xam/frames;
+  int yrate = yam/frames;
   mob_set_movement (m, xam, xrate, yam, yrate);
 }
 

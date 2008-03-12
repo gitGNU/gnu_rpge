@@ -5286,6 +5286,9 @@ _ACEOF
 
 fi
 
+
+  XGETTEXT_EXTRA_OPTIONS=
+
 { echo "$as_me:$LINENO: checking for inline" >&5
 echo $ECHO_N "checking for inline... $ECHO_C" >&6; }
 if test "${ac_cv_c_inline+set}" = set; then
@@ -6092,6 +6095,13 @@ fi
   :
 
 
+
+
+  XGETTEXT_EXTRA_OPTIONS="$XGETTEXT_EXTRA_OPTIONS --flag=error:3:c-format"
+
+
+
+  XGETTEXT_EXTRA_OPTIONS="$XGETTEXT_EXTRA_OPTIONS --flag=error_at_line:5:c-format"
 
 
 
