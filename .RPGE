@@ -9,4 +9,3 @@ key-funcs.scm 		#Key API
 stats.scm		#Statistics system
 mob_events.scm		#Mob event binding system
 test.scm		#Testing game, feel free to remove.
-cool.scm														   
