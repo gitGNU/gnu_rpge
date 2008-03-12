@@ -20,12 +20,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 config_file.h: Here because config_file.c needs an accompanying header.
 */
 
+#ifndef CONFIG_FILE_H
+#define CONFIG_FILE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <libguile.h>
+#include <ctype.h>
 #include "lib/xalloc.h"
+
 #define BLOCK_SIZE 256
 
 char* getline(FILE* stream);
 void exec_config_file(char* filename);
+
+#endif

@@ -74,7 +74,7 @@ exclude_comments(char* str)
     }
   /*Proceed to strip all space and space-like characters from the end of the string, starting just before the trailing \0 */
   str--;
-  while(len && (*str==' '|| *str == '\t' || *str == '\n' || *str == '\v'))
+  while(len && isspace(*str))
     {
       *str = '\0';
       str--;
@@ -98,7 +98,7 @@ exec_config_file(char* filename)
     {
       if(str[0] != 0 && str[0] != '#')
 	{
-	  if(len = exclude_comments(str))
+	  if((len = exclude_comments(str)))
 	    scm_c_safe_load(str);
 	}
       free(str);
