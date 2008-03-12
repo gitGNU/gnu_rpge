@@ -339,13 +339,8 @@ mob_set_movement (mob * m, int xam, double xrate, int yam, double yrate)
   m->ymoverate = yrate;
 }
 
-/*This function acts as a preprocessor to move_mob, so move_mob doesn't have to worry
-  about blocking tiles and the like. The downside of this is that, in theory, mobs moving
-  over tiles while those tiles are being changed will exhibit some erroneous behavior.
-  It is possible to marginalize this by queueing up short movements rather than long
-  sweeping motions and taking care to not change tiles under the feet of any moving mobs.
-  The one thing we should expect to change a lot is the set of positions of mobs, wherefore
-  it is the duty of move_mob to perform checks for mob collision. 
+/*
+  Set up movement parameters, nothing very complicated.
 */
 void
 mob_move_all (mob * m, int xtiles, int ytiles, int frames)
