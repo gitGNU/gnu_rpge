@@ -395,6 +395,22 @@ and ends.
 
 @end itemize
 
+@node Scheme-level APIs
+@section Scheme-level APIs
+
+In addition to the primitives defined by the RPGE core, the default RPGE initialization file loads several
+files that define many Scheme functions for use with RPGE. Usually, these are meant to provide functionality
+that the developers felt shouldn't be 'hardcoded' in RPGE and can be replaced by an equivalent built on either
+GUILE itself or a combination of GUILE and the RPGE primitives described in the previous section.
+
+In the default initialization file, files are ordered in such a way that, at the very least, they will be 
+loaded after their dependencies have been loaded. Therefore, if you replace files, it is recommended to check if files
+loaded after the deleted file will still load and the functions they define will still run. For example, not loading table.guile
+, which is referenced at the very start of the default initialization file, will break most functions in files loaded later,
+with the exception of utils.guile, which does not use any tables at all. 
+
+This section lists the APIs in the order in which they are loaded by default, roughly the order in which they depend on
+each other.
 
 @node GNU Free Documentation License,  , API Reference, Top
 @unnumbered GNU Free Documentation License

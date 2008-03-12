@@ -54,11 +54,13 @@ getline(FILE* stream)
 }
 
 /*This function modifies its first argument, stripping comments (everything after the very first #, so multiline strings are unsupported) and trailing whitespace just
-  before the comment.
+  before the comment. Furthermore, this function tracks and returns the length of the reduced string. This is both necessary to avoid underflow and useful to avoid loading
+  the file NULL.
 */
-void
+int
 exclude_comments(char* str)
 {
+  int len = 0;
   while(*str)
     {
       if(*str == '#')
@@ -66,20 +68,19 @@ exclude_comments(char* str)
 	  *str = '\0';
 	  break;
 	}
+      /*Basically an interwoven edition of strlen, to avoid looping many times over the same thing*/
+      len++;
       str++;
     }
-  /*Proceed to strip all space and space-like characters from the end of the string, starting at just before the trailing null*/
+  /*Proceed to strip all space and space-like characters from the end of the string, starting just before the trailing \0 */
   str--;
-  while(*str)
+  while(len && (*str==' '|| *str == '\t' || *str == '\n' || *str == '\v'))
     {
-      if(*str == ' ' || *str == '\t' || *str == '\n' || *str == '\v')
-	{
-	  *str = '\0';
-	  str--;
-	}
-      else
-	break;
+      *str = '\0';
+      str--;
+      len--;
     }
+  return len;
 }
 
 /*Probably a misnomer, but this one executes all files named in a
@@ -92,12 +93,13 @@ exec_config_file(char* filename)
   if(!file)
     return;
   char* str;
+  int len;
   while((str = getline(file)))
     {
       if(str[0] != 0 && str[0] != '#')
 	{
-	  exclude_comments(str);
-	  scm_c_safe_load(str);
+	  if(len = exclude_comments(str))
+	    scm_c_safe_load(str);
 	}
       free(str);
     }
