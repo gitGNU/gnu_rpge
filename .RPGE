@@ -2,10 +2,10 @@
 #Sample .RPGE config file,loading the standard table interface and the few standard utility scheme functions for RPGE.
 #
 
-table.guile		#Table API
-utils.guile		#Utility functions
-mobutils.scm		#Mob-related utilities
-key-funcs.scm 		#Key API
-stats.scm		#Statistics system
-mob_events.scm		#Mob event binding system
+/usr/local/share/RPGE/scm/table.guile		#Table API
+/usr/local/share/RPGE/scm/utils.guile		#Utility functions
+/usr/local/share/RPGE/scm/mobutils.scm		#Mob-related utilities
+/usr/local/share/RPGE/scm/key-funcs.scm 		#Key API
+/usr/local/share/RPGE/scm/stats.scm		#Statistics system
+/usr/local/share/RPGE/scm/mob_events.scm		#Mob event binding system
 test.scm		#Testing game, feel free to remove.
