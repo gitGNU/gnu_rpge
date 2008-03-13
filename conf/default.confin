@@ -1,0 +1,9 @@
+#Default RPGE configuration file. This file is installed in datadir/conf and loaded by the default skeleton config file.
+scheme-dir:datadir/scm/
+image-dir:datadir/images/
+table.guile		#Table API
+utils.guile		#Utility 
+mobutils.scm		#Mob-related 
+key-funcs.scm 		#Key API
+stats.scm		#Statistics system
+mob_events.scm		#Mob event binding system
