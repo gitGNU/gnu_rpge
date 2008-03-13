@@ -33,5 +33,7 @@ extern sequence scheme_paths;
 void paths_init(void);
 void add_path(sequence* pathgroup, char* path);
 char* get_path(sequence pathgroup, char* file);
+void add_scheme_dir(char* dir);
+void add_image_dir(char* dir);
 
 #endif

@@ -392,5 +392,11 @@ scm_c_safe_load(char* filename)
 SCM
 guile_safe_load(SCM filename)
 {
-  return  scm_c_safe_load(scm_to_locale_string(filename));
+  char* path = get_path(scheme_paths,scm_to_locale_string(filename));
+  if(path)
+    {
+      scm_c_safe_load(path);
+      free(path);
+    }
+  return SCM_UNSPECIFIED;
 }

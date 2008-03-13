@@ -68,9 +68,13 @@ int
 push_image_on_stack(char* filename)
 {
   int index  = find_image(filename), indexempty = find_empty();
+  char* path = get_path(image_paths,filename);
+  if(!path)
+    return -1;
   if(indexempty != -1)
     {
-      images.data[indexempty] = make_image_obj(make_image(load_image(filename),filename));
+      images.data[indexempty] = make_image_obj(make_image(load_image(path),filename));
+      free(path);
       return indexempty;
     }
   else if(index != -1)
@@ -79,7 +83,9 @@ push_image_on_stack(char* filename)
     }
   else
     {
-      return sequence_append(&images,make_image_obj(make_image(load_image(filename),filename)));
+      int returnval = sequence_append(&images,make_image_obj(make_image(load_image(path),filename)));
+      free(path);
+      return returnval;
     }
 }
 

@@ -13,7 +13,6 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -61,15 +60,6 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	install-pdf-recursive install-ps-recursive install-recursive \
 	installcheck-recursive installdirs-recursive pdf-recursive \
 	ps-recursive uninstall-recursive
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(RPGEdatadir)"
-RPGEdataDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(RPGEdata_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 ETAGS = etags
@@ -281,18 +271,14 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
 #RPGE main Makefile.am.
-RPGEdatadir = $(datadir)/RPGE
-RPGEdata_DATA = default.conf
-EXTRA_DIST = convertors.sh  .RPGE  cleanup_loop.sh default.confin
-SUFFIXES = .cgen .confin
-SUBDIRS = lib scm doc images src
+EXTRA_DIST = convertors.sh  .RPGE  cleanup_loop.sh test.scm
+SUBDIRS = lib scm doc images src conf
 ACLOCAL_AMFLAGS = -I m4	
 MOSTLYCLEANFILES = default.conf
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
-.SUFFIXES: .cgen .confin .conf
 am--refresh:
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -343,23 +329,6 @@ $(srcdir)/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
-install-RPGEdataDATA: $(RPGEdata_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(RPGEdatadir)" || $(MKDIR_P) "$(DESTDIR)$(RPGEdatadir)"
-	@list='$(RPGEdata_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(RPGEdataDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(RPGEdatadir)/$$f'"; \
-	  $(RPGEdataDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(RPGEdatadir)/$$f"; \
-	done
-
-uninstall-RPGEdataDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(RPGEdata_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(RPGEdatadir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(RPGEdatadir)/$$f"; \
-	done
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -636,12 +605,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(DATA) config.h
+all-am: Makefile config.h
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(RPGEdatadir)"; do \
-	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
-	done
 install: install-recursive
 install-exec: install-exec-recursive
 install-data: install-data-recursive
@@ -686,7 +652,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-RPGEdataDATA
+install-data-am:
 
 install-dvi: install-dvi-recursive
 
@@ -722,7 +688,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-RPGEdataDATA
+uninstall-am:
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) install-am \
 	install-strip
@@ -733,18 +699,15 @@ uninstall-am: uninstall-RPGEdataDATA
 	dist-shar dist-tarZ dist-zip distcheck distclean \
 	distclean-generic distclean-hdr distclean-tags distcleancheck \
 	distdir distuninstallcheck dvi dvi-am html html-am info \
-	info-am install install-RPGEdataDATA install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
+	info-am install install-am install-data install-data-am \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs installdirs-am maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am tags tags-recursive uninstall \
-	uninstall-RPGEdataDATA uninstall-am
+	pdf-am ps ps-am tags tags-recursive uninstall uninstall-am
 
-.confin.conf:
-	cat $< | sed s'|'datadir'|'$(RPGEdatadir)'|'g > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

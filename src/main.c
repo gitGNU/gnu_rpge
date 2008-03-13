@@ -161,6 +161,8 @@ main (int argc, char **argv)
   SCM_TICK;
   global_usereventstack = eventstack_init();
   windows = images = mobs = argvs = fonts = sequence_init();
+  directives_init();
+  paths_init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
   scm_gc_protect_object(global_userdata);
   exec_config_file(initfile);

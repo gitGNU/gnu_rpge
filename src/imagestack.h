@@ -26,7 +26,7 @@ imagestack.h: Define imagestack structs and declare imagestack functions so imag
 #include <string.h>
 #include "sequence.h"
 #include "xalloc.h"
-
+#include "path.h"
   
 typedef struct
 {

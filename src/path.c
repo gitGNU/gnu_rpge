@@ -87,3 +87,18 @@ get_path(sequence pathgroup, char* filename)
     }
   return NULL;
 }
+
+/*
+  Necessary to add a simple function to the directives, nothing special
+*/
+void
+add_scheme_dir(char* dir)
+{
+  add_path(&scheme_paths,strdup(dir));
+}
+
+void
+add_image_dir(char* dir)
+{
+  add_path(&image_paths,strdup(dir));
+}

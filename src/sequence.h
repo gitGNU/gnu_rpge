@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define TYPE_DISPATCH_PAIR 10
 #define TYPE_MOVE_DESCRIPTOR 11
 #define TYPE_THREAD_ARGV 12
+#define TYPE_DIRECTIVE_T 13
   
 typedef struct
 {

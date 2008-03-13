@@ -441,8 +441,10 @@ uninstall-am: uninstall-RPGEdocsDATA
 	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
 	pdf-am ps ps-am uninstall uninstall-RPGEdocsDATA uninstall-am
 
+
 .texinfo.info:
-	makeinfo $< 
+	makeinfo $<
+
 .texinfo.pdf:
 	texi2pdf $<
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

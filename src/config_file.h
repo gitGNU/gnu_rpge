@@ -29,10 +29,19 @@ config_file.h: Here because config_file.c needs an accompanying header.
 #include <libguile.h>
 #include <ctype.h>
 #include "xalloc.h"
+#include "sequence.h"
+#include "path.h"
+
+typedef struct
+{
+  char* name;
+  void (*func)(char*);
+} directive_t;
 
 #define BLOCK_SIZE 256
 
 char* getline(FILE* stream);
 void exec_config_file(char* filename);
+void directives_init();
 
 #endif
