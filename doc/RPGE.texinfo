@@ -208,9 +208,10 @@ This section describes the entire RPGE GUILE API, all the way from primitives to
 
 @menu
 * Primitives::                  
+* Scheme-level APIs::           
 @end menu
 
-@node Primitives,  , API Reference, API Reference
+@node Primitives, Scheme-level APIs, API Reference, API Reference
 @section Primitives
 
 Primitives related to mobs:
@@ -395,7 +396,7 @@ and ends.
 
 @end itemize
 
-@node Scheme-level APIs
+@node Scheme-level APIs,  , Primitives, API Reference
 @section Scheme-level APIs
 
 In addition to the primitives defined by the RPGE core, the default RPGE initialization file loads several
