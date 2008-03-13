@@ -1,1 +1,307 @@
-Changes shall be marked in this file from the first release onward.
+2008-March 13th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Build system overhaul, fixing old bugs and reorganizing the package
+	  -Synthesize skeleton config files and default config file, install latter
+	  -Update ChangeLog.
+
+2008-March 12th:
+	Remco Bras<rvbras@gnu.org>:
+	  -config_file.c: Fixes to work properly with lines containing only whitespace and comments
+	  -config_file.c: Use isspace, do not hardcode specific space characters
+	  -Some preliminary API documentation for Scheme-defined APIs.
+	  -.RPGE: remove unnecessary debug file
+	  -mobs.cgen: Rewrite mob movement partially, moving blocking checks to move_mob, fixing an old bug. Add coordinate fixing.
+
+2008-March 11th:
+	Remco Bras<rvbras@gnu.org>:
+	  -config_file.c: Exclude comments from string
+	  -main.c: Move REPL initialization to just before main loop
+
+2008-March 10th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Fixed thread loading bug
+	  -Added documentation related to the fix
+
+2008-March 2nd:
+	Remco Bras<rvbras@gnu.org>:
+	  -Docs:Finish description of most primitives
+	  -Video.c: do not render destroyed texts
+	  -.cgen.c suffix rule created, replacing old version
+	  -cleanup added for generated .c files
+	  -fixes to convertors.sh to prevent bogus if interrupted
+
+2008-March 1st:
+	Remco Bras<rvbras@gnu.org>:
+	  -BUGS: Fix wording, add info.
+
+2008-February 29th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Fixed unused make_font fixes
+	  -Some in-progress documentation work committed
+	  -Clear movement queues if mobs collide
+	  -Clarify language in docs describing said queues.
+	  -Makefile.am: add -o $@ to .c.o suffix rule
+
+2008-February 28th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Some changes to documentation
+	  -Generic maintenance in code to obey Rule of Silence and fix bugs
+
+2008-February 27th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Autotool-related fixes
+	  -New manual chapter added
+	  -sequence_map fixed, old version renamed to sequence_map_destructive
+
+2008-February 23rd:
+	Remco Bras<rvbras@gnu.org>:
+	  -Tests updated to fix camera tracking and check for mob events
+
+2008-February 22nd:
+	Remco Bras<rvbras@gnu.org>:
+	  -Added mob events
+	  -Eventstacks should ignore events if nobody is waiting for them
+
+2008-February 19th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Edited README
+	  -Updated version message to include RPGE's GNUness
+	  -Updated same in manual
+	  -Added mob collision and events for such
+	  -General maintenance
+	  -Mob-related bug fixes
+
+2008-February 17th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Fixed various bugs
+
+2008-February 16th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Camera support completed
+	  -Screen surface clearing added (fixing a bug)
+	  -Camera tracking added
+	  -Comments added and removed
+	  -Camera fixes
+
+2008-February 15th:
+	Remco Bras<rvbras@gnu.org>:
+	  -mob_move_all fixes to make blocking work
+	  -depcomp and the like updated
+	  -camera support added to most rendering funcs
+	  -Manual stubs and FDL done
+
+2008-February 14th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Update copyright notices
+	  -Switch to gnulib xalloc module
+	  -add camera stub
+	  -Fix bounds checking in mob_move_all
+	  -Removed magic numbers in exit calls
+	  -Added explanatory comments
+	  
+
+2008-February 13th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Updated AUTHORS file
+
+2008-February 12th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Added -v and -h options, along with -f
+	  -Added long options --version and --help
+	  -Removed debug printf in dispatch.c
+
+2008-February 11th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Bugfixes to stop crashes
+	  -More work on sed-based macros
+
+2008-February 10th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Added sed-based convertor macros.
+	  -Usage of said macros added
+
+2008-February 9th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Added support for movement queuing
+
+2008-February 6th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Fixed superfluous quotation in key-funcs.scm
+	  -Rewrote keys.scm to use bindings
+	  -Added more key bindings
+	  -Basic statistics system written
+
+2008-February 3rd:
+	Remco Bras<rvbras@gnu.org>:
+	  -Tests added
+
+2008-February 2nd:
+	Remco Bras<rvbras@gnu.org>:
+	  -Protect stored SCM values from GC.
+
+2008-January 26th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Load scripts specified in .RPGE on startup
+
+2008-January 15th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Minor configure.in fixes
+
+2008-January 12th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Automated event production dispatcher added
+
+2008-January 4th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Superfluous comment removed
+
+2008-January 3rd:
+	Remco Bras<rvbras@gnu.org>:
+	  -Added deallocation stub to main.c
+	  -Basic text rendering added
+	  -Text rendering GUILE interface added
+
+2007-December 30th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Finalized font opening/closing
+
+2007-December 15th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Font check fixed so size is taken into account
+	  -Size information added to font struct
+
+2007-December 13th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Added opening of fonts
+	  -Fixed bug in sequence.c
+
+2007-December 7th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Automatic cleanup of eventstacks added
+	
+2007-December 1st;
+	Remco Bras<rvbras@gnu.org>:
+	  -Sequences introduced 
+	  -Reworked lots of code to use them
+	  -Thread argument vectors added
+
+2007-November 22nd:
+	Remco Bras<rvbras@gnu.org>:
+	  -GUILE global and mob userdata manipulation interfaces added
+
+2007-November 15th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Event usage implemented and tested
+
+2007-November 9th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Dispatching added
+
+2007-November 6th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Event system reworked so events are pair of SCM values.
+
+2007-October 30th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Bug fix: render-window didn't work
+	  -Window testing code added
+	  -Improved render-window
+	  -Fixed inconsistencies in window.{c,h}
+
+2007-October 27th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Window system work started
+	  -Maintenance of said system
+
+2007-October 18th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Event dispatch work started
+	  -Bugs fixed
+
+2007-October 14th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Maintenance
+	  -Work on eventstacks started
+
+2007-October 12th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Maintenance, removing ugliness in main.c
+
+2007-October 9th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Decoupling of main tilegrid from rendering
+
+2007-October 7th:
+	Remco Bras<rvbras@gnu.org>:
+	  -destroy-mob function added
+
+2007-October 6th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Work on the GUILE API
+	  -Animation interface stub
+
+2007-October 4th:
+	Remco Bras<rvbras@gnu.org>:
+	  -init-tilegrid function added
+	  -mob_move_all fixes
+	
+2007-October 2nd:
+	Remco Bras<rvbras@gnu.org>:
+	  -Bugs fixed
+
+2007-September 30th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Universal move-mob procedure added
+	  -Maintenance
+
+2007-September 29th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Mob movement interface added
+	  -Maintenance
+
+2007-September 28th:
+	Remco Bras<rvbras@gnu.org>:
+	  -More GUILE work
+	  -New test tile added
+	  -Maintenance
+
+2007-September 27th:
+	Remco Bras<rvbras@gnu.org>:	
+	  -Tile-list conversion added
+	  -Many bugs fixed
+
+2007-September 26th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Initial work on GUILE API
+	
+2007-September 25th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Work on GUILE support
+	  -Initial work on GUILE tables
+
+2007-September 24th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Add movement system
+	  -Maintenance
+	Michael de Lang <kingoipo@gmail.com>:
+	  -Added first GUILE support
+	  -Maintenance
+
+2007-September 23rd:
+	Remco Bras<rvbras@gnu.org>:	
+	  -Maintenance, fixing animation bug in mobs.c, among others.
+
+2007-September 22nd:
+	Remco Bras<rvbras@gnu.org>:
+	  -Pre-render tilegrids to improve performance
+	  -Sprite animation stub
+	  -Maintenance
+
+2007-September 20th:
+	Remco Bras<rvbras@gnu.org>:
+	  -General maintenance
+
+2007-September 18th:
+	Remco Bras<rvbras@gnu.org>: 
+	  -Initial tile support added
+	  -Upload first tarball to git repository.
