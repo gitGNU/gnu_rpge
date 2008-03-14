@@ -773,6 +773,7 @@ REPLACE_STRSTR
 NEXT_STRING_H
 GNULIB_CHOWN
 GNULIB_DUP2
+GNULIB_ENVIRON
 GNULIB_FCHDIR
 GNULIB_FTRUNCATE
 GNULIB_GETCWD
@@ -787,6 +788,7 @@ HAVE_FTRUNCATE
 HAVE_GETPAGESIZE
 HAVE_READLINK
 HAVE_SLEEP
+HAVE_DECL_ENVIRON
 HAVE_DECL_GETLOGIN_R
 HAVE_OS_H
 HAVE_SYS_PARAM_H
@@ -5977,6 +5979,7 @@ echo "${ECHO_T}$gl_cv_next_string_h" >&6; }
 
   GNULIB_CHOWN=0;
   GNULIB_DUP2=0;
+  GNULIB_ENVIRON=0;
   GNULIB_FCHDIR=0;
   GNULIB_FTRUNCATE=0;
   GNULIB_GETCWD=0;
@@ -5991,6 +5994,7 @@ echo "${ECHO_T}$gl_cv_next_string_h" >&6; }
   HAVE_GETPAGESIZE=1;
   HAVE_READLINK=1;
   HAVE_SLEEP=1;
+  HAVE_DECL_ENVIRON=1;
   HAVE_DECL_GETLOGIN_R=1;
   HAVE_OS_H=0;
   HAVE_SYS_PARAM_H=0;
@@ -7968,6 +7972,7 @@ REPLACE_STRSTR!$REPLACE_STRSTR$ac_delim
 NEXT_STRING_H!$NEXT_STRING_H$ac_delim
 GNULIB_CHOWN!$GNULIB_CHOWN$ac_delim
 GNULIB_DUP2!$GNULIB_DUP2$ac_delim
+GNULIB_ENVIRON!$GNULIB_ENVIRON$ac_delim
 GNULIB_FCHDIR!$GNULIB_FCHDIR$ac_delim
 GNULIB_FTRUNCATE!$GNULIB_FTRUNCATE$ac_delim
 GNULIB_GETCWD!$GNULIB_GETCWD$ac_delim
@@ -7982,6 +7987,7 @@ HAVE_FTRUNCATE!$HAVE_FTRUNCATE$ac_delim
 HAVE_GETPAGESIZE!$HAVE_GETPAGESIZE$ac_delim
 HAVE_READLINK!$HAVE_READLINK$ac_delim
 HAVE_SLEEP!$HAVE_SLEEP$ac_delim
+HAVE_DECL_ENVIRON!$HAVE_DECL_ENVIRON$ac_delim
 HAVE_DECL_GETLOGIN_R!$HAVE_DECL_GETLOGIN_R$ac_delim
 HAVE_OS_H!$HAVE_OS_H$ac_delim
 HAVE_SYS_PARAM_H!$HAVE_SYS_PARAM_H$ac_delim
@@ -8003,7 +8009,7 @@ gltests_LIBOBJS!$gltests_LIBOBJS$ac_delim
 gltests_LTLIBOBJS!$gltests_LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 94; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 96; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
@@ -8022,7 +8028,7 @@ fi
 
 cat >>$CONFIG_STATUS <<_ACEOF
 cat >"\$tmp/subs-2.sed" <<\CEOF$ac_eof
-/@[a-zA-Z_][a-zA-Z_0-9]*@/!b end
+/@[a-zA-Z_][a-zA-Z_0-9]*@/!b
 _ACEOF
 sed '
 s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g
@@ -8035,8 +8041,6 @@ N; s/^.*\n//; s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g; b n
 ' >>$CONFIG_STATUS <conf$$subs.sed
 rm -f conf$$subs.sed
 cat >>$CONFIG_STATUS <<_ACEOF
-:end
-s/|#_!!_#|//g
 CEOF$ac_eof
 _ACEOF
 
@@ -8290,7 +8294,7 @@ s&@abs_top_builddir@&$ac_abs_top_builddir&;t t
 s&@INSTALL@&$ac_INSTALL&;t t
 s&@MKDIR_P@&$ac_MKDIR_P&;t t
 $ac_datarootdir_hack
-" $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" >$tmp/out
+" $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" | sed 's/|#_!!_#|//g' >$tmp/out
 
 test -z "$ac_datarootdir_hack$ac_datarootdir_seen" &&
   { ac_out=`sed -n '/\${datarootdir}/p' "$tmp/out"`; test -n "$ac_out"; } &&
