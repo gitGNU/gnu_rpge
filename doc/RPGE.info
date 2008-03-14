@@ -580,6 +580,16 @@ with the exception of utils.guile, which does not use any tables at all.
    This section lists the APIs in the order in which they are loaded by
 default, roughly the order in which they depend on each other.
 
+   Table API (defined in table.guile):
+   * `(init-table)' Returns a fresh, initialized table.
+
+   * `(table? TABLE)' Returns #t if TABLE looks like a table. This
+     function is not perfectly accurate.
+
+   * `(add-to-table TABLE KEY VALUE)' Returns TABLE, with VALUE bound
+     to KEY. This does not modify the original TABLE.
+
+
 
 File: RPGE.info,  Node: GNU Free Documentation License,  Prev: API Reference,  Up: Top
 
@@ -1032,6 +1042,6 @@ Node: Communication in RPGE13525
 Node: API Reference15302
 Node: Primitives15680
 Node: Scheme-level APIs21568
-Node: GNU Free Documentation License22815
+Node: GNU Free Documentation License23146
 
 End Tag Table

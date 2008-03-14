@@ -413,6 +413,19 @@ with the exception of utils.guile, which does not use any tables at all.
 This section lists the APIs in the order in which they are loaded by default, roughly the order in which they depend on
 each other.
 
+Table API (defined in table.guile):
+@itemize
+@item @code{(init-table)}
+Returns a fresh, initialized table.
+
+@item @code{(table? @var{table})}
+Returns #t if @var{table} looks like a table. This function is not perfectly accurate.
+
+@item @code{(add-to-table @var{table} @var{key} @var{value})}
+Returns @var{table}, with @var{value} bound to @var{key}. This does not modify the original @var{table}.
+
+@end itemize
+
 @node GNU Free Documentation License,  , API Reference, Top
 @unnumbered GNU Free Documentation License
 @include fdl.texi
