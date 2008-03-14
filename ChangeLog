@@ -1,3 +1,11 @@
+2008-March 14th:
+	Remco Bras<rvbras@gnu.org>:
+	  -General build system maintenance
+	  -General maintenance to add error messages
+	  -Played around with GNUlib a bit,
+	   exploring possible future modules to add.
+	  -examples directory added
+
 2008-March 13th:
 	Remco Bras<rvbras@gnu.org>:
 	  -Build system overhaul, fixing old bugs and reorganizing the package
