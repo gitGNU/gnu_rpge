@@ -7079,7 +7079,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile lib/Makefile scm/Makefile doc/Makefile images/Makefile src/Makefile conf/Makefile"
+ac_config_files="$ac_config_files Makefile lib/Makefile scm/Makefile doc/Makefile images/Makefile src/Makefile conf/Makefile examples/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -7706,6 +7706,7 @@ do
     "images/Makefile") CONFIG_FILES="$CONFIG_FILES images/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "conf/Makefile") CONFIG_FILES="$CONFIG_FILES conf/Makefile" ;;
+    "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}

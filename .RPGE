@@ -1,6 +1,0 @@
-#
-#Sample .RPGE config file,loading the standard table interface and the few standard utility scheme functions for RPGE.
-#
-
-include:global.conf #Include global configuration file
-test.scm		#Testing game, feel free to remove.
