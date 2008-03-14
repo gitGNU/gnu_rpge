@@ -398,5 +398,7 @@ guile_safe_load(SCM filename)
       scm_c_safe_load(path);
       free(path);
     }
+  else
+    fprintf(stderr,"RPGE: Cannot find Scheme source file in . or Scheme search paths: %s\n",scm_to_locale_string(filename));
   return SCM_UNSPECIFIED;
 }

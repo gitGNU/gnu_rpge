@@ -70,7 +70,10 @@ push_image_on_stack(char* filename)
   int index  = find_image(filename), indexempty = find_empty();
   char* path = get_path(image_paths,filename);
   if(!path)
-    return -1;
+    {
+      fprintf(stderr,"RPGE: Cannot find image in . or image paths: %s\n",filename);
+      return -1;
+    }
   if(indexempty != -1)
     {
       images.data[indexempty] = make_image_obj(make_image(load_image(path),filename));

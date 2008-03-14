@@ -143,7 +143,10 @@ exec_config_file(char* filename)
 {
   FILE* file = fopen(filename,"rt");
   if(!file)
-    return;
+    {
+      fprintf(stderr,"RPGE: Cannot find configuration file %s\n",filename);
+      return;
+    }
   char* str,*colon;
   int len;
   while((str = getline(file)))
@@ -165,6 +168,8 @@ exec_config_file(char* filename)
 		  char* path = get_path(scheme_paths,str);
 		  if(path)
 		    scm_c_safe_load(path);
+                  else
+                    fprintf(stderr,"RPGE: Cannot find Scheme source file in . or Scheme search paths: %s\n",str);
 		  if(path != str)
 		    free(path);
 		}
