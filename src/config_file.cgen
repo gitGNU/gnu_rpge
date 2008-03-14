@@ -130,7 +130,10 @@ exec_config_file(char* filename)
 {
   FILE* file = fopen(filename,"rt");
   if(!file)
-    return;
+    {
+      fprintf(stderr,"RPGE: Cannot find configuration file %s\n",filename);
+      return;
+    }
   char* str,*colon;
   int len;
   while((str = getline(file)))
