@@ -27,7 +27,7 @@ config_file.h: Here because config_file.c needs an accompanying header.
 #include <stdlib.h>
 #include <string.h>
 #include <libguile.h>
-#include "c-ctype.h"
+#include <ctype.h>
 #include "xalloc.h"
 #include "sequence.h"
 #include "path.h"
