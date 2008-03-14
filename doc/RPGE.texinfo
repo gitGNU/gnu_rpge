@@ -422,7 +422,52 @@ Returns a fresh, initialized table.
 Returns #t if @var{table} looks like a table. This function is not perfectly accurate.
 
 @item @code{(add-to-table @var{table} @var{key} @var{value})}
-Returns @var{table}, with @var{value} bound to @var{key}. This does not modify the original @var{table}.
+Returns @var{table}, with @var{key} bound to @var{value}. This does not modify the original @var{table}.
+
+@item @code{(add-to-table! @var{table} @var{key} @var{value})}
+Returns @var{table}, modified to include @var{key} bound to @var{value}.
+
+@item @code{(get-from-table @var{table} @var{key})}
+Returns the value @var{key} is bound to in @var{table}.
+
+@item @code{(set-in-table! @var{table} @var{key} @var{value})}
+Bind @var{key} to @var{value} in @var{table},modifying it. Returns 'error 
+if @var{key} is not bound in @var{table}.
+
+@item @code{(multi-key-find-with-list @var{table} @var{keylist})}
+Returns the value bound to the keylist in @var{table}. Essentially,
+for a list of length n, this returns the value bound to the successive
+members of the list in @var{table} and n-1 sub tables. On error, this returns
+'() if a table does not contain the right key and 'error if one of the sub
+tables is not a table.
+
+@item @code{(multi-key-find @var{table} . keys)}
+The same as the above, but using the rest argument keys as the key list.
+
+@item @code{(multi-key-add! @var{table} @var{keylist} @var{value})}
+Using the same conventions for sub tables as the above two functions, add
+@var{value} to a subtable of @var{table}.
+
+@item @code{(multi-key-set! @var{table} @var{keylist} @var{value})}
+Using the same sub table conventions, modify the value in a subtable of @var{table},
+ setting it to @var{value}.
+
+@item @code{(remove-from-table! @var{table} @var{key})}
+Modifies @var{table}, removing the binding of @var{key}.
+
+@end itemize
+
+Key binding API (defined in keys.scm):
+
+@itemize
+@item @code{(bind-key @var{key} @var{proc})}
+Add a new binding, binding @var{key} to @var{proc}, where @var{proc} is a procedure of no arguments.
+
+@item @code{(get-binding @var{key})}
+Get the procedure bound to @var{key}, or '() if none can be found.
+
+@item @code{(remove-binding @var{key})}
+Undo the current binding to @var{key}.
 
 @end itemize
 

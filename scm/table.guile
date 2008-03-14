@@ -107,3 +107,10 @@
     (if (eq? result 'error)
       'error
       table)))
+
+(define (remove-from-table! table key)
+  (cond
+   ((null? (cdr table)) '())
+   ((eq? (caadr table) key) (set-cdr! table (cddr table)))
+   (else
+    (remove-from-table! (cdr table) key))))

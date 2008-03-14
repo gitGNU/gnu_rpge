@@ -586,8 +586,49 @@ default, roughly the order in which they depend on each other.
    * `(table? TABLE)' Returns #t if TABLE looks like a table. This
      function is not perfectly accurate.
 
-   * `(add-to-table TABLE KEY VALUE)' Returns TABLE, with VALUE bound
-     to KEY. This does not modify the original TABLE.
+   * `(add-to-table TABLE KEY VALUE)' Returns TABLE, with KEY bound to
+     VALUE. This does not modify the original TABLE.
+
+   * `(add-to-table! TABLE KEY VALUE)' Returns TABLE, modified to
+     include KEY bound to VALUE.
+
+   * `(get-from-table TABLE KEY)' Returns the value KEY is bound to in
+     TABLE.
+
+   * `(set-in-table! TABLE KEY VALUE)' Bind KEY to VALUE in
+     TABLE,modifying it. Returns 'error if KEY is not bound in TABLE.
+
+   * `(multi-key-find-with-list TABLE KEYLIST)' Returns the value bound
+     to the keylist in TABLE. Essentially, for a list of length n, this
+     returns the value bound to the successive members of the list in
+     TABLE and n-1 sub tables. On error, this returns '() if a table
+     does not contain the right key and 'error if one of the sub tables
+     is not a table.
+
+   * `(multi-key-find TABLE . keys)' The same as the above, but using
+     the rest argument keys as the key list.
+
+   * `(multi-key-add! TABLE KEYLIST VALUE)' Using the same conventions
+     for sub tables as the above two functions, add VALUE to a subtable
+     of TABLE.
+
+   * `(multi-key-set! TABLE KEYLIST VALUE)' Using the same sub table
+     conventions, modify the value in a subtable of TABLE,  setting it
+     to VALUE.
+
+   * `(remove-from-table! TABLE KEY)' Modifies TABLE, removing the
+     binding of KEY.
+
+
+   Key binding API (defined in keys.scm):
+
+   * `(bind-key KEY PROC)' Add a new binding, binding KEY to PROC,
+     where PROC is a procedure of no arguments.
+
+   * `(get-binding KEY)' Get the procedure bound to KEY, or '() if none
+     can be found.
+
+   * `(remove-binding KEY)' Undo the current binding to KEY.
 
 
 
@@ -1042,6 +1083,6 @@ Node: Communication in RPGE13525
 Node: API Reference15302
 Node: Primitives15680
 Node: Scheme-level APIs21568
-Node: GNU Free Documentation License23146
+Node: GNU Free Documentation License24672
 
 End Tag Table
