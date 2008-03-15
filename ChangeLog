@@ -1,5 +1,7 @@
 2008-March 15th:
 	Remco Bras<rvbras@gnu.org>:
+          -RPGE-0.0.1 released
+          -Some build system maintenance
 	  -Added missing Scheme API functions
 	  -Finished documentation of Scheme APIs
 	  -Documented colon directives, rewrote initialization file docs.
