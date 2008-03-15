@@ -106,7 +106,6 @@ File: RPGE.info,  Node: Invoking RPGE,  Next: RPGE's view of the world,  Prev: A
 
 * A summary of command-line options::
 * RPGE initialization files::
-* Caveats::
 
 
 File: RPGE.info,  Node: A summary of command-line options,  Next: RPGE initialization files,  Prev: Invoking RPGE,  Up: Invoking RPGE
@@ -124,7 +123,7 @@ options is one or more of the following, with their required arguments:
      startup from .RPGE to FILE
 
 
-File: RPGE.info,  Node: RPGE initialization files,  Next: Caveats,  Prev: A summary of command-line options,  Up: Invoking RPGE
+File: RPGE.info,  Node: RPGE initialization files,  Prev: A summary of command-line options,  Up: Invoking RPGE
 
 2.2 RPGE initialization files
 =============================
@@ -142,38 +141,47 @@ statistics of mobs and a generic table type. However, it is certainly
 possible and sometimes useful to replace them. Keep in mind that
 anything that depends on other files should be loaded after them.
 
-   Currently, RPGE executes everything in the config file in the same
-thread as the main loop. This may change later, perhaps being replaced
-by waiting until the user tells RPGE he is done loading the state of
-his application. The reason for this is that it would enable leaving
-code running from startup. As it stands however, this is unsupported
-and attempts to make threads from within startup code have thus far
-failed. Therefore, a user of a user-created application has to load
-code to process keystrokes himself, a rather suboptimal situation to
-say the least.
+   Files loaded by initialization files may create threads, for example
+to load a certain mechanism to handle events in a loop. To do so,
+declare (use-modules (ice-9 threads)) at the start of your file and use
+(make-thread safe-load FILENAME) to load the file.  The safe-load
+procedure is a RPGE primitive, which uses a load mutex to ensure that
+no concurrent loads happen. Since looping mechanisms may run forever,
+such files should define all their procedures and call (unlock-mutex
+load-mutex) just before entering their main loops. This ensures that
+the background script is loaded properly and new loads can happen
+safely.
 
-
-File: RPGE.info,  Node: Caveats,  Prev: RPGE initialization files,  Up: Invoking RPGE
+   When loading a file referenced in an initialization file, RPGE looks
+for it in the current directory first, after which it checks through a
+sequence of scheme paths. These are directories that may contain scheme
+code. By default, this sequence is empty on startup. To fill the
+sequence, use a so-called colon directive in your initialization file,
+of the form `scheme-dir:DIRECTORY'. This adds DIRECTORY, which should
+be a complete, relative or absolute, path to the directory (for example
+/usr/local/share/RPGE/scm or ../), to the scheme paths. A similar
+facility exists for sprites, so the default sprites can be found by
+simply referencing them by name. To add an image search directory, use
+the directive `image-dir:DIRECTORY', which acts like the scheme-dir
+directive.
 
-2.3 Caveats
-===========
-
-RPGE uses the so-called safe-load procedure to load files mentioned in
-initialization files. This means that, prior to loading the file, RPGE
-locks the load-mutex mutex, blocking if another thread has locked it
-and incrementing the lock count if the current thread has and unlocks
-it afterwards. Loads do not happen concurrently, even if the main
-thread could theoretically run a load while a spawned thread is doing
-one. Since this causes trouble for scripts that run forever, such
-scripts should execute (unlock-mutex load-mutex) before entering their
-infinite loops. Not doing so breaks any and all usage of safe-load.
-
-   Spawning threads and using any multi-threaded programming technique
-supported by GUILE is possible in RPGE, but note that usage of threads
-may require adding (use-modules (ice-9 threads)) to the top of your
-script. If you wish to run other scripts concurrently with your own,
-the safest way to do so is to use safe-load in the new thread. The
-simplest way to do so is `(make-thread safe-load FILENAME)'.
+   Since several common files and directories may be loaded and
+declared very often, RPGE provides an include directive to tell RPGE to
+load another configuration file. This does not use any paths yet, so
+when using it, the path passed to it should be a complete path to the
+other configuration file. Syntactically, the directive is
+`include:FILE'.  To deal with the problem of loading the default
+libraries on startup, RPGE's build system builds a default
+configuration file for you using sed. This file is located in
+conf/default.conf, relative to the RPGE source directory.  This file is
+installed on your system by make install and sets up the default scheme
+directories, image directories and libraries. RPGE also makes a
+skeleton configuration file, conf/skeleton.conf, for you, which
+includes default.conf and loads the testing game, test.scm. Loading
+RPGE with this file (using for example `src/RPGE -f conf/skeleton.conf'
+in the top source directory after running make), will fail until make
+install has run.  This is intentional, as the file is meant to make it
+easy to work with the included files in any RPGE installation.
 
 
 File: RPGE.info,  Node: RPGE's view of the world,  Next: Communication in RPGE,  Prev: Invoking RPGE,  Up: Top
@@ -232,16 +240,12 @@ for the corresponding edge is checked.
 types of mobs (dubbed 'ground' and 'air' mobs) and block none, one or
 both of those. However, these flags are unused at the time of writing.
 
-   Fourth, though tilegrids can be changed at runtime, one has to be
-relatively careful when doing so, due to an implementation quirk of
-RPGE. RPGE preprocesses the specifics of which tiles will block a mob
-throughout its movement, wherefore moving a mob over a rather long
-distance while changing the tilegrid may result in invalidating the
-preprocessing , which RPGE will not change. For example, a mob may stop
-at a tile that used to be blocking even though that tile was changed to
-not block. Among several techniques to deal with this are modifying
-RPGE to get rid of this quirk, changing the tilegrid only while no mobs
-are moving and taking care to not move mobs over great distances.
+   Fourth, though RPGE does check for tile blocking while a mob is
+moving, mobs moving over tiles while they are being changed may cause
+some bugs. For example, a mob moving over a tile that does not block
+while it is being modified to block will probably proceed to move over
+the tile anyway, as blocking was checked when the mob entered the tile
+and will not be checked when the mob leaves it.
 
 
 File: RPGE.info,  Node: Mobs,  Prev: Tiles,  Up: RPGE's view of the world
@@ -339,6 +343,42 @@ and is a single object, for example a collision between two mobs or a
 keypress. Stacks assigned to the object are for events related to the
 object exclusively, for example an event sent when a mob moves across a
 tile boundary.
+
+* Menu:
+
+* Event Reference::
+
+
+File: RPGE.info,  Node: Event Reference,  Prev: Communication in RPGE,  Up: Communication in RPGE
+
+4.1 Event Reference
+===================
+
+This section lists all current events. Note that events, to GUILE, are
+pairs whose car holds data identifying the particular type of event and
+whose cdr holds data associated with the specific event itself.
+
+   Global events:
+   * key-down:This event specifies a keypress. The car is the symbol
+     'key-down, the cdr is a symbol indicating the key pressed.
+     Usually, this is the letter typed by pressing  this particular
+     key. For example, if the a key is pressed without holding down
+     shift, the cdr of the associated event will hold the symbol 'a.
+     Newlines, tabs  and spaces are converted to 'newline, 'tab and
+     'space, respectively.
+
+   * collision:This event indicates a collision between two mobs. Its
+     car is the symbol 'collision, its cdr is a pair, holding the two
+     mobs that collided, in no particular order.
+
+
+   Mob events:
+   * tile-change:This event is sent whenever a mob (technically a mob's
+     center) crosses a tile boundary. Its car is the symbol
+     'tile-change, its cdr is a pair of pairs, whose car holds a pair
+     of the x and y coordinates (in tile coordinates) the mob had and
+     whose cdr holds a pair of the new x and y coordinates.
+
 
 
 File: RPGE.info,  Node: API Reference,  Next: GNU Free Documentation License,  Prev: Communication in RPGE,  Up: Top
@@ -630,6 +670,77 @@ default, roughly the order in which they depend on each other.
 
    * `(remove-binding KEY)' Undo the current binding to KEY.
 
+
+   Mob event API (defined in mob_events.scm):
+
+   * `(mob-tracking-init)' Initialize mob event handling.
+
+   * `(add-tracked-mob! MOB)' Make the mob event system track MOB,
+     handling events on this mob.
+
+   * `(remove-tracked-mob! MOB)' Make the mob event system stop
+     tracking MOB.
+
+   * `(init-mob-bindings MOB)' Initialize event binding for MOB.
+
+   * `(bind-mob-event MOB EVENT PROC)' Bind EVENT to PROC on MOB. PROC
+     should be a procedure of 1 argument, the event sent by RPGE, which
+     is a pair of a type (usually a symbol) and some associated data.
+
+   * `(execute-mob-binding MOB EVENT)' Execute the procedure bound to
+     EVENT for MOB, passing it the event. Note that for this procedure,
+     EVENT should contain the full event sent by RPGE, but while
+     binding, it should contain the type data for the event.
+
+
+   Mob bootstrapping API (defined in mobutils.scm):
+
+   * `(get-mob-bootstrap-proc)' Returns the current mob bootstrap
+     procedure, or '() if none was defined.
+
+   * `(set-mob-bootstrap-proc! proc)' Set current mob bootstrap proc to
+     proc, or define it to proc if it was not defined yet.
+
+   * `(make-mob X Y SPRITE)' Make a mob using create-mob, passing it
+     the arguments passed. Then, apply the mob boostrap procedure, if
+     any, to the newly made mob.  This procedure should be used
+     whenever you 'just want to make a mob'. Use create-mob only if you
+     have an explicit reason to avoid bootstrapping.
+
+
+   Mob statistics API (defined in stats.scm):
+
+   * `(stats-init MOB)' Initialize the statistics system on the mob.
+     Like many default procedures, this relies on the mob data being a
+     valid table.  It is recommended to call this and related
+     procedures in the mob bootstrap procedure.
+
+   * `(get-stat MOB STAT)' Get the value of STAT for MOB. If STAT is
+     not set, this returns '().
+
+   * `(set-stat MOB STAT VALUE)' Set the value of STAT to VALUE for
+     MOB. If STAT is not set, this implicitly defines it.
+
+   * `(procedural-stats-init)' Initialize the procedural stats system.
+     This requires that the global userdata is a valid table.
+
+   * `(add-procedural-stat-proc! STAT PROC)' Add STAT as a procedural
+     stat, meaning that get-stat will call PROC on the mob passed to
+     get-stat if STAT is requested.
+
+   * `(get-stat-proc STAT)' Returns the procedure used to calculate
+     STAT.
+
+   * `(remove-procedural-stat-proc! STAT)' Remove the procedure bound
+     to STAT. After this, STAT will be looked up by value on the mob,
+     rather than being calculated using a procedure.
+
+
+   The above APIs usually have initialization procedures, which need to
+be called before using them. If the description of such a procedure
+does not mention any other constraints, it should be presumed that the
+global userdata needs to be a table and, for procedures that initialize
+something for a mob, the mob's user data must be a valid table as well.
 
 
 File: RPGE.info,  Node: GNU Free Documentation License,  Prev: API Reference,  Up: Top
@@ -1072,17 +1183,17 @@ Node: About RPGE and this manual1086
 Node: Getting a copy1688
 Node: Installation2459
 Node: Invoking RPGE3512
-Node: A summary of command-line options3755
-Node: RPGE initialization files4333
-Node: Caveats5827
-Node: RPGE's view of the world6972
-Node: Overview7183
-Node: Tiles8085
-Node: Mobs9991
-Node: Communication in RPGE13525
-Node: API Reference15302
-Node: Primitives15680
-Node: Scheme-level APIs21568
-Node: GNU Free Documentation License24672
+Node: A summary of command-line options3743
+Node: RPGE initialization files4321
+Node: RPGE's view of the world7773
+Node: Overview7984
+Node: Tiles8886
+Node: Mobs10496
+Node: Communication in RPGE14030
+Node: Event Reference15837
+Node: API Reference17179
+Node: Primitives17557
+Node: Scheme-level APIs23445
+Node: GNU Free Documentation License29485
 
 End Tag Table

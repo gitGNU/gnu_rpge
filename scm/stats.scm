@@ -43,3 +43,6 @@
 
 (define (get-stat-proc stat)
   (get-from-table (get-procstats-table) stat))
+
+(define (remove-procedural-stat-proc! stat)
+  (remove-from-table! (get-procstats-table) stat))

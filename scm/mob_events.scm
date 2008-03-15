@@ -25,6 +25,9 @@
 (define (add-tracked-mob! mob)
   (add-to-table! (tracked-mob-table) mob (open-mob-events mob)))
  
+(define (remove-tracked-mob! mob)
+  (remove-from-table! (tracked-mob-table) mob))
+
 (define (init-mob-bindings mob)
   (add-to-table! (get-mob-data mob) 'bindings (init-table)))
   
