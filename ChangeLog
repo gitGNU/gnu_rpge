@@ -1,3 +1,10 @@
+2008-March 15th:
+	Remco Bras<rvbras@gnu.org>:
+	  -Added missing Scheme API functions
+	  -Finished documentation of Scheme APIs
+	  -Documented colon directives, rewrote initialization file docs.
+	  -More generic documentation fixes
+
 2008-March 14th:
 	Remco Bras<rvbras@gnu.org>:
 	  -General build system maintenance
@@ -5,6 +12,8 @@
 	  -Played around with GNUlib a bit,
 	   exploring possible future modules to add.
 	  -examples directory added
+	  -Documentation expanded, concerning Scheme APIs
+	  -Added missing remove-table! procedure
 
 2008-March 13th:
 	Remco Bras<rvbras@gnu.org>:

@@ -1,7 +1,7 @@
 #Makefile for RPGE documentation
 RPGEdocsdir = $(datadir)/RPGE/doc
 RPGEdocs_DATA = RPGE.info RPGE.pdf
-EXTRA_DIST = RPGE.texinfo fdl.texi
+EXTRA_DIST = RPGE.texinfo fdl.texi RPGE.pdf RPGE.info
 SUFFIXES = .info .pdf
 MOSTLYCLEANFILES=RPGE.info RPGE.pdf RPGE.log RPGE.aux RPGE.cp RPGE.fn RPGE.vr RPGE.tp RPGE.ky RPGE.pg RPGE.toc
 

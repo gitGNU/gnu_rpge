@@ -189,7 +189,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/xalloc-die.c
   lib/xalloc.h
   lib/xmalloc.c
-  m4/absolute-header.m4
   m4/error.m4
   m4/exitfail.m4
   m4/extensions.m4
