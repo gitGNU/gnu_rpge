@@ -165,6 +165,7 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("resize-window",2,0,0,guile_resize_window);
   scm_c_define_gsubr ("move-text",2,0,0,guile_move_text);
   scm_c_define_gsubr ("get-text-coordinates",1,0,0,guile_get_text_coordinates);
+  scm_c_define_gsubr ("get-text-lines",1,0,0,guile_get_text_line_list);
   SCM_TICK;
   global_usereventstack = eventstack_init();
   windows = images = mobs = argvs = fonts = sequence_init();

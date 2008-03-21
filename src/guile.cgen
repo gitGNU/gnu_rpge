@@ -462,3 +462,31 @@ guile_get_text_coordinates(SCM index)
   text* t = (text*)texts.data[ind].data;
   return scm_cons(scm_from_uint(t->x),scm_from_uint(t->y));
 }
+
+SCM
+obj_to_scm(object o)
+{
+  /*To do: implement dispatching*/
+  if(o.typeinfo == TYPE_STRING)
+    return scm_from_locale_string(*((char**)o.data));
+  return SCM_EOL;
+}
+
+SCM
+guile_sequence_to_list(sequence s)
+{
+  SCM last = scm_cons(obj_to_scm(s.data[0]),SCM_EOL),current,first = last;
+  for(int i = 1; i < s.objcount; i++)
+    {
+      current = scm_cons(obj_to_scm(s.data[i]),SCM_EOL);
+      scm_set_cdr_x(last,current);
+      last = current;
+    }
+  return first;
+}
+
+SCM
+guile_get_text_line_list(SCM index)
+{
+  return guile_sequence_to_list(((text*)texts.data[scm_to_int(index)].data)->buffers);
+}

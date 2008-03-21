@@ -2,7 +2,9 @@ RPGE is a GNU package, that provides an engine for two-dimensional graphical rol
 RPGE is free software, you can redistribute and/or modify it. For more information, please read the file
 COPYING in the root of the source tree. This file is a copy of the GNU General Public License, version 3, 
 which is the license RPGE uses. At your option, you may redistribute RPGE under a later version of that license,
-as published by the Free Software Foundation.
+as published by the Free Software Foundation. The lib subdirectory contains parts of gnulib, a separate GNU package. 
+Code in this subdirectory is not part of RPGE. Though gnulib is free software, its licensing terms may be different from
+those of RPGE.
 
 RPGE is meant to be as extensible as possible, but it may have known limitations. If so, you 
 can find information about these in the BUGS file in the root of the source code tree. Texinfo source
