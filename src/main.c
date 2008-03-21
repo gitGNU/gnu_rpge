@@ -158,6 +158,13 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("get-mob-event",2,0,0,guile_get_mob_event);
   scm_c_define_gsubr ("close-mob-events",2,0,0,guile_close_mob_eventstack);
   scm_c_define_gsubr ("safe-load",1,0,0,guile_safe_load);
+  scm_c_define_gsubr ("set-mob-frame",3,0,0,guile_set_mob_frame);
+  scm_c_define_gsubr ("get-window-coordinates",1,0,0,guile_get_window_coordinates);
+  scm_c_define_gsubr ("get-window-dimensions",1,0,0,guile_get_window_dimensions);
+  scm_c_define_gsubr ("move-window",2,0,0,guile_move_window);
+  scm_c_define_gsubr ("resize-window",2,0,0,guile_resize_window);
+  scm_c_define_gsubr ("move-text",2,0,0,guile_move_text);
+  scm_c_define_gsubr ("get-text-coordinates",1,0,0,guile_get_text_coordinates);
   SCM_TICK;
   global_usereventstack = eventstack_init();
   windows = images = mobs = argvs = fonts = sequence_init();

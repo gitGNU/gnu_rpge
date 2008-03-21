@@ -256,7 +256,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
 #Makefile.am handling RPGE examples
-examplesdir = $(datadir)/RPGE/examples
+examplesdir = $(datadir)/rpge/examples
 examples_DATA = test.scm
 EXTRA_DIST = test.scm
 all: all-am

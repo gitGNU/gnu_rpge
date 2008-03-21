@@ -1,7 +1,7 @@
 \input texinfo @c -*-texinfo-*-
 
 @c %**start of header
-@setfilename RPGE.info
+@setfilename rpge.info
 @settitle Role Playing Game Engine
 @c %**end of header
 

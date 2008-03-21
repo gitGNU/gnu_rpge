@@ -256,7 +256,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
 #RPGE conf Makefile.am, handling configuration issues.
-confdir = $(datadir)/RPGE/conf
+confdir = $(datadir)/rpge/conf
 conf_DATA = default.conf
 noinst_DATA = skeleton.conf
 EXTRA_DIST = default.confin skeleton.confin 
@@ -446,7 +446,7 @@ uninstall-am: uninstall-confDATA
 
 
 .confin.conf:
-	cat $< | sed s'|'datadir'|'$(datadir)/RPGE'|'g > $@
+	cat $< | sed s'|'datadir'|'$(datadir)/rpge'|'g > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -402,3 +402,63 @@ guile_safe_load(SCM filename)
     fprintf(stderr,"RPGE: Cannot find Scheme source file in . or Scheme search paths: %s\n",scm_to_locale_string(filename));
   return SCM_UNSPECIFIED;
 }
+
+SCM
+guile_set_mob_frame(SCM index, SCM animation, SCM framenum)
+{
+  ((mob*)mobs.data[scm_to_int(index)].data)->frame = scm_to_uint(framenum);
+  ((mob*)mobs.data[scm_to_int(index)].data)->animation = scm_to_uint(animation);
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_get_window_coordinates(SCM index)
+{
+  window w = get_obj_window(windows.data[scm_to_int(index)]);
+  return scm_cons(scm_from_int(w.x),scm_from_int(w.y));
+}
+
+SCM
+guile_get_window_dimensions(SCM index)
+{
+  window w = get_obj_window(windows.data[scm_to_int(index)]);
+  return scm_cons(scm_from_int(w.width),scm_from_int(w.height));
+}
+
+SCM
+guile_move_window(SCM index, SCM point)
+{
+  int ind = scm_to_int(index);
+  window* w = (window*)windows.data[ind].data;
+  w->x = scm_to_int(scm_car(point));
+  w->y = scm_to_int(scm_cdr(point));
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_resize_window(SCM index, SCM dimensions)
+{
+  int ind = scm_to_int(index);
+  window* w = (window*)windows.data[ind].data;
+  w->width=scm_to_int(scm_car(dimensions));
+  w->height=scm_to_int(scm_cdr(dimensions));
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_move_text(SCM index, SCM point)
+{
+  int ind = scm_to_int(index);
+  text * t = (text*)texts.data[ind].data;
+  t->x = scm_to_uint(scm_car(point));
+  t->y = scm_to_uint(scm_cdr(point));
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_get_text_coordinates(SCM index)
+{
+  int ind = scm_to_int(index);
+  text* t = (text*)texts.data[ind].data;
+  return scm_cons(scm_from_uint(t->x),scm_from_uint(t->y));
+}

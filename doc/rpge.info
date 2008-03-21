@@ -1,4 +1,4 @@
-This is RPGE.info, produced by makeinfo version 4.8 from RPGE.texinfo.
+This is rpge.info, produced by makeinfo version 4.8 from rpge.texinfo.
 
    Copyright (C)  2007,2008  Remco Bras.    Permission is granted to
 copy, distribute and/or modify this document   under the terms of the
@@ -9,7 +9,7 @@ the license is included in the section entitled "GNU   Free
 Documentation License".
 
 
-File: RPGE.info,  Node: Top,  Next: About RPGE and obtaining it,  Prev: (dir),  Up: (dir)
+File: rpge.info,  Node: Top,  Next: About RPGE and obtaining it,  Prev: (dir),  Up: (dir)
 
 Role Playing Game Engine
 ************************
@@ -26,7 +26,7 @@ This manual is for RPGE, version 0.0.1.
 * GNU Free Documentation License::
 
 
-File: RPGE.info,  Node: About RPGE and obtaining it,  Next: Invoking RPGE,  Prev: Top,  Up: Top
+File: rpge.info,  Node: About RPGE and obtaining it,  Next: Invoking RPGE,  Prev: Top,  Up: Top
 
 1 About RPGE and obtaining it
 *****************************
@@ -38,7 +38,7 @@ File: RPGE.info,  Node: About RPGE and obtaining it,  Next: Invoking RPGE,  Prev
 * Installation::
 
 
-File: RPGE.info,  Node: About RPGE and this manual,  Next: Getting a copy,  Prev: About RPGE and obtaining it,  Up: About RPGE and obtaining it
+File: rpge.info,  Node: About RPGE and this manual,  Next: Getting a copy,  Prev: About RPGE and obtaining it,  Up: About RPGE and obtaining it
 
 1.1 About RPGE and this manual
 ==============================
@@ -51,7 +51,7 @@ using it should know about, the way RPGE is driven using GUILE and how
 RPGE can be obtained, installed and otherwise used.
 
 
-File: RPGE.info,  Node: Getting a copy,  Next: Installation,  Prev: About RPGE and this manual,  Up: About RPGE and obtaining it
+File: rpge.info,  Node: Getting a copy,  Next: Installation,  Prev: About RPGE and this manual,  Up: About RPGE and obtaining it
 
 1.2 Getting a copy
 ==================
@@ -67,7 +67,7 @@ you to receive a copy of RPGE, but keep in mind that the sources in git
 will be more current, but probably also buggier than the releases.
 
 
-File: RPGE.info,  Node: Installation,  Prev: Getting a copy,  Up: About RPGE and obtaining it
+File: rpge.info,  Node: Installation,  Prev: Getting a copy,  Up: About RPGE and obtaining it
 
 1.3 Installation
 ================
@@ -97,7 +97,7 @@ can be installed by running `make install' as a user with administrator
 privileges.
 
 
-File: RPGE.info,  Node: Invoking RPGE,  Next: RPGE's view of the world,  Prev: About RPGE and obtaining it,  Up: Top
+File: rpge.info,  Node: Invoking RPGE,  Next: RPGE's view of the world,  Prev: About RPGE and obtaining it,  Up: Top
 
 2 Invoking RPGE
 ***************
@@ -108,7 +108,7 @@ File: RPGE.info,  Node: Invoking RPGE,  Next: RPGE's view of the world,  Prev: A
 * RPGE initialization files::
 
 
-File: RPGE.info,  Node: A summary of command-line options,  Next: RPGE initialization files,  Prev: Invoking RPGE,  Up: Invoking RPGE
+File: rpge.info,  Node: A summary of command-line options,  Next: RPGE initialization files,  Prev: Invoking RPGE,  Up: Invoking RPGE
 
 2.1 A summary of command-line options
 =====================================
@@ -123,7 +123,7 @@ options is one or more of the following, with their required arguments:
      startup from .RPGE to FILE
 
 
-File: RPGE.info,  Node: RPGE initialization files,  Prev: A summary of command-line options,  Up: Invoking RPGE
+File: rpge.info,  Node: RPGE initialization files,  Prev: A summary of command-line options,  Up: Invoking RPGE
 
 2.2 RPGE initialization files
 =============================
@@ -184,7 +184,7 @@ install has run.  This is intentional, as the file is meant to make it
 easy to work with the included files in any RPGE installation.
 
 
-File: RPGE.info,  Node: RPGE's view of the world,  Next: Communication in RPGE,  Prev: Invoking RPGE,  Up: Top
+File: rpge.info,  Node: RPGE's view of the world,  Next: Communication in RPGE,  Prev: Invoking RPGE,  Up: Top
 
 3 RPGE's view of the world
 **************************
@@ -196,7 +196,7 @@ File: RPGE.info,  Node: RPGE's view of the world,  Next: Communication in RPGE, 
 * Mobs::
 
 
-File: RPGE.info,  Node: Overview,  Next: Tiles,  Prev: RPGE's view of the world,  Up: RPGE's view of the world
+File: rpge.info,  Node: Overview,  Next: Tiles,  Prev: RPGE's view of the world,  Up: RPGE's view of the world
 
 3.1 Overview
 ============
@@ -215,7 +215,7 @@ especially useful if RPGE were ever networked. At present though, there
 is only one world and parallel universes are merely science-fiction.
 
 
-File: RPGE.info,  Node: Tiles,  Next: Mobs,  Prev: Overview,  Up: RPGE's view of the world
+File: rpge.info,  Node: Tiles,  Next: Mobs,  Prev: Overview,  Up: RPGE's view of the world
 
 3.2 Tiles
 =========
@@ -248,7 +248,7 @@ the tile anyway, as blocking was checked when the mob entered the tile
 and will not be checked when the mob leaves it.
 
 
-File: RPGE.info,  Node: Mobs,  Prev: Tiles,  Up: RPGE's view of the world
+File: rpge.info,  Node: Mobs,  Prev: Tiles,  Up: RPGE's view of the world
 
 3.3 Mobs
 ========
@@ -310,7 +310,7 @@ whenever a mob completes a motion or, more generally, changes its
 motion. This would be useful for animation purposes.
 
 
-File: RPGE.info,  Node: Communication in RPGE,  Next: API Reference,  Prev: RPGE's view of the world,  Up: Top
+File: rpge.info,  Node: Communication in RPGE,  Next: API Reference,  Prev: RPGE's view of the world,  Up: Top
 
 4 Communication in RPGE
 ***********************
@@ -349,7 +349,7 @@ tile boundary.
 * Event Reference::
 
 
-File: RPGE.info,  Node: Event Reference,  Prev: Communication in RPGE,  Up: Communication in RPGE
+File: rpge.info,  Node: Event Reference,  Prev: Communication in RPGE,  Up: Communication in RPGE
 
 4.1 Event Reference
 ===================
@@ -381,7 +381,7 @@ whose cdr holds data associated with the specific event itself.
 
 
 
-File: RPGE.info,  Node: API Reference,  Next: GNU Free Documentation License,  Prev: Communication in RPGE,  Up: Top
+File: rpge.info,  Node: API Reference,  Next: GNU Free Documentation License,  Prev: Communication in RPGE,  Up: Top
 
 Appendix A API Reference
 ************************
@@ -396,7 +396,7 @@ the RPGE distribution.
 * Scheme-level APIs::
 
 
-File: RPGE.info,  Node: Primitives,  Next: Scheme-level APIs,  Prev: API Reference,  Up: API Reference
+File: rpge.info,  Node: Primitives,  Next: Scheme-level APIs,  Prev: API Reference,  Up: API Reference
 
 A.1 Primitives
 ==============
@@ -595,7 +595,7 @@ Primitives related to mobs:
 
 
 
-File: RPGE.info,  Node: Scheme-level APIs,  Prev: Primitives,  Up: API Reference
+File: rpge.info,  Node: Scheme-level APIs,  Prev: Primitives,  Up: API Reference
 
 A.2 Scheme-level APIs
 =====================
@@ -743,7 +743,7 @@ global userdata needs to be a table and, for procedures that initialize
 something for a mob, the mob's user data must be a valid table as well.
 
 
-File: RPGE.info,  Node: GNU Free Documentation License,  Prev: API Reference,  Up: Top
+File: rpge.info,  Node: GNU Free Documentation License,  Prev: API Reference,  Up: Top
 
 GNU Free Documentation License
 ******************************

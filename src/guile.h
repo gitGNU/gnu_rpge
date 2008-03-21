@@ -75,4 +75,12 @@ SCM guile_get_mob_event(SCM mobindex, SCM luser);
 SCM guile_close_mob_eventstack(SCM mobindex, SCM luser);
 SCM scm_c_safe_load(char* filename);
 SCM guile_safe_load(SCM filename);
+SCM guile_set_mob_frame(SCM mob, SCM animation, SCM framenum);
+SCM guile_get_window_coordinates(SCM index);
+SCM guile_get_window_dimensions(SCM index);
+SCM guile_move_window(SCM index, SCM point);
+SCM guile_resize_window(SCM index, SCM dimensions);
+SCM guile_move_text(SCM index, SCM point);
+SCM guile_get_text_coordinates(SCM index);
+
 #endif

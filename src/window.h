@@ -38,5 +38,7 @@ int windowstack_addwindow(window w);
 void windowstack_remove(int index);
 void windowstack_removewindow(window w);
 void render_windows(SDL_Surface* dest);
+window get_obj_window(object o);
+object make_window_obj(window w);
 
 #endif

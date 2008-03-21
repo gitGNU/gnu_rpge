@@ -30,7 +30,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = RPGE$(EXEEXT)
+bin_PROGRAMS = rpge$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -51,13 +51,13 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_RPGE_OBJECTS = main.$(OBJEXT) video.$(OBJEXT) mobs.$(OBJEXT) \
+am_rpge_OBJECTS = main.$(OBJEXT) video.$(OBJEXT) mobs.$(OBJEXT) \
 	imagestack.$(OBJEXT) tile.$(OBJEXT) guile.$(OBJEXT) \
 	event.$(OBJEXT) window.$(OBJEXT) sequence.$(OBJEXT) \
 	text.$(OBJEXT) dispatch.$(OBJEXT) config_file.$(OBJEXT) \
 	camera.$(OBJEXT) path.$(OBJEXT)
-RPGE_OBJECTS = $(am_RPGE_OBJECTS)
-RPGE_DEPENDENCIES = $(top_builddir)/lib/libgnu.a
+rpge_OBJECTS = $(am_rpge_OBJECTS)
+rpge_DEPENDENCIES = $(top_builddir)/lib/libgnu.a
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -65,8 +65,8 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(RPGE_SOURCES)
-DIST_SOURCES = $(RPGE_SOURCES)
+SOURCES = $(rpge_SOURCES)
+DIST_SOURCES = $(rpge_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -265,8 +265,8 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-RPGE_SOURCES = main.c video.c video.h main.h mobs.h mobs.cgen imagestack.h imagestack.cgen tile.h tile.c guile.h guile.cgen constants.h event.cgen event.h window.h window.cgen sequence.cgen sequence.h text.cgen text.h dispatch.cgen dispatch.h config_file.cgen config_file.h camera.c camera.h path.h path.c
-RPGE_LDADD = $(top_builddir)/lib/libgnu.a
+rpge_SOURCES = main.c video.c video.h main.h mobs.h mobs.cgen imagestack.h imagestack.cgen tile.h tile.c guile.h guile.cgen constants.h event.cgen event.h window.h window.cgen sequence.cgen sequence.h text.cgen text.h dispatch.cgen dispatch.h config_file.cgen config_file.h camera.c camera.h path.h path.c
+rpge_LDADD = $(top_builddir)/lib/libgnu.a
 AM_CFLAGS = -I$(top_srcdir)/lib -I$(top_builddir)/lib -Wall
 SUFFIXES = .cgen
 MOSTLYCLEANFILES = dispatch.c imagestack.c mobs.c guile.c event.c window.c sequence.c text.c dispatch.c config_file.c
@@ -326,9 +326,9 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-RPGE$(EXEEXT): $(RPGE_OBJECTS) $(RPGE_DEPENDENCIES) 
-	@rm -f RPGE$(EXEEXT)
-	$(LINK) $(RPGE_OBJECTS) $(RPGE_LDADD) $(LIBS)
+rpge$(EXEEXT): $(rpge_OBJECTS) $(rpge_DEPENDENCIES) 
+	@rm -f rpge$(EXEEXT)
+	$(LINK) $(rpge_OBJECTS) $(rpge_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

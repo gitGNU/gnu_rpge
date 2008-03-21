@@ -55,9 +55,9 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(RPGEdocsdir)"
-RPGEdocsDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(RPGEdocs_DATA)
+am__installdirs = "$(DESTDIR)$(rpgedocsdir)"
+rpgedocsDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(rpgedocs_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -256,11 +256,11 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
 #Makefile for RPGE documentation
-RPGEdocsdir = $(datadir)/RPGE/doc
-RPGEdocs_DATA = RPGE.info RPGE.pdf
-EXTRA_DIST = RPGE.texinfo fdl.texi RPGE.pdf RPGE.info
+rpgedocsdir = $(datadir)/rpge/doc
+rpgedocs_DATA = rpge.info rpge.pdf
+EXTRA_DIST = rpge.texinfo fdl.texi rpge.pdf rpge.info
 SUFFIXES = .info .pdf
-MOSTLYCLEANFILES = RPGE.info RPGE.pdf RPGE.log RPGE.aux RPGE.cp RPGE.fn RPGE.vr RPGE.tp RPGE.ky RPGE.pg RPGE.toc
+MOSTLYCLEANFILES = rpge.info rpge.pdf rpge.log rpge.aux rpge.cp rpge.fn rpge.vr rpge.tp rpge.ky rpge.pg rpge.toc
 all: all-am
 
 .SUFFIXES:
@@ -294,22 +294,22 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-install-RPGEdocsDATA: $(RPGEdocs_DATA)
+install-rpgedocsDATA: $(rpgedocs_DATA)
 	@$(NORMAL_INSTALL)
-	test -z "$(RPGEdocsdir)" || $(MKDIR_P) "$(DESTDIR)$(RPGEdocsdir)"
-	@list='$(RPGEdocs_DATA)'; for p in $$list; do \
+	test -z "$(rpgedocsdir)" || $(MKDIR_P) "$(DESTDIR)$(rpgedocsdir)"
+	@list='$(rpgedocs_DATA)'; for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  f=$(am__strip_dir) \
-	  echo " $(RPGEdocsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(RPGEdocsdir)/$$f'"; \
-	  $(RPGEdocsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(RPGEdocsdir)/$$f"; \
+	  echo " $(rpgedocsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(rpgedocsdir)/$$f'"; \
+	  $(rpgedocsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(rpgedocsdir)/$$f"; \
 	done
 
-uninstall-RPGEdocsDATA:
+uninstall-rpgedocsDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(RPGEdocs_DATA)'; for p in $$list; do \
+	@list='$(rpgedocs_DATA)'; for p in $$list; do \
 	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(RPGEdocsdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(RPGEdocsdir)/$$f"; \
+	  echo " rm -f '$(DESTDIR)$(rpgedocsdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(rpgedocsdir)/$$f"; \
 	done
 tags: TAGS
 TAGS:
@@ -348,7 +348,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(RPGEdocsdir)"; do \
+	for dir in "$(DESTDIR)$(rpgedocsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -394,7 +394,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-RPGEdocsDATA
+install-data-am: install-rpgedocsDATA
 
 install-dvi: install-dvi-am
 
@@ -428,20 +428,20 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-RPGEdocsDATA
+uninstall-am: uninstall-rpgedocsDATA
 
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic distclean \
 	distclean-generic distdir dvi dvi-am html html-am info info-am \
-	install install-RPGEdocsDATA install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-rpgedocsDATA install-strip installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am uninstall uninstall-RPGEdocsDATA uninstall-am
+	pdf-am ps ps-am uninstall uninstall-am uninstall-rpgedocsDATA
 
 
 .texinfo.info:
