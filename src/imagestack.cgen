@@ -105,5 +105,6 @@ remove_image (char* filename)
   free(((image*)images.data[index].data)->filename);
   ((image*)images.data[index].data)->data = NULL;
   ((image*)images.data[index].data)->filename = NULL;
+  free(images.data[index].data);
   images.data[index].data = NULL; 
 }
