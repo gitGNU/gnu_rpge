@@ -63,6 +63,7 @@ find_empty()
 
 /*
 A convenience function to make loading images easier. It takes advantage of holes in the images sequence, filling them up. Indices returned from this procedure are guaranteed to be constant, barring corruption of the sequence itself.
+Note: This function MUST be called with a string allocated by malloc or a variant thereof (or implicitly that way using scm_to_locale_string, strdup and so on). If this is not done, remove_image will crash when called to remove this image.
 */
 int 
 push_image_on_stack(char* filename)
@@ -77,7 +78,8 @@ push_image_on_stack(char* filename)
   if(indexempty != -1)
     {
       images.data[indexempty] = make_image_obj(make_image(load_image(path),filename));
-      free(path);
+      if(path != filename)
+	free(path);
       return indexempty;
     }
   else if(index != -1)
@@ -87,7 +89,8 @@ push_image_on_stack(char* filename)
   else
     {
       int returnval = sequence_append(&images,make_image_obj(make_image(load_image(path),filename)));
-      free(path);
+      if(path != filename)
+	free(path);
       return returnval;
     }
 }
@@ -98,7 +101,8 @@ remove_image (char* filename)
   int index = find_image(filename);
   if(index == -1 || !images.objcount || !images.data)
     return;
-  /*Should free the filename here, tends to cause crashes, SHOULD also free the surface, need to look into why this doesn't do that.*/
+  SDL_FreeSurface(((image*)images.data[index].data)->data);
+  free(((image*)images.data[index].data)->filename);
   ((image*)images.data[index].data)->data = NULL;
   ((image*)images.data[index].data)->filename = NULL;
   images.data[index].data = NULL; 
