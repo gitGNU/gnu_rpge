@@ -169,6 +169,7 @@ main (int argc, char **argv)
   SCM_TICK;
   global_usereventstack = eventstack_init();
   windows = images = mobs = argvs = fonts = sequence_init();
+  image_mutex = SDL_CreateMutex();
   directives_init();
   paths_init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));

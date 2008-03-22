@@ -35,6 +35,7 @@ typedef struct
 } image;
 
 extern sequence images;
+extern SDL_mutex* image_mutex;
 
 image make_image (SDL_Surface* data, char* filename);
 int  push_image_on_stack(char* filename);

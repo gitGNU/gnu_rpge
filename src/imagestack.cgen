@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "imagestack.h"
 
 sequence images = {0,0};
+SDL_mutex* image_mutex;
 convertors(image);
 
 /*
@@ -77,7 +78,10 @@ push_image_on_stack(char* filename)
     }
   if(indexempty != -1)
     {
+      SDL_mutexP(image_mutex);
+      free_obj(images.data[indexempty]);
       images.data[indexempty] = make_image_obj(make_image(load_image(path),filename));
+      SDL_mutexV(image_mutex);
       if(path != filename)
 	free(path);
       return indexempty;
@@ -88,7 +92,9 @@ push_image_on_stack(char* filename)
     }
   else
     {
+      SDL_mutexP(image_mutex);
       int returnval = sequence_append(&images,make_image_obj(make_image(load_image(path),filename)));
+      SDL_mutexV(image_mutex);
       if(path != filename)
 	free(path);
       return returnval;
@@ -101,10 +107,11 @@ remove_image (char* filename)
   int index = find_image(filename);
   if(index == -1 || !images.objcount || !images.data)
     return;
+  /*If we've reached this point, we're going to make changes, so lock the image sequence*/
+  SDL_mutexP(image_mutex);
   SDL_FreeSurface(((image*)images.data[index].data)->data);
   free(((image*)images.data[index].data)->filename);
   ((image*)images.data[index].data)->data = NULL;
   ((image*)images.data[index].data)->filename = NULL;
-  free(images.data[index].data);
-  images.data[index].data = NULL; 
+  SDL_mutexV(image_mutex);
 }
