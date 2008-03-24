@@ -118,9 +118,12 @@ SCM
 guile_move_mob_all (SCM mobindex, SCM tilecountx, SCM tilecounty,
 		    SCM frametotal)
 {
+  /*Since we use the direct pointer here, it makes no sense to actually have the callee mob_move_all do the locking (one may wish to call it on a mob not part of the sequence), so take care of it here. The same logic applies to many other guile mob primitives*/
+  SDL_mutexP(mob_mutex);
   mob_move_all ((mob *) mobs.data[scm_to_int (mobindex)].data,
 		scm_to_int (tilecountx), scm_to_int (tilecounty),
 		scm_to_int (frametotal));
+  SDL_mutexV(mob_mutex);
   return scm_from_int (0);
 }
 
@@ -128,17 +131,21 @@ SCM
 guile_set_mob_animation (SCM mobindex, SCM animation, SCM start,
 			 SCM targetframe, SCM framesbetween, SCM loop)
 {
+  SDL_mutexP(mob_mutex);
   mob_set_animation ((mob *) mobs.data[scm_to_int (mobindex)].data,
 		     scm_to_int (animation), scm_to_int (start),
 		     scm_to_int (targetframe), scm_to_int (framesbetween),
 		     scm_to_bool (loop));
+  SDL_mutexV(mob_mutex);
   return scm_from_int (0);
 }
 
 SCM
 guile_stop_mob_animation (SCM mobindex)
 {
+  SDL_mutexP(mob_mutex);
   mob_stop_animation ((mob *) mobs.data[scm_to_int (mobindex)].data);
+  SDL_mutexV(mob_mutex);
   return scm_from_int (0);
 }
 
@@ -204,11 +211,13 @@ guile_get_global_event (SCM userindex)
 SCM
 guile_set_mob_userdata (SCM index, SCM newdata)
 {
+  SDL_mutexP(mob_mutex);
   scm_gc_unprotect_object (((mob *) mobs.data[scm_to_int (index)].data)->
 			   userdata);
   ((mob *) mobs.data[scm_to_int (index)].data)->userdata = newdata;
   scm_gc_protect_object (((mob *) mobs.data[scm_to_int (index)].data)->
 			 userdata);
+  SDL_mutexV(mob_mutex);
   return SCM_UNSPECIFIED;
 }
 

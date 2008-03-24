@@ -53,6 +53,7 @@ typedef struct
 }  move_descriptor;
 
 extern sequence mobs;
+extern SDL_mutex* mob_mutex;
 
 mob create_mob_using_sprite (unsigned int, unsigned int, char *);
 int push_mob_on_array (mob);
@@ -66,6 +67,6 @@ void  mob_stop_animation(mob* m);
 void  mob_add_movement(mob* m, int xtile, int ytile, int frames);
 void  mob_stop_movement(mob* m);
 
-/*Self-dependent include and indirectly self-dependent include*/
+/*Self-dependent include*/
 #include "tile.h"
 #endif

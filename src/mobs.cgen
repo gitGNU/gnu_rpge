@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "mobs.h"
 sequence mobs;
+SDL_mutex* mob_mutex;
 convertors(move_descriptor);
 convertors(mob);
 
@@ -76,13 +77,17 @@ push_mob_on_array (mob m)
   int indexempty = find_empty_mob ();
   if (indexempty != -1)
     {
+      SDL_mutexP(mob_mutex);
       *((mob*)mobs.data[indexempty].data) = m;
+      SDL_mutexV(mob_mutex);
       set_mob_occupants(mobs.data[indexempty].data);
       return indexempty;
     }
   else
     {
+      SDL_mutexP(mob_mutex);
       int index = sequence_append(&mobs,make_mob_obj(m));
+      SDL_mutexV(mob_mutex);
       set_mob_occupants(mobs.data[index].data);
       return index;
     }
@@ -96,7 +101,9 @@ remove_mob (int index)
       mob m = *((mob*)mobs.data[index].data);
       int tilex = (m.x+SPRITE_WIDTH/2)/SPRITE_WIDTH,tiley = (m.y+SPRITE_HEIGHT/2)/SPRITE_HEIGHT;
       reset_occupant(tilex,tiley);
+      SDL_mutexP(mob_mutex);
       ((mob*)mobs.data[index].data)->imgindex = -1;
+      SDL_mutexV(mob_mutex);
     }
 }
 
@@ -147,10 +154,12 @@ animate_mob (mob * m)
 void
 animate_mobs ()
 {
+  SDL_mutexP(mob_mutex);
   for (int i = 0; i < mobs.objcount; i++)
     {
       animate_mob ((mob*)mobs.data[i].data);
     }
+  SDL_mutexV(mob_mutex);
 }
 
 inline void
@@ -317,10 +326,12 @@ move_mob (mob * m)
 void
 move_mobs ()
 {
+  SDL_mutexP(mob_mutex);
   for (int i = 0; i < mobs.objcount; i++)
     {
       move_mob ((mob*)mobs.data[i].data);
     }
+  SDL_mutexV(mob_mutex);
 }
 
 void
