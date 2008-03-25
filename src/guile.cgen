@@ -62,12 +62,12 @@ list_to_tile (SCM tilelist)
 {
   tile t;
   SDL_Rect clip;
-  t.tilesheetindex = scm_to_int (scm_car (tilelist));
-  clip.x = scm_to_int16 (scm_cadr (tilelist));
-  clip.y = scm_to_int16 (scm_nth (tilelist, 3));
-  clip.w = scm_to_uint16 (scm_nth (tilelist, 4));
-  clip.h = scm_to_uint16 (scm_nth (tilelist, 5));
-  t.blocking = scm_to_char (scm_nth (tilelist, 6));
+  t.tilesheetindex = push_image_on_stack(scm_to_locale_string(scm_cadr(tilelist)));
+  clip.x = scm_to_int16 (scm_nth (tilelist,3));
+  clip.y = scm_to_int16 (scm_nth (tilelist, 4));
+  clip.w = scm_to_uint16 (scm_nth (tilelist, 5));
+  clip.h = scm_to_uint16 (scm_nth (tilelist, 6));
+  t.blocking = scm_to_char (scm_nth (tilelist, 7));
   t.sheetclippinginfo = clip;
   t.occupant = NULL;
   return t;
@@ -76,14 +76,34 @@ list_to_tile (SCM tilelist)
 SCM
 tile_to_list (tile t)
 {
-  SCM l = scm_list_n (scm_from_int (t.tilesheetindex),
+  char* fname = get_image_name(t.tilesheetindex);
+  SCM l = scm_list_n (scm_from_locale_symbol("tile"),
+                      scm_from_locale_string (fname),
 		      scm_from_int16 (t.sheetclippinginfo.x),
 		      scm_from_int16 (t.sheetclippinginfo.y),
 		      scm_from_uint16 (t.sheetclippinginfo.w),
 		      scm_from_uint16 (t.sheetclippinginfo.h),
 		      scm_from_char (t.blocking),
 		      SCM_UNDEFINED);
+  free(fname);
   return l;
+}
+
+/*
+This seems deceptively similar to the above, but the major difference is that tile_to_list is meant for tiles already created, i.e. proper tiles with internalized images. Since it's rather tough (outside of smobs and the like) to keep track of image references in GUILE and it's more logical to not preload images for tiles a user just keeps around, we define the below function to deal with pseudotiles, i.e. tiles without a proper, internalized image. 
+*/
+
+SCM
+listify_pseudotile(char* filename, SDL_Rect clip, char blocking)
+{
+  return scm_list_n(scm_from_locale_symbol("tile"),
+                    scm_from_locale_string(filename),
+                    scm_from_int16(clip.x),
+                    scm_from_int16(clip.y),
+                    scm_from_uint16(clip.w),
+                    scm_from_uint16(clip.h),
+                    scm_from_char(blocking),
+                    SCM_UNDEFINED);
 }
 
 SCM
@@ -97,7 +117,7 @@ guile_create_tile (SCM sprite, SCM partclip, SCM blocking)
   r.w = scm_to_uint16 (scm_caddr (partclip));
   r.h = scm_to_uint16 (scm_cadddr (partclip));
   return
-    tile_to_list (make_tile (push_image_on_stack (spritefilename), r, block));
+    listify_pseudotile(spritefilename,r,block);
 }
 
 SCM
@@ -499,3 +519,4 @@ guile_get_text_line_list(SCM index)
 {
   return guile_sequence_to_list(((text*)texts.data[scm_to_int(index)].data)->buffers);
 }
+

@@ -115,3 +115,9 @@ remove_image (char* filename)
   ((image*)images.data[index].data)->filename = NULL;
   SDL_mutexV(image_mutex);
 }
+
+inline char*
+get_image_name(int index)
+{
+  return ((image*)images.data[index].data)->filename;
+}

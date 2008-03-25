@@ -3,8 +3,8 @@ scheme-dir:datadir/scm/
 scheme-dir:datadir/examples/
 image-dir:datadir/images/
 table.guile		#Table API
-utils.guile		#Utility 
-mobutils.scm		#Mob-related 
+utils.guile		#Utility functions
+mobutils.scm		#Mob-related utilities
 key-funcs.scm 		#Key API
 stats.scm		#Statistics system
 mob_events.scm		#Mob event binding system
