@@ -32,11 +32,7 @@
     (if (null? stat-value) (add-to-table! (mob-stats-table mob) stat value)
 	(set-in-table! (mob-stats-table mob) stat value))))
 
-(define (procedural-stats-init)
-  (add-to-table! (get-global-data) 'procstats (init-table)))
-
-(define (get-procstats-table)
-  (get-from-table (get-global-data) 'procstats))
+(define get-procstats-table (make-table-closure))
 
 (define (add-procedural-stat-proc! stat proc)
   (add-to-table! (get-procstats-table) stat proc))

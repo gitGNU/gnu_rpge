@@ -16,8 +16,7 @@
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
  
-(define (get-bindings)
-  (get-from-table (get-global-data) 'bindings))
+(define get-bindings (make-table-closure))
 
 (define (bind-key key proc)
   (add-to-table! (get-bindings) key proc))

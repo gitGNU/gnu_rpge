@@ -16,11 +16,7 @@
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
 
-(define (mob-tracking-init)
-  (add-to-table! (get-global-data) `tracked-mobs (init-table)))
-
-(define (tracked-mob-table)
-  (get-from-table (get-global-data) 'tracked-mobs))
+(define tracked-mob-table (make-table-closure))
 
 (define (add-tracked-mob! mob)
   (add-to-table! (tracked-mob-table) mob (open-mob-events mob)))

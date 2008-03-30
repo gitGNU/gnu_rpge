@@ -24,9 +24,6 @@
 			   (stats-init X)
                            (init-mob-bindings X)))
 (define m (make-mob 0 0 "sprite_letter.png"))
-(add-to-table! (get-global-data) 'bindings (init-table))
-(procedural-stats-init)
-(mob-tracking-init)
 ;Camera locking is now handled externally, so these are back to their old simplicity.
 ;Tell mob_event_test.scm to get a move on and track this mob.
 (add-tracked-mob! m)

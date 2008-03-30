@@ -357,8 +357,10 @@ guile_destroy_text (SCM textindex)
 SCM
 guile_add_mob_movement (SCM mob, SCM xtile, SCM ytile, SCM frames)
 {
+  SDL_mutexP(mob_mutex);
   mob_add_movement (mobs.data[scm_to_int (mob)].data, scm_to_int (xtile),
 		    scm_to_int (ytile), scm_to_int (frames));
+  SDL_mutexV(mob_mutex);
   return SCM_UNSPECIFIED;
 }
 
@@ -435,8 +437,10 @@ guile_safe_load(SCM filename)
 SCM
 guile_set_mob_frame(SCM index, SCM animation, SCM framenum)
 {
+  SDL_mutexP(mob_mutex);
   ((mob*)mobs.data[scm_to_int(index)].data)->frame = scm_to_uint(framenum);
   ((mob*)mobs.data[scm_to_int(index)].data)->animation = scm_to_uint(animation);
+  SDL_mutexV(mob_mutex);
   return SCM_UNSPECIFIED;
 }
 

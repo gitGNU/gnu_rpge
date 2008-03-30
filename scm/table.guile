@@ -1,4 +1,4 @@
-;Copyright 2007 Remco Bras
+;Copyright 2007,2008 Remco Bras
 ;
 ;This file is part of the RPGE.
 ;
@@ -114,3 +114,6 @@
    ((eq? (caadr table) key) (set-cdr! table (cddr table)))
    (else
     (remove-from-table! (cdr table) key))))
+    
+(define (make-table-closure)
+  (closure-gen (init-table)))        
