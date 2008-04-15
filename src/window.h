@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "video.h"
 #include "imagestack.h"
+#include <SDL/SDL.h>
 
 typedef struct
 {
@@ -30,6 +31,7 @@ typedef struct
 } window;
 
 extern sequence windows;
+extern SDL_mutex* window_mutex;
 
 window  create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename,unsigned int spritew,unsigned int spriteh);
 void render_window(SDL_Surface* dest,window w);

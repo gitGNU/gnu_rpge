@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "window.h"
 
 sequence windows;
+SDL_mutex* window_mutex;
 convertors(window);
 
 window
@@ -127,12 +128,17 @@ int windowstack_addwindow(window w)
   int empty = find_empty_window();
   if(empty != -1)
     {
+      SDL_mutexP(window_mutex);
       *((window*)windows.data[empty].data) = w;
+      SDL_mutexV(window_mutex);
       return empty;
     }
   else
     {
-      return sequence_append(&windows,make_window_obj(w));
+      SDL_mutexP(window_mutex);
+      int index = sequence_append(&windows,make_window_obj(w));
+      SDL_mutexV(window_mutex);
+      return index;
     }
 }
 
@@ -143,14 +149,18 @@ void windowstack_removewindow(window w)
     return;
   else
     {
+      SDL_mutexP(window_mutex);
       *((window*)windows.data[index].data) = empty_window();
+      SDL_mutexV(window_mutex);
       return;
     }
 }
 
 void windowstack_remove(int index)
 {
+  SDL_mutexP(window_mutex);
   *((window*)windows.data[index].data) = empty_window();
+  SDL_mutexV(window_mutex);
 }
 
 void render_windows(SDL_Surface* dest)

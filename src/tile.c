@@ -21,7 +21,29 @@ tile.c: Implement the functions related to tiles and tilelayers.
 */
 #include "tile.h"
 
-/*This is the now used main tilegrid, in the future, this should be interfaced to guile using a sequence, allowing people to swap tilegrids on the fly, to speed up loading and unloading battle maps and other things for applications that need them.*/
+/*Declare convertor usage, so sed can find it and take care of the mess*/
+inline object
+                         make_tilelayer_obj(tilelayer foo)
+                         {
+                           object o;
+                           o.data=xmalloc(sizeof(tilelayer));
+                           o.typeinfo = TYPE_TILELAYER;
+                           *((tilelayer*)o.data)=foo;
+                           return o;
+                         }
+                         inline tilelayer
+                         get_obj_tilelayer (object o)
+                         {
+                           return *((tilelayer*)o.data);
+                         }
+
+/*The sequence of current ready, loaded tilegrids (or tile_layers, whichever). The main idea here is to ensure that whatever links to the main grid is at any and all times 
+  loaded. (Technically, the point is to A: be able to load the new grid immediately on transition, B: swap around tilegrids if necessary (a prereq of A, really) and C: make sure
+  A carries over transitions).*/
+sequence tile_layers;
+/*We do need to know what world the user would like us to render*/
+int maingrid_index;
+
 tilelayer main_grid;
 
 tile 

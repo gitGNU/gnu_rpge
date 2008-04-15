@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define TYPE_MOVE_DESCRIPTOR 11
 #define TYPE_THREAD_ARGV 12
 #define TYPE_DIRECTIVE_T 13
+#define TYPE_TILELAYER 14
   
 typedef struct
 {
@@ -68,5 +69,6 @@ object make_Uint32_obj (Uint32 u);
 Uint32 get_obj_Uint32(object o);
 object make_string_obj(char*);
 char* get_obj_string(object);
+void free_obj(object o);
 
 #endif

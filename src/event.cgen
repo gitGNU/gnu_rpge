@@ -19,6 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "event.h"
 eventstack global_usereventstack;
 
+/*Some macros to make locking stacks easier*/
+#define LOCK_STACK(s) s->lock? SDL_mutexP(s->lock) : -1
+#define UNLOCK_STACK(s) s->lock? SDL_mutexV(s->lock) : -1
+
 convertors(event);
 
 event
@@ -37,6 +41,7 @@ eventstack_init (void)
 {
   eventstack es;
   es.indices = es.events = sequence_init ();
+  es.lock = SDL_CreateMutex();
   return es;
 }
 
@@ -54,7 +59,11 @@ eventstack_addevent (eventstack * stackptr, event e)
 {
   /*Only add events if someone cares to get them.*/
   if(stackptr->indices.objcount)
-    sequence_append (&stackptr->events, make_event_obj (e));
+    {
+      LOCK_STACK(stackptr);
+      sequence_append (&stackptr->events, make_event_obj (e));
+      UNLOCK_STACK(stackptr);
+    }
 }
 
 event
@@ -65,7 +74,9 @@ eventstack_getfirstevent (eventstack * stackptr)
   else
     {
       event event = get_obj_event (stackptr->events.data[0]);
+      LOCK_STACK(stackptr);
       sequence_remove_at (&stackptr->events, 0);
+      UNLOCK_STACK(stackptr);
       return event;
     }
 }
@@ -87,12 +98,17 @@ eventstack_open (eventstack * es)
   int index = find_empty_luser (*es);
   if (index != -1)
     {
+      LOCK_STACK(es);
       *((int *) es->indices.data[index].data) = 0;
+      UNLOCK_STACK(es);
       return index;
     }
   else
     {
-      return sequence_append (&es->indices, make_int_obj (0));
+      LOCK_STACK(es);
+      int index = sequence_append(&es->indices,make_int_obj(0));
+      UNLOCK_STACK(es);
+      return index;
     }
 }
 
@@ -100,7 +116,9 @@ eventstack_open (eventstack * es)
 void
 eventstack_close (eventstack * es, unsigned long int luser)
 {
+  LOCK_STACK(es);
   *((int *) es->indices.data[luser].data) = -1;
+  UNLOCK_STACK(es);
 }
 
 int
@@ -141,7 +159,7 @@ eventstack_clean_stack (eventstack * es)
       /*
          Performance note: This bit here's sluggish, there should be a sequence_remove_upto, which I'll get around to some other time. Also deprotects objects in the events.
        */
-
+      LOCK_STACK(es);
       for (int j = 0; j < lowest; j++)
 	{
 	  scm_gc_unprotect_object (((event *) es->events.data[0].data)->type);
@@ -152,6 +170,7 @@ eventstack_clean_stack (eventstack * es)
 	{
 	  *((int *) es->indices.data[j].data) -= lowest;
 	}
+      UNLOCK_STACK(es);
     }
 }
 
@@ -163,7 +182,9 @@ eventstack_get_first_of_user (eventstack * es, unsigned long int luser)
   index = eventstack_get_index_of_user (*es, luser);
   if (index != -1 && index < es->events.objcount)
     {
+      LOCK_STACK(es);
       (*((int *) es->indices.data[luser].data))++;
+      UNLOCK_STACK(es);
       return *((event *) es->events.data[index].data);
     }
   else

@@ -34,6 +34,8 @@ typedef struct
 {
   sequence events;
   sequence indices;
+  /*We give all eventstacks their own mutex locks, to prevent having object-specific stacks lock each other out for no reason.*/
+  SDL_mutex* lock;
 } eventstack;
 
 extern eventstack global_usereventstack; //holds all generic game events, with the minor exception of quitting events.
