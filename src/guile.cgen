@@ -463,8 +463,10 @@ guile_move_window(SCM index, SCM point)
 {
   int ind = scm_to_int(index);
   window* w = (window*)windows.data[ind].data;
+  SDL_mutexP(window_mutex);
   w->x = scm_to_int(scm_car(point));
   w->y = scm_to_int(scm_cdr(point));
+  SDL_mutexV(window_mutex);
   return SCM_UNSPECIFIED;
 }
 
@@ -473,8 +475,10 @@ guile_resize_window(SCM index, SCM dimensions)
 {
   int ind = scm_to_int(index);
   window* w = (window*)windows.data[ind].data;
+  SDL_mutexP(window_mutex);
   w->width=scm_to_int(scm_car(dimensions));
   w->height=scm_to_int(scm_cdr(dimensions));
+  SDL_mutexV(window_mutex);
   return SCM_UNSPECIFIED;
 }
 
@@ -483,8 +487,10 @@ guile_move_text(SCM index, SCM point)
 {
   int ind = scm_to_int(index);
   text * t = (text*)texts.data[ind].data;
+  SDL_mutexP(text_mutex);
   t->x = scm_to_uint(scm_car(point));
   t->y = scm_to_uint(scm_cdr(point));
+  SDL_mutexV(text_mutex);
   return SCM_UNSPECIFIED;
 }
 

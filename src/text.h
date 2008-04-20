@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "stdio.h"
 #include "sequence.h"
 #include <SDL/SDL_ttf.h>
+#include <SDL/SDL.h>
 
 typedef struct
 {
@@ -39,6 +40,7 @@ typedef struct
 } font;
 
 extern sequence texts;
+extern SDL_mutex* font_mutex, *text_mutex;
 extern sequence fonts;
 
 int open_font(char* filename, int size);

@@ -22,6 +22,7 @@ sequence fonts;
 sequence texts;
 convertors(font);
 convertors(text);
+SDL_mutex *font_mutex,*text_mutex;
 
 font
 make_font(TTF_Font* fontptr, char* filename,unsigned int size)
@@ -76,13 +77,18 @@ open_font(char* filename, int size)
           if(empty_font != -1)
             {
               free(o.data);
+	      SDL_mutexP(font_mutex);
               *((font*)fonts.data[empty_font].data) = font_to_add;
+	      SDL_mutexV(font_mutex);
               return empty_font;
             }
           else
             {
               *((font*)o.data) = font_to_add;
-              return sequence_append(&fonts, o);
+	      SDL_mutexP(font_mutex);
+              int returnval = sequence_append(&fonts, o);
+	      SDL_mutexV(font_mutex);
+	      return returnval;
             }
         }
     }
@@ -92,7 +98,11 @@ void
 close_font(int index)
 {
   if(index >= 0 && index < fonts.objcount)
-    ((font*)fonts.data[index].data)->size = 0;
+    {
+      SDL_mutexP(font_mutex);
+      ((font*)fonts.data[index].data)->size = 0;
+      SDL_mutexV(font_mutex);
+    }
 }
 
 /*
@@ -166,17 +176,26 @@ add_text(text t)
   int indexempty = find_empty_text();
   if(indexempty != -1)
     {
+      SDL_mutexP(text_mutex);
       *((text*)texts.data[indexempty].data) = t;
+      SDL_mutexV(text_mutex);
       return indexempty;
     }
   else
-    return sequence_append(&texts,make_text_obj(t));
+    {
+      SDL_mutexP(text_mutex);
+      int returnval =  sequence_append(&texts,make_text_obj(t));
+      SDL_mutexV(text_mutex);
+      return returnval;
+    }
 }
 
 void
 remove_text(int index)
 {
+  SDL_mutexP(text_mutex);
   sequence_free(((text*)texts.data[index].data)->buffers);
   ((text*)texts.data[index].data)->fontindex = -1;
+  SDL_mutexV(text_mutex);
 }
 
