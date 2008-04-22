@@ -39,13 +39,15 @@
 
 (define (dialogs-next dialogid)
   (let ((dialog (get-dialog dialogid)))
-  (cond
-   ((null? dialog) '())
-   (else
-    (if (> (get-dialog-text dialog) -1)
-	(destroy-text (get-dialog-text dialog)))
-    (let ((text (get-next-text-string dialog))) 
-      (if (null? text) (destroy-dialog! dialogid) (set-dialog-text! dialog (make-text (get-dialog-text-x dialog) (get-dialog-text-y dialog) text (get-dialog-font dialog) 255 255 255))))))))
+    (cond
+     ((null? dialog) '())
+     (else 
+      (let ((text (get-next-text-string dialog)))
+	(cond ((null? text) (destroy-dialog! dialogid))
+	      (else
+	       (if (> (get-dialog-text dialog) -1)
+		   (destroy-text (get-dialog-text dialog)))
+	       (set-dialog-text! dialog (make-text (get-dialog-text-x dialog) (get-dialog-text-y dialog) text (get-dialog-font dialog) 255 255 255)))))))))
 
 (define get-dialog-text cadr)
 
