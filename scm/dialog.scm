@@ -47,7 +47,7 @@
       (let ((text (get-next-text-string dialog)))
 	(cond ((null? text) (destroy-dialog! dialogid) 
 	       (let ((next (dialog-queue 'update)))
-		 (if (null? next) '() (apply make-dialog next))))
+		 (if (null? next) (dialog-queue 'set '()) (apply make-dialog next))))
 	      (else
 	       (if (> (get-dialog-text dialog) -1)
 		   (destroy-text (get-dialog-text dialog)))
@@ -63,8 +63,15 @@
   (let ((list (cadddr dialog)))
     (if (null? list) '() 
 	(let ((t (car list)))
-	  (set-car! (cdddr dialog) (cdr list))
-	  t))))
+	  (cond ((eq? t 'menu) 
+		 (let ((ind (cadr list)))
+		   (set-car! (cdr list) (+ ind 1))
+		   (if (= (cadr list) (length (cddr list)))
+		       (set-car! (cdr list) 0))
+		   (list-ref (cddr list) (cadr list))))
+		(else
+		 (set-car! (cdddr dialog) (cdr list))
+		 t))))))
 
 (define (get-dialog-text-x dialog)
   (let ((w (get-dialog-window dialog)))
