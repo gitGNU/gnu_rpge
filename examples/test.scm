@@ -32,6 +32,16 @@
 (bind-key 'a (lambda() (add-mob-movement m -1 0 16)))
 (bind-key 's (lambda() (add-mob-movement m 0 1 16)))
 (bind-key 'w (lambda() (add-mob-movement m 0 -1 16)))
+;Binding for dialog system, yay
+(bind-key 'q (lambda () (if (not (null? (get-dialog-queue))) (dialogs-next (get-next-dialog-id )))))
+;Menu fun
+(bind-key 'e (lambda () 
+	       (if (null? (get-dialog-queue))
+		   '()
+		   (let ((d (get-dialog (get-next-dialog-id))))
+		     ;Check if we're dealing with a menu
+		     (cond ((null? d) '())
+			   ((eq? (car (get-string-list d)) 'menu) ((get-menu-action (list-ref (get-menu-choices (get-string-list d)) (get-index (get-string-list d)))))))))))
 (set-tile 5 5 (create-tile "tile1.png" (make-rect 0 0 16 16) block-all-undirectional))
 (define n (make-mob 5 0 "sprite_letter.png"))
 (make-thread safe-load "keys.scm")

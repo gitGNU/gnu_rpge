@@ -115,3 +115,14 @@
       (cond ((eq? message 'get) queue)
 	    ((eq? message 'set) (set-queue! (car args)))
 	    ((eq? message 'update) (update-queue!))))))
+
+(define (get-dialog-queue)
+  (dialog-queue 'get))
+
+(define (get-next-dialog-id)
+  (car (get-dialog-queue)))
+
+(define get-string-list cadddr)
+(define get-menu-choices cddr)
+(define get-menu-action cdr)
+(define get-index cadr)
