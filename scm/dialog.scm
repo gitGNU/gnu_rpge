@@ -19,6 +19,8 @@
 (define dialog-config (make-table-closure))
 (define dialogs (make-table-closure))
 
+
+
 (define (dialogs-init initial-width initial-height initial-font sprite-name sprite-width sprite-height)
   (add-to-table! (dialog-config) 'dimensions (cons initial-width initial-height))
   (add-to-table! (dialog-config) 'font initial-font)
@@ -43,7 +45,9 @@
      ((null? dialog) '())
      (else 
       (let ((text (get-next-text-string dialog)))
-	(cond ((null? text) (destroy-dialog! dialogid))
+	(cond ((null? text) (destroy-dialog! dialogid) 
+	       (let ((next (dialog-queue 'update)))
+		 (if (null? next) '() (apply make-dialog next))))
 	      (else
 	       (if (> (get-dialog-text dialog) -1)
 		   (destroy-text (get-dialog-text dialog)))
@@ -80,3 +84,27 @@
     (remove-window (get-dialog-window dialog))
     (destroy-text (get-dialog-text dialog))
     (remove-from-table! (dialogs) id)))
+
+(define (set-current-dialog! id)
+  (dialog-queue 'set (list id)))
+
+(define (queue-dialog id x y stringlist)
+  (if (null? (dialog-queue 'get)) (begin (make-dialog id x y stringlist) (set-current-dialog! id))
+      (append! (dialog-queue 'get) (list (list id x y stringlist)))))
+
+(define dialog-queue
+  (begin
+    (define queue '())
+    (define (set-queue! val)
+      (set! queue val))
+    (define (update-queue!)
+      (cond ((null? queue) '())
+	    ((null? (cdr queue)) '())
+	    (else
+	     (let ((next (cadr queue)))
+	       (set-queue! (cons (car next) (cddr queue)))
+	       next))))
+    (lambda (message . args)
+      (cond ((eq? message 'get) queue)
+	    ((eq? message 'set) (set-queue! (car args)))
+	    ((eq? message 'update) (update-queue!))))))
