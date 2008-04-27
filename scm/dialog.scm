@@ -68,7 +68,7 @@
 		   (set-car! (cdr list) (+ ind 1))
 		   (if (= (cadr list) (length (cddr list)))
 		       (set-car! (cdr list) 0))
-		   (list-ref (cddr list) (cadr list))))
+		   (car (list-ref (cddr list) (cadr list)))))
 		(else
 		 (set-car! (cdddr dialog) (cdr list))
 		 t))))))
