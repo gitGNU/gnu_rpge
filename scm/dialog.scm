@@ -46,8 +46,7 @@
      (else 
       (let ((text (get-next-text-string dialog)))
 	(cond ((null? text) (destroy-dialog! dialogid) 
-	       (let ((next (dialog-queue 'update)))
-		 (if (null? next) (dialog-queue 'set '()) (apply make-dialog next))))
+	       (show-next-dialog!))
 	      (else
 	       (if (> (get-dialog-text dialog) -1)
 		   (destroy-text (get-dialog-text dialog)))
@@ -99,6 +98,16 @@
   (if (null? (dialog-queue 'get)) (begin (make-dialog id x y stringlist) (set-current-dialog! id))
       (append! (dialog-queue 'get) (list (list id x y stringlist)))))
 
+;The below definition of dialog-queue is equivalent to the one used, but should be left commented out until mkobject is accepted into the library proper.
+;(define dialog-queue (mkobject ((queue '())) (get (lambda whatever queue) 
+	;				      set (lambda (self val) (set! queue val)) 
+		;			      update (lambda (self) (cond ((null? (self 'get)) '())
+			;						  ((null? (cdr (self 'get))) (self 'set '()))
+				;					  (else
+					;				   (let ((next (cadr (self 'get))))
+						;			     (self 'set (cons (car next) (cddr (self 'get))))
+							;		     next)))))))
+
 (define dialog-queue
   (begin
     (define queue '())
@@ -106,7 +115,7 @@
       (set! queue val))
     (define (update-queue!)
       (cond ((null? queue) '())
-	    ((null? (cdr queue)) '())
+	    ((null? (cdr queue)) (set-queue! '()))
 	    (else
 	     (let ((next (cadr queue)))
 	       (set-queue! (cons (car next) (cddr queue)))
@@ -119,10 +128,24 @@
 (define (get-dialog-queue)
   (dialog-queue 'get))
 
-(define (get-next-dialog-id)
+(define (get-current-dialog-id)
   (car (get-dialog-queue)))
 
 (define get-string-list cadddr)
 (define get-menu-choices cddr)
 (define get-menu-action cdr)
 (define get-index cadr)
+
+(define (make-menu id x y choices)
+  (make-dialog id x y (append (list 'menu -1) choices)))
+
+(define (queue-menu id x y choices)
+  (queue-dialog id x y (append (list 'menu -1) choices)))
+
+(define (destroy-current-dialog)
+  (destroy-dialog! (get-current-dialog-id))
+  (show-next-dialog!))
+
+(define (show-next-dialog!)
+  (let ((next (dialog-queue 'update)))
+    (if (null? next) '() (apply make-dialog next))))

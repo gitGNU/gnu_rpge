@@ -55,7 +55,10 @@ typedef struct
   SDL_Surface* imagebuffer;
 } tilelayer;
 
-extern tilelayer main_grid;
+extern sequence tile_layers;
+extern int maingrid_index;
+
+#define MAIN_GRID ((tilelayer*)tile_layers.data[maingrid_index].data)
 
 SDL_Surface* remake_tilegrid();
 tile make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking);

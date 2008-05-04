@@ -41,10 +41,9 @@ inline object
   loaded. (Technically, the point is to A: be able to load the new grid immediately on transition, B: swap around tilegrids if necessary (a prereq of A, really) and C: make sure
   A carries over transitions).*/
 sequence tile_layers;
+
 /*We do need to know what world the user would like us to render*/
 int maingrid_index;
-
-tilelayer main_grid;
 
 tile 
 make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking)
@@ -57,7 +56,7 @@ make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking)
   return t;
 }
 
-/*Note: The caller should handle the memory allocated here. Currently, there is only one tilegrid at all times, this can (and will) change in later versions, in which that property shall become significant.*/
+/*Note: The caller should handle the memory allocated here.*/
 tile**
 init_tilegrid(unsigned int width,unsigned int height)
 {
@@ -92,11 +91,11 @@ tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridhei
 /*These convenience functions exist merely to make life easier for users (and guile.c). How they should be rewritten in case we're dealing with any number of tilelayers is something to be seen later.*/
 tile** set_tile(unsigned int x, unsigned int y, tile replacement)
 {
-  if(main_grid.tilegrid)
+  if(MAIN_GRID->tilegrid)
     {
-      main_grid.tilegrid[x][y] = replacement;
+      MAIN_GRID->tilegrid[x][y] = replacement;
       remake_tilegrid();
-      return main_grid.tilegrid;
+      return MAIN_GRID->tilegrid;
     }
   else
     return NULL;
@@ -104,11 +103,11 @@ tile** set_tile(unsigned int x, unsigned int y, tile replacement)
 
 tile** set_all_tiles(tile replacement)
 {
-  if(main_grid.tilegrid)
+  if(MAIN_GRID->tilegrid)
     {
-      main_grid.tilegrid = tilegrid_set_all_tiles(main_grid.tilegrid,main_grid.width,main_grid.height,replacement);
+      MAIN_GRID->tilegrid = tilegrid_set_all_tiles(MAIN_GRID->tilegrid,MAIN_GRID->width,MAIN_GRID->height,replacement);
       remake_tilegrid();
-      return main_grid.tilegrid;
+      return MAIN_GRID->tilegrid;
     }
   else
     return NULL;
@@ -118,38 +117,48 @@ tile** set_all_tiles(tile replacement)
 SDL_Surface*
 remake_tilegrid()
 {
+  tilelayer* main_grid = MAIN_GRID;
   SDL_Surface* display;
-  if(!main_grid.imagebuffer)
+  if(!main_grid)
+    return NULL;
+  if(!main_grid->imagebuffer)
     {
       display = SDL_GetVideoSurface();
-      main_grid.imagebuffer = SDL_CreateRGBSurface(SDL_HWSURFACE,main_grid.width*TILE_WIDTH,main_grid.height*TILE_HEIGHT,display->format->BitsPerPixel,display->format->Rmask,display->format->Gmask,display->format->Bmask,display->format->Amask);
+      main_grid->imagebuffer = SDL_CreateRGBSurface(SDL_HWSURFACE,main_grid->width*TILE_WIDTH,main_grid->height*TILE_HEIGHT,display->format->BitsPerPixel,display->format->Rmask,display->format->Gmask,display->format->Bmask,display->format->Amask);
     }
   else
-    SDL_FillRect(main_grid.imagebuffer,NULL,SDL_MapRGB(main_grid.imagebuffer->format,0,0,0));
-  render_tilegrid(main_grid.imagebuffer,main_grid.tilegrid,main_grid.width,main_grid.height);
-  return main_grid.imagebuffer;
+    SDL_FillRect(main_grid->imagebuffer,NULL,SDL_MapRGB(main_grid->imagebuffer->format,0,0,0));
+  render_tilegrid(main_grid->imagebuffer,main_grid->tilegrid,main_grid->width,main_grid->height);
+  return main_grid->imagebuffer;
 }
 
 inline char 
 occupied(int tilex, int tiley)
 {
-  return main_grid.tilegrid[tilex][tiley].occupant != NULL;
+  return MAIN_GRID->tilegrid[tilex][tiley].occupant != NULL;
 }
 
 inline void 
 set_occupant(int tilex, int tiley, mob* new_occupant)
 {
-  main_grid.tilegrid[tilex][tiley].occupant = new_occupant;
+  MAIN_GRID->tilegrid[tilex][tiley].occupant = new_occupant;
 }
 
 inline mob* 
 get_occupant(int tilex, int tiley)
 {
-  return main_grid.tilegrid[tilex][tiley].occupant;
+  return MAIN_GRID->tilegrid[tilex][tiley].occupant;
 }
 
 inline void
 reset_occupant(int tilex, int tiley)
 {
-  main_grid.tilegrid[tilex][tiley].occupant = NULL;
+  MAIN_GRID->tilegrid[tilex][tiley].occupant = NULL;
+}
+
+/*Add checking for empty spots later */
+int
+add_tilegrid(tilelayer grid)
+{
+  return sequence_append(&tile_layers,make_tilelayer_obj(grid));
 }

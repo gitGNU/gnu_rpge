@@ -124,8 +124,12 @@ render_screen(SDL_Surface* dest)
 {
   int xoffset = get_camera_xoffset(global_camera,SCREEN_WIDTH),yoffset = get_camera_yoffset(global_camera,SCREEN_HEIGHT);
   SDL_FillRect(dest,NULL,SDL_MapRGB(dest->format,0,0,0));
-  SDL_Rect clip = {0,0,main_grid.width*TILE_WIDTH,main_grid.height*TILE_HEIGHT};
-  apply_surface(xoffset,yoffset,main_grid.imagebuffer,dest,&clip);
+  if(tile_layers.objcount && maingrid_index < tile_layers.objcount)
+    {
+      fprintf(stderr,"Rendering grid: %d of %lu\n",maingrid_index,tile_layers.objcount);
+      SDL_Rect clip = {0,0,MAIN_GRID->width*TILE_WIDTH,MAIN_GRID->height*TILE_HEIGHT};
+      apply_surface(xoffset,yoffset,MAIN_GRID->imagebuffer,dest,&clip);
+    }
   for(int i = 0; i < mobs.objcount; i++)
     {
       render_mob_with_offsets(dest,*((mob*)mobs.data[i].data),xoffset,yoffset);

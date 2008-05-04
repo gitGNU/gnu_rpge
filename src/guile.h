@@ -45,7 +45,7 @@ SCM guile_create_tile(SCM sprite, SCM partclip, SCM blocking);
 SCM guile_set_all_tiles(SCM tile);
 SCM guile_set_tile(SCM x, SCM y, SCM tile);
 SCM guile_move_mob_all(SCM mobindex, SCM tilecountx, SCM tilecounty, SCM frametotal);
-SCM guile_init_tilegrid(SCM width, SCM height);
+SCM guile_make_tilegrid(SCM width, SCM height);
 SCM guile_set_mob_animation(SCM mobindex, SCM animation, SCM start, SCM targetframe, SCM framesbetween, SCM loop);
 SCM guile_stop_mob_animation(SCM mobindex);
 SCM guile_destroy_mob(SCM mobindex);

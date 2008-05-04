@@ -177,13 +177,14 @@ guile_destroy_mob (SCM mobindex)
 }
 
 SCM
-guile_init_tilegrid (SCM width, SCM height)
+guile_make_tilegrid (SCM width, SCM height)
 {
-  main_grid.tilegrid =
-    init_tilegrid (scm_to_uint (width), scm_to_uint (height));
-  main_grid.width = scm_to_uint (width);
-  main_grid.height = scm_to_uint (height);
-  return scm_from_int (0);
+  tilelayer new_grid;
+  memset(&new_grid,0,sizeof(tilelayer));
+  new_grid.width = scm_to_int(width);
+  new_grid.height = scm_to_int(height);
+  new_grid.tilegrid=init_tilegrid(new_grid.width,new_grid.height);
+  return scm_from_int(add_tilegrid(new_grid));
 }
 
 SCM

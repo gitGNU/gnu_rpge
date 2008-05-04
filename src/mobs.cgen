@@ -256,7 +256,7 @@ move_mob (mob * m)
       int old_tilex = (oldx+SPRITE_WIDTH/2)/TILE_WIDTH, old_tiley = (oldy+SPRITE_HEIGHT/2)/TILE_HEIGHT;
       mob* occupant = NULL;
       /*Check grid bounds*/
-      if(m->x < 0 || tilex >= main_grid.width || m->y < 0 || tiley >=main_grid.height)
+      if(m->x < 0 || tilex >= MAIN_GRID->width || m->y < 0 || tiley >=MAIN_GRID->height)
 	{
 	  mob_stop_movement(m);
 	  /*Do some fixing of coordinates, to make sure the top-left corner of the sprite is at the limit of the set of allowed positions*/
@@ -270,7 +270,7 @@ move_mob (mob * m)
 	  /* Do tile block checking since there was no collision*/
 	  if(old_tilex != tilex || old_tiley != tiley)
 	    {
-	      char blocking = main_grid.tilegrid[tilex][tiley].blocking;
+	      char blocking = MAIN_GRID->tilegrid[tilex][tiley].blocking;
 	      char stop = 0;
 	      /*Moving right,check left edge*/
 	      if(tilex > old_tilex)
