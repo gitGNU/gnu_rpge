@@ -26,14 +26,12 @@ mob
 create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
 {
   mob mobby;
+  memset(&mobby,0,sizeof(mob));
   mobby.imgindex = push_image_on_stack (sprity);
   mobby.x = x * TILE_WIDTH;
   mobby.y = y * TILE_HEIGHT;
+  mobby.grid = 0;
   mobby.xpixelalignment = mobby.ypixelalignment = 0;
-  memset (((char *) &mobby) + sizeof (unsigned int) * 2 + sizeof (float) * 2 +
-	  sizeof (SDL_Surface *), 0,
-	  sizeof (mob) - sizeof (unsigned int) * 2 - sizeof (float) * 2 -
-	  sizeof (SDL_Surface *));
   mobby.userdata = SCM_EOL;
   scm_gc_protect_object(mobby.userdata);
   mobby.move_descriptors = sequence_init();

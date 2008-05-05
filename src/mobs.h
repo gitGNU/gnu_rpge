@@ -28,13 +28,14 @@ typedef struct
 {
   int x;
   int y;
-  float xpixelalignment;
-  float ypixelalignment;
+  int grid;
+  float xpixelalignment; /*Unused as of right about now, but intended for usage in 'offsetting' sprites from the center of their assigned tile*/
+  float ypixelalignment; 
   int imgindex;
   unsigned int animation;
   unsigned int frame;
   unsigned int targetframe;
-  char animlooping;
+  char animlooping; /*Low-hanging optimization fruit here*/
   char resetonnext;
   int initialtimetonextframe;
   int timetonextframe;

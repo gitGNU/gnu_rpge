@@ -1,8 +1,8 @@
-This is rpge.info, produced by makeinfo version 4.8 from rpge.texinfo.
+This is rpge.info, produced by makeinfo version 4.11 from rpge.texinfo.
 
-   Copyright (C)  2007,2008  Remco Bras.    Permission is granted to
-copy, distribute and/or modify this document   under the terms of the
-GNU Free Documentation License, Version 1.2   or any later version
+Copyright (C)  2007,2008  Remco Bras.    Permission is granted to copy,
+distribute and/or modify this document   under the terms of the GNU
+Free Documentation License, Version 1.2   or any later version
 published by the Free Software Foundation;   with no Invariant
 Sections, no Front-Cover Texts, and no Back-Cover   Texts.  A copy of
 the license is included in the section entitled "GNU   Free
@@ -1177,23 +1177,23 @@ permit their use in free software.
 
 
 Tag Table:
-Node: Top496
-Node: About RPGE and obtaining it849
-Node: About RPGE and this manual1086
-Node: Getting a copy1688
-Node: Installation2459
-Node: Invoking RPGE3512
-Node: A summary of command-line options3743
-Node: RPGE initialization files4321
-Node: RPGE's view of the world7773
-Node: Overview7984
-Node: Tiles8886
-Node: Mobs10496
-Node: Communication in RPGE14030
-Node: Event Reference15837
-Node: API Reference17179
-Node: Primitives17557
-Node: Scheme-level APIs23445
-Node: GNU Free Documentation License29485
+Node: Top494
+Node: About RPGE and obtaining it847
+Node: About RPGE and this manual1084
+Node: Getting a copy1686
+Node: Installation2457
+Node: Invoking RPGE3510
+Node: A summary of command-line options3741
+Node: RPGE initialization files4319
+Node: RPGE's view of the world7771
+Node: Overview7982
+Node: Tiles8884
+Node: Mobs10494
+Node: Communication in RPGE14028
+Node: Event Reference15835
+Node: API Reference17177
+Node: Primitives17555
+Node: Scheme-level APIs23443
+Node: GNU Free Documentation License29483
 
 End Tag Table
