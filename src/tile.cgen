@@ -1,12 +1,11 @@
 /*
-Copyright Remco Bras and Michael de Lang 2007.
+Copyright Remco Bras and Michael de Lang 2007,2008
 This file is part of RPGE.
 
 RPGE is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 3 of the License, or
 (at your option) any later version.
-
 RPGE is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -22,20 +21,7 @@ tile.c: Implement the functions related to tiles and tilelayers.
 #include "tile.h"
 
 /*Declare convertor usage, so sed can find it and take care of the mess*/
-inline object
-                         make_tilelayer_obj(tilelayer foo)
-                         {
-                           object o;
-                           o.data=xmalloc(sizeof(tilelayer));
-                           o.typeinfo = TYPE_TILELAYER;
-                           *((tilelayer*)o.data)=foo;
-                           return o;
-                         }
-                         inline tilelayer
-                         get_obj_tilelayer (object o)
-                         {
-                           return *((tilelayer*)o.data);
-                         }
+convertors(tilelayer);
 
 /*The sequence of current ready, loaded tilegrids (or tile_layers, whichever). The main idea here is to ensure that whatever links to the main grid is at any and all times 
   loaded. (Technically, the point is to A: be able to load the new grid immediately on transition, B: swap around tilegrids if necessary (a prereq of A, really) and C: make sure
@@ -94,7 +80,7 @@ tile** set_tile(unsigned int x, unsigned int y, tile replacement)
   if(MAIN_GRID->tilegrid)
     {
       MAIN_GRID->tilegrid[x][y] = replacement;
-      remake_tilegrid();
+      remake_tilegrid(MAIN_GRID);
       return MAIN_GRID->tilegrid;
     }
   else
@@ -106,18 +92,17 @@ tile** set_all_tiles(tile replacement)
   if(MAIN_GRID->tilegrid)
     {
       MAIN_GRID->tilegrid = tilegrid_set_all_tiles(MAIN_GRID->tilegrid,MAIN_GRID->width,MAIN_GRID->height,replacement);
-      remake_tilegrid();
+      remake_tilegrid(MAIN_GRID);
       return MAIN_GRID->tilegrid;
     }
   else
     return NULL;
 }  
 
-/*This one should be generalised to any tilelayer, but note that it renders the entire tilegrid in advance. This is an optimization hack, to avoid thousands of runtime blits every frame. */
+/*Pre-render a tilegrid, avoiding duplication of blitting work when rendering frames*/
 SDL_Surface*
-remake_tilegrid()
+remake_tilegrid(tilelayer* main_grid)
 {
-  tilelayer* main_grid = MAIN_GRID;
   SDL_Surface* display;
   if(!main_grid)
     return NULL;
@@ -133,32 +118,41 @@ remake_tilegrid()
 }
 
 inline char 
-occupied(int tilex, int tiley)
+occupied(int tilex, int tiley,int grid)
 {
-  return MAIN_GRID->tilegrid[tilex][tiley].occupant != NULL;
+  return GRID_PTR(grid)->tilegrid[tilex][tiley].occupant != NULL;
 }
 
 inline void 
-set_occupant(int tilex, int tiley, mob* new_occupant)
+set_occupant(int tilex, int tiley,int grid, mob* new_occupant)
 {
-  MAIN_GRID->tilegrid[tilex][tiley].occupant = new_occupant;
+  GRID_PTR(grid)->tilegrid[tilex][tiley].occupant = new_occupant;
 }
 
 inline mob* 
-get_occupant(int tilex, int tiley)
+get_occupant(int tilex, int tiley,int grid)
 {
-  return MAIN_GRID->tilegrid[tilex][tiley].occupant;
+  return GRID_PTR(grid)->tilegrid[tilex][tiley].occupant;
 }
 
 inline void
-reset_occupant(int tilex, int tiley)
+reset_occupant(int tilex, int tiley,int grid)
 {
-  MAIN_GRID->tilegrid[tilex][tiley].occupant = NULL;
+  GRID_PTR(grid)->tilegrid[tilex][tiley].occupant = NULL;
 }
 
-/*Add checking for empty spots later */
 int
 add_tilegrid(tilelayer grid)
 {
-  return sequence_append(&tile_layers,make_tilelayer_obj(grid));
+  object o;
+  o.data = NULL;
+  o.typeinfo = 0;
+  int index_empty = sequence_position(tile_layers,o,NULL);
+  if(index_empty == -1)
+    return sequence_append(&tile_layers,make_tilelayer_obj(grid));
+  else
+    {
+      tile_layers.data[index_empty] = make_tilelayer_obj(grid);
+      return index_empty;
+    }
 }

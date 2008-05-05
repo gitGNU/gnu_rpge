@@ -56,7 +56,7 @@ void
 set_mob_occupants(mob* m)
 {
   int tilex = (m->x+SPRITE_WIDTH/2)/TILE_WIDTH, tiley = (m->y+SPRITE_HEIGHT/2)/TILE_HEIGHT;
-  set_occupant(tilex,tiley,m);
+  set_occupant(tilex,tiley,maingrid_index,m);
 }
 
 void
@@ -100,7 +100,7 @@ remove_mob (int index)
     {
       mob m = *((mob*)mobs.data[index].data);
       int tilex = (m.x+SPRITE_WIDTH/2)/SPRITE_WIDTH,tiley = (m.y+SPRITE_HEIGHT/2)/SPRITE_HEIGHT;
-      reset_occupant(tilex,tiley);
+      reset_occupant(tilex,tiley,maingrid_index);
       SDL_mutexP(mob_mutex);
       ((mob*)mobs.data[index].data)->imgindex = -1;
       SDL_mutexV(mob_mutex);
@@ -264,9 +264,9 @@ move_mob (mob * m)
 	  m->y <  0 ? m->y = 0 : set_mob_tile_y(m,old_tiley);
 
 	}
-      else if(!(occupant = get_occupant(tilex,tiley)) || occupant == m)
+      else if(!(occupant = get_occupant(tilex,tiley,maingrid_index)) || occupant == m)
         {
-          reset_occupant(old_tilex,old_tiley);
+          reset_occupant(old_tilex,old_tiley,maingrid_index);
 	  /* Do tile block checking since there was no collision*/
 	  if(old_tilex != tilex || old_tiley != tiley)
 	    {

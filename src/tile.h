@@ -1,5 +1,5 @@
 /*
-Copyright Remco Bras and Michael de Lang 2007.
+Copyright Remco Bras and Michael de Lang 2007,2008.
 This file is part of RPGE.
 
 RPGE is free software; you can redistribute it and/or modify
@@ -59,6 +59,7 @@ extern sequence tile_layers;
 extern int maingrid_index;
 
 #define MAIN_GRID ((tilelayer*)tile_layers.data[maingrid_index].data)
+#define GRID_PTR(n) ((tilelayer*)tile_layers.data[n].data)
 
 SDL_Surface* remake_tilegrid();
 tile make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking);
@@ -67,10 +68,11 @@ tile** tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile r
 tile** tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridheight, tile replacement);
 tile** set_all_tiles(tile replacement);
 tile** set_tile(unsigned int x, unsigned int y, tile replacement);
-char occupied(int tilex, int tiley);
-void set_occupant(int tilex, int tiley, mob* new_occupant);
-mob* get_occupant(int tilex, int tiley);
-void reset_occupant(int tilex, int tiley);
+char occupied(int tilex, int tiley,int grid);
+void set_occupant(int tilex, int tiley, int grid, mob* new_occupant);
+mob* get_occupant(int tilex, int tiley, int grid);
+void reset_occupant(int tilex, int tiley,int grid);
+int add_tilegrid(tilelayer grid);
 
 /*Includes which depend on this file*/
 #include "video.h"

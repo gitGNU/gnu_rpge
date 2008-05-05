@@ -126,7 +126,6 @@ render_screen(SDL_Surface* dest)
   SDL_FillRect(dest,NULL,SDL_MapRGB(dest->format,0,0,0));
   if(tile_layers.objcount && maingrid_index < tile_layers.objcount)
     {
-      fprintf(stderr,"Rendering grid: %d of %lu\n",maingrid_index,tile_layers.objcount);
       SDL_Rect clip = {0,0,MAIN_GRID->width*TILE_WIDTH,MAIN_GRID->height*TILE_HEIGHT};
       apply_surface(xoffset,yoffset,MAIN_GRID->imagebuffer,dest,&clip);
     }
