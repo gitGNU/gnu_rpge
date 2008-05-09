@@ -23,14 +23,14 @@ convertors(move_descriptor);
 convertors(mob);
 
 mob
-create_mob_using_sprite (unsigned x, unsigned y, char *sprity)
+create_mob_using_sprite (unsigned x, unsigned y, unsigned grid, char *sprity)
 {
   mob mobby;
   memset(&mobby,0,sizeof(mob));
   mobby.imgindex = push_image_on_stack (sprity);
   mobby.x = x * TILE_WIDTH;
   mobby.y = y * TILE_HEIGHT;
-  mobby.grid = 0;
+  mobby.grid = grid;
   mobby.xpixelalignment = mobby.ypixelalignment = 0;
   mobby.userdata = SCM_EOL;
   scm_gc_protect_object(mobby.userdata);

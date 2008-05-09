@@ -18,8 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "main.h"
 
-SCM global_userdata = SCM_EOL;
-
 int
 exec_guile_shell (void *unused_arg)
 {
@@ -125,13 +123,14 @@ main (int argc, char **argv)
   scm_init_guile ();
   /*Define the load mutex as a recursive mutex. This is necessary for safe loading*/
   scm_c_define("load-mutex",scm_make_recursive_mutex());
-  scm_c_define_gsubr ("create-mob", 3, 0, 0, guile_create_mob);
+  scm_c_define_gsubr ("create-mob", 4, 0, 0, guile_create_mob);
   scm_c_define_gsubr ("destroy-mob",1,0,0,guile_destroy_mob);
   scm_c_define_gsubr ("create-tile", 3, 0, 0, guile_create_tile);
-  scm_c_define_gsubr ("set-tile", 3, 0, 0, guile_set_tile);
-  scm_c_define_gsubr ("set-all-tiles", 1, 0, 0, guile_set_all_tiles);
+  scm_c_define_gsubr ("set-tile", 4, 0, 0, guile_set_tile);
+  scm_c_define_gsubr ("set-all-tiles", 2, 0, 0, guile_set_all_tiles);
   scm_c_define_gsubr ("move-mob", 4, 0, 0, guile_move_mob_all);
   scm_c_define_gsubr ("init-tilegrid",2,0,0,guile_make_tilegrid);
+  scm_c_define_gsubr ("remove-tilegrid",1,0,0,guile_remove_grid);
   scm_c_define_gsubr ("set-mob-animation",6,0,0,guile_set_mob_animation);
   scm_c_define_gsubr ("stop-mob-animation",1,0,0,guile_stop_mob_animation);
   scm_c_define_gsubr ("create-window",7,0,0,guile_make_window);

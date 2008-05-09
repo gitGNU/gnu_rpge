@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "guile.h"
 
+SCM global_userdata = SCM_EOL;
 sequence argvs;
 convertors(thread_argv);
 
@@ -48,13 +49,13 @@ scm_nth (SCM list, int n)
 }
 
 SCM
-guile_create_mob (SCM x, SCM y, SCM string)
+guile_create_mob (SCM x, SCM y, SCM grid, SCM string)
 {
   char *filename = scm_to_locale_string (string);
-  unsigned int xc = scm_to_uint (x), yc = scm_to_uint (y);
+  unsigned int xc = scm_to_uint (x), yc = scm_to_uint (y), gc = scm_to_uint(grid);
   return
     scm_from_int (push_mob_on_array
-		  (create_mob_using_sprite (xc, yc, filename)));
+		  (create_mob_using_sprite (xc, yc, gc, filename)));
 }
 
 tile
@@ -121,16 +122,16 @@ guile_create_tile (SCM sprite, SCM partclip, SCM blocking)
 }
 
 SCM
-guile_set_tile (SCM x, SCM y, SCM tile)
+guile_set_tile (SCM grid,SCM x, SCM y, SCM tile)
 {
-  set_tile (scm_to_int16 (x), scm_to_int16 (y), list_to_tile (tile));
+  set_tile (GRID_PTR(scm_to_int(grid)),scm_to_int16 (x), scm_to_int16 (y), list_to_tile (tile));
   return scm_from_int (0);
 }
 
 SCM
-guile_set_all_tiles (SCM tile)
+guile_set_all_tiles (SCM grid,SCM tile)
 {
-  set_all_tiles (list_to_tile (tile));
+  set_all_tiles (GRID_PTR(scm_to_int(grid)),list_to_tile (tile));
   return scm_from_int (0);
 }
 
@@ -185,6 +186,13 @@ guile_make_tilegrid (SCM width, SCM height)
   new_grid.height = scm_to_int(height);
   new_grid.tilegrid=init_tilegrid(new_grid.width,new_grid.height);
   return scm_from_int(add_tilegrid(new_grid));
+}
+
+SCM 
+guile_remove_grid(SCM index)
+{
+  remove_grid_at(scm_to_int(index));
+  return SCM_UNSPECIFIED;
 }
 
 SCM

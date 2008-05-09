@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #ifndef GUILE_H
 #define GUILE_H
 
-#include "main.h"
 #include "event.h"
 #include "mobs.h"
 #include "tile.h"
@@ -35,17 +34,18 @@ typedef struct
   SCM argv;
 }  thread_argv;
 
-  
+extern SCM global_userdata;   
 extern sequence argvs;
 
-SCM guile_create_mob(SCM,SCM,SCM);
+SCM guile_create_mob(SCM,SCM,SCM,SCM);
 SCM tile_to_list(tile);
 tile list_to_tile(SCM);
 SCM guile_create_tile(SCM sprite, SCM partclip, SCM blocking);
-SCM guile_set_all_tiles(SCM tile);
-SCM guile_set_tile(SCM x, SCM y, SCM tile);
+SCM guile_set_all_tiles(SCM grid,SCM tile);
+SCM guile_set_tile(SCM grid,SCM x, SCM y, SCM tile);
 SCM guile_move_mob_all(SCM mobindex, SCM tilecountx, SCM tilecounty, SCM frametotal);
 SCM guile_make_tilegrid(SCM width, SCM height);
+SCM guile_remove_grid(SCM index);
 SCM guile_set_mob_animation(SCM mobindex, SCM animation, SCM start, SCM targetframe, SCM framesbetween, SCM loop);
 SCM guile_stop_mob_animation(SCM mobindex);
 SCM guile_destroy_mob(SCM mobindex);

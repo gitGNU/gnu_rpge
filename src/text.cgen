@@ -59,6 +59,7 @@ open_font(char* filename, int size)
   int index;
   font_to_add.filename = filename;
   font_to_add.size = size;
+  font_to_add.font = NULL;
   object o = make_font_obj(font_to_add);
   index = sequence_position(fonts,o,object_font_filename_and_size_eq);
   if(index != -1)
@@ -121,7 +122,7 @@ make_text(unsigned int x, unsigned int y, char* string, int fontindex, SDL_Color
   t.color = color;
   if(string)
     {
-      char* saveptr;
+      char* saveptr = NULL;
       t.buffers = sequence_init();
       char* str = strdup(string);
       char* token = strtok_r(str,"\n",&saveptr);

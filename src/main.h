@@ -48,5 +48,4 @@ This program is part of the GNU project, released under the aegis of GNU."
 #include "dispatch.h"
 #include "config_file.h"
 
-extern SCM global_userdata; //There's an interesting reason for this one, see nonexistent docs.
 #endif

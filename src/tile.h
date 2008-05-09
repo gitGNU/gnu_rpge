@@ -66,13 +66,14 @@ tile make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking);
 tile** init_tilegrid(unsigned int width, unsigned int height);
 tile** tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile replacement);
 tile** tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridheight, tile replacement);
-tile** set_all_tiles(tile replacement);
-tile** set_tile(unsigned int x, unsigned int y, tile replacement);
+tile** set_all_tiles(tilelayer* grid,tile replacement);
+tile** set_tile(tilelayer* grid,unsigned int x, unsigned int y, tile replacement);
 char occupied(int tilex, int tiley,int grid);
 void set_occupant(int tilex, int tiley, int grid, mob* new_occupant);
 mob* get_occupant(int tilex, int tiley, int grid);
 void reset_occupant(int tilex, int tiley,int grid);
 int add_tilegrid(tilelayer grid);
+void remove_grid_at(int index);
 
 /*Includes which depend on this file*/
 #include "video.h"

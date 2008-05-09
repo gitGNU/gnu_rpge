@@ -31,6 +31,7 @@ config_file.h: Here because config_file.c needs an accompanying header.
 #include "xalloc.h"
 #include "sequence.h"
 #include "path.h"
+#include "guile.h" /*We need scm_c_safe_load*/
 
 typedef struct
 {

@@ -17,13 +17,14 @@
 ;
 (use-modules (ice-9 threads))
 (set-global-data (init-table))
-(init-tilegrid 50 40)
-(set-all-tiles (create-tile "tile2.png" (make-rect 0 0 16 16) block-none))
 (set-mob-bootstrap-proc! (lambda (X) 
 			   (set-mob-data X (init-table)) 
 			   (stats-init X)
-                           (init-mob-bindings X)))
-(define m (make-mob 0 0 "sprite_letter.png"))
+			   (init-mob-bindings X)))
+(define grid  (init-tilegrid 50 40))
+(set-all-tiles grid (create-tile "tile2.png" (make-rect 0 0 16 16) block-none))
+(define m (make-mob 0 0 grid "sprite_letter.png"))
+(define n (make-mob 5 0 grid "sprite_letter.png"))
 ;Camera locking is now handled externally, so these are back to their old simplicity.
 ;Tell mob_event_test.scm to get a move on and track this mob.
 (add-tracked-mob! m)
@@ -42,7 +43,6 @@
 		     ;Check if we're dealing with a menu
 		     (cond ((null? d) '())
 			   ((eq? (car (get-string-list d)) 'menu) ((get-menu-action (list-ref (get-menu-choices (get-string-list d)) (get-index (get-string-list d)))))))))))
-(set-tile 5 5 (create-tile "tile1.png" (make-rect 0 0 16 16) block-all-undirectional))
-(define n (make-mob 5 0 "sprite_letter.png"))
+(set-tile grid 5 5 (create-tile "tile1.png" (make-rect 0 0 16 16) block-all-undirectional))
 (make-thread safe-load "keys.scm")
 (make-thread safe-load "mob_event_test.scm")

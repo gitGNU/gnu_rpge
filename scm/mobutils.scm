@@ -24,8 +24,8 @@
       (set-in-table! (get-global-data) 'mob-bootstrap-proc proc)
       (add-to-table! (get-global-data) 'mob-bootstrap-proc proc)))
 
-(define (make-mob x y sprite)
-  (let ((mobby (create-mob x y sprite)))
+(define (make-mob x y grid sprite)
+  (let ((mobby (create-mob x y grid sprite)))
     (if (not (null? (get-mob-bootstrap-proc)))
 	((get-mob-bootstrap-proc) mobby))
     mobby))

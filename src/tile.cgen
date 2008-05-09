@@ -74,26 +74,28 @@ tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridhei
   return grid;
 }
 
-/*These convenience functions exist merely to make life easier for users (and guile.c). How they should be rewritten in case we're dealing with any number of tilelayers is something to be seen later.*/
-tile** set_tile(unsigned int x, unsigned int y, tile replacement)
+
+tile** set_tile(tilelayer* grid, unsigned int x, unsigned int y, tile replacement)
 {
-  if(MAIN_GRID->tilegrid)
+  if(grid->tilegrid)
     {
-      MAIN_GRID->tilegrid[x][y] = replacement;
-      remake_tilegrid(MAIN_GRID);
-      return MAIN_GRID->tilegrid;
+      grid->tilegrid[x][y] = replacement;
+      if(grid == MAIN_GRID)
+	remake_tilegrid(grid);
+      return grid->tilegrid;
     }
   else
     return NULL;
 }
 
-tile** set_all_tiles(tile replacement)
+tile** set_all_tiles(tilelayer* grid,tile replacement)
 {
-  if(MAIN_GRID->tilegrid)
+  if(grid->tilegrid)
     {
-      MAIN_GRID->tilegrid = tilegrid_set_all_tiles(MAIN_GRID->tilegrid,MAIN_GRID->width,MAIN_GRID->height,replacement);
-      remake_tilegrid(MAIN_GRID);
-      return MAIN_GRID->tilegrid;
+      grid->tilegrid = tilegrid_set_all_tiles(grid->tilegrid,grid->width,grid->height,replacement);
+      if(grid == MAIN_GRID)
+	remake_tilegrid(grid);
+      return grid->tilegrid;
     }
   else
     return NULL;
@@ -155,4 +157,12 @@ add_tilegrid(tilelayer grid)
       tile_layers.data[index_empty] = make_tilelayer_obj(grid);
       return index_empty;
     }
+}
+
+void
+remove_grid_at(int index)
+{
+  free_obj(tile_layers.data[index]);
+  tile_layers.data[index].data = NULL;
+  tile_layers.data[index].typeinfo = -1;
 }
