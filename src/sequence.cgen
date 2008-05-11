@@ -31,7 +31,7 @@ sequence_init (void)
   return s;
 }
 
-object
+static object
 null_obj()
 {
   object o = {0,0};
@@ -58,7 +58,7 @@ sequence_append (sequence * seq, object data)
 /*
 Both sequence_position and sequence_find take a predicate, which should take two objects and return char. The default predicate, which checks for holding the exact same pointer, is used in case eqproc is NULL. Note that these predicates are always called with the data in the sequence as the first argument and the data passed to _find or _position as the second argument. In case you wish to avoid superfluous memory usage by passing objects of specific types into these procedures, presume that those are the second argument to your predicate. This may make certain predicates somewhat hard to understand or quite non-generic.
 */
-char
+static char
 obj_identity_eq (object o1, object o2)
 {
   return o1.data == o2.data;

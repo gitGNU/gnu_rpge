@@ -38,8 +38,6 @@ extern SCM global_userdata;
 extern sequence argvs;
 
 SCM guile_create_mob(SCM,SCM,SCM,SCM);
-SCM tile_to_list(tile);
-tile list_to_tile(SCM);
 SCM guile_create_tile(SCM sprite, SCM partclip, SCM blocking);
 SCM guile_set_all_tiles(SCM grid,SCM tile);
 SCM guile_set_tile(SCM grid,SCM x, SCM y, SCM tile);

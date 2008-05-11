@@ -31,8 +31,8 @@ typedef struct
 } window;
 
 extern sequence windows;
-extern SDL_mutex* window_mutex;
 
+void init_windows();
 window  create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename,unsigned int spritew,unsigned int spriteh);
 void render_window(SDL_Surface* dest,window w);
 void clear_windowstack(void);
@@ -42,5 +42,7 @@ void windowstack_removewindow(window w);
 void render_windows(SDL_Surface* dest);
 window get_obj_window(object o);
 object make_window_obj(window w);
+void move_window(int index, unsigned x, unsigned y);
+void resize_window(int index, unsigned w, unsigned h);
 
 #endif

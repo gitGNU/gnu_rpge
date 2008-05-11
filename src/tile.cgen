@@ -28,8 +28,30 @@ convertors(tilelayer);
   A carries over transitions).*/
 sequence tile_layers;
 
+/*
+  For now, let's lock a single mutex for any tilegrid operation, to at least 
+  make the system thread-safe. Research and testing should be done to figure
+  out exactly what would be the best arrangement of locks. The real problem
+  here is that the 'ideal' arrangement of locks could probably be modeled
+  as a rather complicated mathematical function of the specific usage rpge's
+  put to. Put simply, there's probably no ideal general-purpose locking 
+  strategy, but we should at least try to find something decent.
+*/
+
+SDL_mutex* tile_mutex;
+
 /*We do need to know what world the user would like us to render*/
 int maingrid_index;
+
+#define GRID_PTR(n) ((tilelayer*)tile_layers.data[n].data)
+
+void 
+init_tiles()
+{
+  tile_layers = sequence_init();
+  tile_mutex = SDL_CreateMutex();
+  maingrid_index = -1;
+}
 
 tile 
 make_tile(unsigned int tilesheet, SDL_Rect clipping, char blocking)
@@ -54,14 +76,21 @@ init_tilegrid(unsigned int width,unsigned int height)
   return grid;
 }
 
-tile**
+/*
+  Locking note: Since these functions act on tile**'s, the caller is 
+  responsible for locking if the callee is used on tilegrids from 
+  the tile_layers sequence.
+  (It's probably sane to declare all these static)
+*/
+
+static inline tile**
 tilegrid_replace_tile(tile** grid, unsigned int x, unsigned int y, tile replacement)
 {
   grid[x][y]=replacement;
   return grid;
 }
 
-tile**
+static inline tile**
 tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridheight, tile replacement)
 {
   for(int i = 0; i < gridwidth; i++)
@@ -74,35 +103,8 @@ tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridhei
   return grid;
 }
 
-
-tile** set_tile(tilelayer* grid, unsigned int x, unsigned int y, tile replacement)
-{
-  if(grid->tilegrid)
-    {
-      grid->tilegrid[x][y] = replacement;
-      if(grid == MAIN_GRID)
-	remake_tilegrid(grid);
-      return grid->tilegrid;
-    }
-  else
-    return NULL;
-}
-
-tile** set_all_tiles(tilelayer* grid,tile replacement)
-{
-  if(grid->tilegrid)
-    {
-      grid->tilegrid = tilegrid_set_all_tiles(grid->tilegrid,grid->width,grid->height,replacement);
-      if(grid == MAIN_GRID)
-	remake_tilegrid(grid);
-      return grid->tilegrid;
-    }
-  else
-    return NULL;
-}  
-
 /*Pre-render a tilegrid, avoiding duplication of blitting work when rendering frames*/
-SDL_Surface*
+static SDL_Surface*
 remake_tilegrid(tilelayer* main_grid)
 {
   SDL_Surface* display;
@@ -118,6 +120,34 @@ remake_tilegrid(tilelayer* main_grid)
   render_tilegrid(main_grid->imagebuffer,main_grid->tilegrid,main_grid->width,main_grid->height);
   return main_grid->imagebuffer;
 }
+
+tile** set_tile(int gridid, unsigned int x, unsigned int y, tile replacement)
+{
+  tilelayer* grid = GRID_PTR(gridid);
+  if(grid->tilegrid)
+    {
+      grid->tilegrid = tilegrid_replace_tile(grid->tilegrid,x,y,replacement);
+      if(grid == MAIN_GRID)
+	remake_tilegrid(grid);
+      return grid->tilegrid;
+    }
+  else
+    return NULL;
+}
+
+tile** set_all_tiles(int gridid,tile replacement)
+{
+  tilelayer* grid = GRID_PTR(gridid);
+  if(grid->tilegrid)
+    {
+      grid->tilegrid = tilegrid_set_all_tiles(grid->tilegrid,grid->width,grid->height,replacement);
+      if(grid == MAIN_GRID)
+	remake_tilegrid(grid);
+      return grid->tilegrid;
+    }
+  else
+    return NULL;
+}  
 
 inline char 
 occupied(int tilex, int tiley,int grid)

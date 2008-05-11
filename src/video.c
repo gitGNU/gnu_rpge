@@ -124,7 +124,7 @@ render_screen(SDL_Surface* dest)
 {
   int xoffset = get_camera_xoffset(global_camera,SCREEN_WIDTH),yoffset = get_camera_yoffset(global_camera,SCREEN_HEIGHT);
   SDL_FillRect(dest,NULL,SDL_MapRGB(dest->format,0,0,0));
-  if(tile_layers.objcount && maingrid_index < tile_layers.objcount)
+  if(tile_layers.objcount && maingrid_index < tile_layers.objcount && maingrid_index > 0)
     {
       SDL_Rect clip = {0,0,MAIN_GRID->width*TILE_WIDTH,MAIN_GRID->height*TILE_HEIGHT};
       apply_surface(xoffset,yoffset,MAIN_GRID->imagebuffer,dest,&clip);

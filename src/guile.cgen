@@ -22,7 +22,7 @@ SCM global_userdata = SCM_EOL;
 sequence argvs;
 convertors(thread_argv);
 
-SCM
+static SCM
 scm_ncar (SCM list, int n)
 {
   for (int i = 0; i < n; i++)
@@ -32,7 +32,7 @@ scm_ncar (SCM list, int n)
   return list;
 }
 
-SCM
+static SCM
 scm_ncdr (SCM list, int n)
 {
   for (int i = 0; i < n; i++)
@@ -42,7 +42,7 @@ scm_ncdr (SCM list, int n)
   return list;
 }
 
-SCM
+static inline SCM
 scm_nth (SCM list, int n)
 {
   return scm_car (scm_ncdr (list, n - 1));
@@ -58,7 +58,7 @@ guile_create_mob (SCM x, SCM y, SCM grid, SCM string)
 		  (create_mob_using_sprite (xc, yc, gc, filename)));
 }
 
-tile
+static inline tile
 list_to_tile (SCM tilelist)
 {
   tile t;
@@ -74,7 +74,7 @@ list_to_tile (SCM tilelist)
   return t;
 }
 
-SCM
+static inline SCM
 tile_to_list (tile t)
 {
   char* fname = get_image_name(t.tilesheetindex);
@@ -94,7 +94,7 @@ tile_to_list (tile t)
 This seems deceptively similar to the above, but the major difference is that tile_to_list is meant for tiles already created, i.e. proper tiles with internalized images. Since it's rather tough (outside of smobs and the like) to keep track of image references in GUILE and it's more logical to not preload images for tiles a user just keeps around, we define the below function to deal with pseudotiles, i.e. tiles without a proper, internalized image. 
 */
 
-SCM
+static inline SCM
 listify_pseudotile(char* filename, SDL_Rect clip, char blocking)
 {
   return scm_list_n(scm_from_locale_symbol("tile"),
@@ -124,14 +124,14 @@ guile_create_tile (SCM sprite, SCM partclip, SCM blocking)
 SCM
 guile_set_tile (SCM grid,SCM x, SCM y, SCM tile)
 {
-  set_tile (GRID_PTR(scm_to_int(grid)),scm_to_int16 (x), scm_to_int16 (y), list_to_tile (tile));
+  set_tile (scm_to_int(grid),scm_to_int16 (x), scm_to_int16 (y), list_to_tile (tile));
   return scm_from_int (0);
 }
 
 SCM
 guile_set_all_tiles (SCM grid,SCM tile)
 {
-  set_all_tiles (GRID_PTR(scm_to_int(grid)),list_to_tile (tile));
+  set_all_tiles (scm_to_int(grid),list_to_tile (tile));
   return scm_from_int (0);
 }
 
@@ -139,7 +139,7 @@ SCM
 guile_move_mob_all (SCM mobindex, SCM tilecountx, SCM tilecounty,
 		    SCM frametotal)
 {
-  /*Since we use the direct pointer here, it makes no sense to actually have the callee mob_move_all do the locking (one may wish to call it on a mob not part of the sequence), so take care of it here. The same logic applies to many other guile mob primitives*/
+  /*Since we use the direct pointer here, it makes no sense to actually have the callee mob_move_all do the locking (one may wish to call it on a mob not part of the sequence), so take care of it here. The same logic applies to many other guile mob primitives. However, since guile.cgen should only use data in sequences, this still needs fixing.*/
   SDL_mutexP(mob_mutex);
   mob_move_all ((mob *) mobs.data[scm_to_int (mobindex)].data,
 		scm_to_int (tilecountx), scm_to_int (tilecounty),
@@ -470,24 +470,14 @@ guile_get_window_dimensions(SCM index)
 SCM
 guile_move_window(SCM index, SCM point)
 {
-  int ind = scm_to_int(index);
-  window* w = (window*)windows.data[ind].data;
-  SDL_mutexP(window_mutex);
-  w->x = scm_to_int(scm_car(point));
-  w->y = scm_to_int(scm_cdr(point));
-  SDL_mutexV(window_mutex);
+  move_window(scm_to_int(index),scm_to_uint(scm_car(point)),scm_to_uint(scm_cdr(point)));
   return SCM_UNSPECIFIED;
 }
 
 SCM
 guile_resize_window(SCM index, SCM dimensions)
 {
-  int ind = scm_to_int(index);
-  window* w = (window*)windows.data[ind].data;
-  SDL_mutexP(window_mutex);
-  w->width=scm_to_int(scm_car(dimensions));
-  w->height=scm_to_int(scm_cdr(dimensions));
-  SDL_mutexV(window_mutex);
+  resize_window(scm_to_int(index),scm_to_uint(scm_car(dimensions)),scm_to_uint(scm_cdr(dimensions)));
   return SCM_UNSPECIFIED;
 }
 

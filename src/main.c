@@ -167,10 +167,11 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("get-text-lines",1,0,0,guile_get_text_line_list);
   SCM_TICK;
   global_usereventstack = eventstack_init();
-  windows = images = mobs = argvs = fonts = tile_layers =  sequence_init();
+  images = mobs = argvs = fonts =  sequence_init();
   image_mutex = SDL_CreateMutex();
   mob_mutex = SDL_CreateMutex();
-  window_mutex = SDL_CreateMutex();
+  init_tiles();
+  init_windows();
   directives_init();
   paths_init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));

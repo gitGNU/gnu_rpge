@@ -22,6 +22,13 @@ sequence windows;
 SDL_mutex* window_mutex;
 convertors(window);
 
+void 
+init_windows()
+{
+  windows = sequence_init();
+  window_mutex = SDL_CreateMutex();
+}
+
 window
 create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename,unsigned int spritew,unsigned int spriteh)
 {
@@ -169,4 +176,24 @@ void render_windows(SDL_Surface* dest)
     {
       render_window(dest,*((window*)windows.data[i].data));
     }
+}
+
+void
+move_window(int index, unsigned x, unsigned y)
+{
+  window* w = windows.data[index].data;
+  SDL_mutexP(window_mutex);
+  w->x = x;
+  w->y = y;
+  SDL_mutexV(window_mutex);
+}
+
+void 
+resize_window(int index, unsigned w, unsigned h)
+{
+  window* win = windows.data[index].data;
+  SDL_mutexP(window_mutex);
+  win->width = w;
+  win->height = h;
+  SDL_mutexV(window_mutex);
 }
