@@ -54,7 +54,7 @@ void
 set_mob_occupants(mob* m)
 {
   int tilex = (m->x+SPRITE_WIDTH/2)/TILE_WIDTH, tiley = (m->y+SPRITE_HEIGHT/2)/TILE_HEIGHT;
-  set_occupant(tilex,tiley,maingrid_index,m);
+  set_occupant(tilex,tiley,m->grid,m);
 }
 
 void
@@ -100,6 +100,7 @@ remove_mob (int index)
       int tilex = (m.x+SPRITE_WIDTH/2)/SPRITE_WIDTH,tiley = (m.y+SPRITE_HEIGHT/2)/SPRITE_HEIGHT;
       reset_occupant(tilex,tiley,maingrid_index);
       SDL_mutexP(mob_mutex);
+      release_image(((mob*)mobs.data[index].data)->imgindex);
       ((mob*)mobs.data[index].data)->imgindex = -1;
       SDL_mutexV(mob_mutex);
     }

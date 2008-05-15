@@ -22,6 +22,7 @@ tile.c: Implement the functions related to tiles and tilelayers.
 
 /*Declare convertor usage, so sed can find it and take care of the mess*/
 convertors(tilelayer);
+convertors(imagecounter);
 
 /*The sequence of current ready, loaded tilegrids (or tile_layers, whichever). The main idea here is to ensure that whatever links to the main grid is at any and all times 
   loaded. (Technically, the point is to A: be able to load the new grid immediately on transition, B: swap around tilegrids if necessary (a prereq of A, really) and C: make sure
@@ -103,6 +104,79 @@ tilegrid_set_all_tiles(tile** grid, unsigned int gridwidth, unsigned int gridhei
   return grid;
 }
 
+static inline int
+search_for_image_id(sequence ics,int id)
+{
+  for(int i = 0; i < ics.objcount; i++)
+    {
+      if(((imagecounter*)ics.data[i].data)->index == id)
+	return i;
+    }
+  return -1;
+}
+
+static void
+increase_count(tilelayer* grid,int imageid)
+{
+  int index = search_for_image_id(grid->imagecounts,imageid),index_empty = search_for_image_id(grid->imagecounts,-1);
+  if(index != -1)
+    {
+      ((imagecounter*)grid->imagecounts.data[index].data)->count++;
+    }
+  else if(index_empty != -1)
+    {
+      imagecounter* ic = ((imagecounter*)grid->imagecounts.data[index_empty].data);
+      ic->index = imageid;
+      ic->count = 1;
+    }
+  else
+    {
+      imagecounter ic = {index: imageid,count: 1};
+      sequence_append(&(grid->imagecounts),make_imagecounter_obj(ic));
+    }
+}
+
+static void
+set_count(tilelayer* grid,int imageid, int val)
+{
+  int index = search_for_image_id(grid->imagecounts,imageid),index_empty = search_for_image_id(grid->imagecounts,-1);
+  if(index != -1)
+    {
+      ((imagecounter*)grid->imagecounts.data[index].data)->count = val;
+    }
+  else if(index_empty != -1)
+    {
+      imagecounter* ic = grid->imagecounts.data[index_empty].data;
+      ic->index = imageid;
+      ic->count = val;
+    }
+  else
+    {
+      imagecounter ic = {index : imageid, count: val};
+      sequence_append(&(grid->imagecounts),make_imagecounter_obj(ic));
+    }
+}
+
+static void
+decrease_count(tilelayer* grid,int imageid)
+{
+  int index = search_for_image_id(grid->imagecounts,imageid);
+  if(index == -1)
+    {
+      fprintf(stderr,"rpge:decrease_count: Warning: potentially corrupted imagecounts on grid %u, cannot find count for %d\n",(unsigned int)grid,imageid);
+    }
+  else
+    {
+      ((imagecounter*)grid->imagecounts.data[index].data)->count--;
+      if(!((imagecounter*)grid->imagecounts.data[index].data)->count)
+	{
+	  release_image(((imagecounter*)grid->imagecounts.data[index].data)->index);
+	  ((imagecounter*)grid->imagecounts.data[index].data)->index = -1;
+	}
+    }
+}
+
+
 /*Pre-render a tilegrid, avoiding duplication of blitting work when rendering frames*/
 static SDL_Surface*
 remake_tilegrid(tilelayer* main_grid)
@@ -126,9 +200,18 @@ tile** set_tile(int gridid, unsigned int x, unsigned int y, tile replacement)
   tilelayer* grid = GRID_PTR(gridid);
   if(grid->tilegrid)
     {
+      SDL_mutexP(tile_mutex);
+      /*Janitorial work, dealing with image counts*/
+      tile old = grid->tilegrid[x][y];
+      if(old.tilesheetindex != replacement.tilesheetindex)
+	{
+	  decrease_count(grid,old.tilesheetindex);
+	  increase_count(grid,replacement.tilesheetindex);
+	}
       grid->tilegrid = tilegrid_replace_tile(grid->tilegrid,x,y,replacement);
       if(grid == MAIN_GRID)
 	remake_tilegrid(grid);
+      SDL_mutexV(tile_mutex);
       return grid->tilegrid;
     }
   else
@@ -140,9 +223,12 @@ tile** set_all_tiles(int gridid,tile replacement)
   tilelayer* grid = GRID_PTR(gridid);
   if(grid->tilegrid)
     {
+      SDL_mutexP(tile_mutex);
       grid->tilegrid = tilegrid_set_all_tiles(grid->tilegrid,grid->width,grid->height,replacement);
+      set_count(grid,replacement.tilesheetindex,grid->width*grid->height);
       if(grid == MAIN_GRID)
 	remake_tilegrid(grid);
+      SDL_mutexV(tile_mutex);
       return grid->tilegrid;
     }
   else
@@ -158,7 +244,9 @@ occupied(int tilex, int tiley,int grid)
 inline void 
 set_occupant(int tilex, int tiley,int grid, mob* new_occupant)
 {
+  SDL_mutexP(tile_mutex);
   GRID_PTR(grid)->tilegrid[tilex][tiley].occupant = new_occupant;
+  SDL_mutexV(tile_mutex);
 }
 
 inline mob* 
@@ -170,7 +258,9 @@ get_occupant(int tilex, int tiley,int grid)
 inline void
 reset_occupant(int tilex, int tiley,int grid)
 {
+  SDL_mutexP(tile_mutex);
   GRID_PTR(grid)->tilegrid[tilex][tiley].occupant = NULL;
+  SDL_mutexV(tile_mutex);
 }
 
 int
@@ -178,13 +268,20 @@ add_tilegrid(tilelayer grid)
 {
   object o;
   o.data = NULL;
-  o.typeinfo = 0;
+  o.typeinfo = -1;
   int index_empty = sequence_position(tile_layers,o,NULL);
   if(index_empty == -1)
-    return sequence_append(&tile_layers,make_tilelayer_obj(grid));
+    {
+      SDL_mutexP(tile_mutex);
+      int index = sequence_append(&tile_layers,make_tilelayer_obj(grid));
+      SDL_mutexV(tile_mutex);
+      return index;
+    }
   else
     {
+      SDL_mutexP(tile_mutex);
       tile_layers.data[index_empty] = make_tilelayer_obj(grid);
+      SDL_mutexV(tile_mutex);
       return index_empty;
     }
 }
@@ -192,7 +289,18 @@ add_tilegrid(tilelayer grid)
 void
 remove_grid_at(int index)
 {
+  SDL_mutexP(tile_mutex);
   free_obj(tile_layers.data[index]);
   tile_layers.data[index].data = NULL;
   tile_layers.data[index].typeinfo = -1;
+  SDL_mutexV(tile_mutex);
+}
+
+inline void
+set_maingrid_index(int ind)
+{
+  maingrid_index = ind;
+  SDL_mutexP(tile_mutex);
+  remake_tilegrid(GRID_PTR(ind));
+  SDL_mutexV(tile_mutex);
 }

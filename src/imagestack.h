@@ -32,6 +32,8 @@ typedef struct
 {
   SDL_Surface* data;
   char* filename;
+  int count;
+  char permanence; /*In a similar vein as guile's capability to force the GC to always mark an object, this forces the imagestack to never release an image.*/
 } image;
 
 extern sequence images;
@@ -40,6 +42,7 @@ extern SDL_mutex* image_mutex;
 image make_image (SDL_Surface* data, char* filename);
 int  push_image_on_stack(char* filename);
 int  find_image(char* filename);
+void release_image(int index);
 void remove_image(char* filename);
 char* get_image_name(int index);
 #endif

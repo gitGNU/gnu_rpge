@@ -44,5 +44,6 @@
 		     (cond ((null? d) '())
 			   ((eq? (car (get-string-list d)) 'menu) ((get-menu-action (list-ref (get-menu-choices (get-string-list d)) (get-index (get-string-list d)))))))))))
 (set-tile grid 5 5 (create-tile "tile1.png" (make-rect 0 0 16 16) block-all-undirectional))
+(set-main-grid grid)
 (make-thread safe-load "keys.scm")
 (make-thread safe-load "mob_event_test.scm")

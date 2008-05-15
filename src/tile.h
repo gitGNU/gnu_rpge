@@ -49,10 +49,17 @@ typedef struct
 
 typedef struct
 {
+  int index;
+  int count;
+}  imagecounter;
+
+typedef struct
+{
   tile** tilegrid;
   int height;
   int width;
   SDL_Surface* imagebuffer;
+  sequence imagecounts;
 } tilelayer;
 
 extern sequence tile_layers;
@@ -71,6 +78,7 @@ mob* get_occupant(int tilex, int tiley, int grid);
 void reset_occupant(int tilex, int tiley,int grid);
 int add_tilegrid(tilelayer grid);
 void remove_grid_at(int index);
+void set_maingrid_index(int ind);
 
 /*Includes which depend on this file*/
 #include "video.h"

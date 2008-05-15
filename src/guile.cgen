@@ -139,7 +139,7 @@ SCM
 guile_move_mob_all (SCM mobindex, SCM tilecountx, SCM tilecounty,
 		    SCM frametotal)
 {
-  /*Since we use the direct pointer here, it makes no sense to actually have the callee mob_move_all do the locking (one may wish to call it on a mob not part of the sequence), so take care of it here. The same logic applies to many other guile mob primitives. However, since guile.cgen should only use data in sequences, this still needs fixing.*/
+  /*Since we use the direct pointer here, it makes no sense to actually have the callee mob_move_all do the locking (one may wish to call it on a mob not part of the sequence), so take care of it here. The same logic applies to many other guile mob primitives. However, since guile.cgen should only use data in sequences, this still needs fixing. Perhaps the most practical way to do this is to expose only the 'safe' sequence-based primitives and declare the more primitive language static. The downside of this approach is that the exposed interface loses its generality. Whether or not it has any utility to deal with data outside of the sequences (hence data that will never be processed to begin with), especially when guile userspace has no way to do so is doubtful. */
   SDL_mutexP(mob_mutex);
   mob_move_all ((mob *) mobs.data[scm_to_int (mobindex)].data,
 		scm_to_int (tilecountx), scm_to_int (tilecounty),
@@ -185,6 +185,7 @@ guile_make_tilegrid (SCM width, SCM height)
   new_grid.width = scm_to_int(width);
   new_grid.height = scm_to_int(height);
   new_grid.tilegrid=init_tilegrid(new_grid.width,new_grid.height);
+  new_grid.imagecounts = sequence_init();
   return scm_from_int(add_tilegrid(new_grid));
 }
 
@@ -529,3 +530,15 @@ guile_get_text_line_list(SCM index)
   return guile_sequence_to_list(((text*)texts.data[scm_to_int(index)].data)->buffers);
 }
 
+SCM
+guile_set_main_grid(SCM g)
+{
+  set_maingrid_index(scm_to_int(g));  
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_get_main_grid()
+{
+  return scm_from_int(maingrid_index);
+}

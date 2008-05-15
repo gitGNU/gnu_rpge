@@ -22,7 +22,9 @@ void
 render_mob_with_offsets(SDL_Surface* dest, mob mobby, int xoffset, int yoffset)
 {
   if(mobby.imgindex == -1 || mobby.grid != maingrid_index)
-    return;
+    {
+      return;
+    }
   SDL_Rect imageclippy = {mobby.animation * SPRITE_WIDTH, mobby.frame * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT};  
   apply_surface(mobby.x+xoffset,mobby.y+yoffset,((image*)images.data[mobby.imgindex].data)->data,dest,&imageclippy);
 }
@@ -124,7 +126,7 @@ render_screen(SDL_Surface* dest)
 {
   int xoffset = get_camera_xoffset(global_camera,SCREEN_WIDTH),yoffset = get_camera_yoffset(global_camera,SCREEN_HEIGHT);
   SDL_FillRect(dest,NULL,SDL_MapRGB(dest->format,0,0,0));
-  if(tile_layers.objcount && maingrid_index < tile_layers.objcount && maingrid_index > 0)
+  if(tile_layers.objcount && maingrid_index < tile_layers.objcount && maingrid_index >= 0)
     {
       SDL_Rect clip = {0,0,MAIN_GRID->width*TILE_WIDTH,MAIN_GRID->height*TILE_HEIGHT};
       apply_surface(xoffset,yoffset,MAIN_GRID->imagebuffer,dest,&clip);

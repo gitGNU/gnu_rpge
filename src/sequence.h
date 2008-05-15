@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define TYPE_THREAD_ARGV 12
 #define TYPE_DIRECTIVE_T 13
 #define TYPE_TILELAYER 14
+#define TYPE_IMAGECOUNTER 15
   
 typedef struct
 {

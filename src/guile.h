@@ -81,5 +81,7 @@ SCM guile_resize_window(SCM index, SCM dimensions);
 SCM guile_move_text(SCM index, SCM point);
 SCM guile_get_text_coordinates(SCM index);
 SCM guile_get_text_line_list(SCM index);
+SCM guile_set_main_grid(SCM g);
+SCM guile_get_main_grid();
 
 #endif

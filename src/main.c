@@ -165,6 +165,8 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("move-text",2,0,0,guile_move_text);
   scm_c_define_gsubr ("get-text-coordinates",1,0,0,guile_get_text_coordinates);
   scm_c_define_gsubr ("get-text-lines",1,0,0,guile_get_text_line_list);
+  scm_c_define_gsubr ("set-main-grid",1,0,0,guile_set_main_grid);
+  scm_c_define_gsubr ("get-main-grid",0,0,0,guile_get_main_grid);
   SCM_TICK;
   global_usereventstack = eventstack_init();
   images = mobs = argvs = fonts =  sequence_init();
