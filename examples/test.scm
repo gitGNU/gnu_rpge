@@ -47,3 +47,4 @@
 (set-main-grid grid)
 (make-thread safe-load "keys.scm")
 (make-thread safe-load "mob_event_test.scm")
+(run-repl)

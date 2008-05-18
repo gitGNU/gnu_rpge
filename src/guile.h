@@ -37,6 +37,10 @@ typedef struct
 extern SCM global_userdata;   
 extern sequence argvs;
 
+/*Actually a SDL_USEREVENT code, but.. put here to decrease warnings*/
+#define RELEASE_REPL_MUTEX 0
+#define ACQUIRE_REPL_MUTEX 1
+
 SCM guile_create_mob(SCM,SCM,SCM,SCM);
 SCM guile_create_tile(SCM sprite, SCM partclip, SCM blocking);
 SCM guile_set_all_tiles(SCM grid,SCM tile);
@@ -83,5 +87,7 @@ SCM guile_get_text_coordinates(SCM index);
 SCM guile_get_text_line_list(SCM index);
 SCM guile_set_main_grid(SCM g);
 SCM guile_get_main_grid();
+SCM guile_run_repl();
+SCM guile_stop_repl();
 
 #endif

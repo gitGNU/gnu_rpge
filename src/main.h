@@ -28,7 +28,7 @@ This program is part of the GNU project, released under the aegis of GNU."
 #define HELP_STRING "Usage: RPGE <options>"
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE -1
-  
+#define PROMPT "rpge>"
   
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>

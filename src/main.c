@@ -17,12 +17,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 #include "main.h"
+SDL_mutex* repl_signal; /*Used to signal whether the REPL can run. While unlocked, the REPL may run (and will acquire the lock, evaluate an expression and release the lock). */
 
 int
 exec_guile_shell (void *unused_arg)
 {
   scm_init_guile();
-  scm_shell(0,0);
+  /*Like top-repl (see guile sources) called by scm_shell, evaluate our code in the guile-user module.*/
+  scm_set_current_module(scm_c_resolve_module("guile-user"));
+  /*Horribly inefficient*/
+  while(1)
+    {
+      SCM_TICK;
+      SDL_mutexP(repl_signal);
+      scm_simple_format(scm_current_output_port(),scm_from_locale_string(PROMPT),SCM_EOL);
+      scm_simple_format(scm_current_output_port(),scm_from_locale_string("~S"),scm_list_1(scm_primitive_eval(scm_read(scm_current_input_port()))));
+      scm_newline(scm_current_output_port());
+      SDL_mutexV(repl_signal);
+    }
   return 0;			//never reached, just here to please gcc.
 }
 
@@ -167,6 +179,8 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("get-text-lines",1,0,0,guile_get_text_line_list);
   scm_c_define_gsubr ("set-main-grid",1,0,0,guile_set_main_grid);
   scm_c_define_gsubr ("get-main-grid",0,0,0,guile_get_main_grid);
+  scm_c_define_gsubr ("run-repl",0,0,0,guile_run_repl);
+  scm_c_define_gsubr ("stop-repl",0,0,0,guile_stop_repl);
   SCM_TICK;
   global_usereventstack = eventstack_init();
   images = mobs = argvs = fonts =  sequence_init();
@@ -179,6 +193,9 @@ main (int argc, char **argv)
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
   scm_gc_protect_object(global_userdata);
   exec_config_file(initfile);
+  /*Set up REPL signal and run REPL thread*/
+  repl_signal = SDL_CreateMutex();
+  SDL_mutexP(repl_signal);
   SDL_CreateThread (exec_guile_shell, 0);
   while (1)
     {
@@ -194,6 +211,12 @@ main (int argc, char **argv)
                 SDL_Quit();
 	        return 0;
 	        break;
+              case SDL_USEREVENT:
+		if(event->user.code == RELEASE_REPL_MUTEX)
+		  SDL_mutexV(repl_signal);
+		else if(event->user.code == ACQUIRE_REPL_MUTEX)
+		  SDL_mutexP(repl_signal);
+		break;
               default:
                 dispatch_event(*event);
 	    }

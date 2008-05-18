@@ -542,3 +542,24 @@ guile_get_main_grid()
 {
   return scm_from_int(maingrid_index);
 }
+
+SCM
+guile_run_repl()
+{
+  /*Since the repl_signal mutex is locked by the main loop, use an event to signal it needs to be released*/
+  SDL_Event* e = malloc(sizeof(SDL_Event));
+  e->type = SDL_USEREVENT;
+  e->user.code = RELEASE_REPL_MUTEX;
+  SDL_PushEvent(e);
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_stop_repl()
+{
+  SDL_Event* e = malloc(sizeof(SDL_Event));
+  e->type = SDL_USEREVENT;
+  e->user.code = ACQUIRE_REPL_MUTEX;
+  SDL_PushEvent(e);
+  return SCM_UNSPECIFIED;
+}
