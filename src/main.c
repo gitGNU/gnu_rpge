@@ -25,13 +25,16 @@ exec_guile_shell (void *unused_arg)
   scm_init_guile();
   /*Like top-repl (see guile sources) called by scm_shell, evaluate our code in the guile-user module.*/
   scm_set_current_module(scm_c_resolve_module("guile-user"));
+  /*Prepare some procedures to deal with guile-level errors*/
+  SCM evaluator = scm_c_eval_string("(lambda () (display (primitive-eval (read (current-input-port)))))");
+  SCM handler = scm_c_eval_string("(lambda (type . args) (if (eq? type 'quit) (exit) (format (current-output-port) \"ERROR: ~a\" type)))");
   /*Horribly inefficient*/
   while(1)
     {
       SCM_TICK;
       SDL_mutexP(repl_signal);
       scm_simple_format(scm_current_output_port(),scm_from_locale_string(PROMPT),SCM_EOL);
-      scm_simple_format(scm_current_output_port(),scm_from_locale_string("~S"),scm_list_1(scm_primitive_eval(scm_read(scm_current_input_port()))));
+      scm_catch(SCM_BOOL_T,evaluator,handler);
       scm_newline(scm_current_output_port());
       SDL_mutexV(repl_signal);
     }
