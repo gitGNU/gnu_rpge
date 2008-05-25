@@ -82,7 +82,14 @@ push_image_on_stack(char* filename)
       fprintf(stderr,"RPGE: Cannot find image in . or image paths: %s\n",filename);
       return -1;
     }
-  if(indexempty != -1)
+  else if(index != -1)
+    {
+      SDL_mutexP(image_mutex);
+      ADD_REF(index);
+      SDL_mutexV(image_mutex);
+      return index;
+    }
+  else if(indexempty != -1)
     {
       SDL_mutexP(image_mutex);
       free_obj(images.data[indexempty]);
@@ -92,13 +99,6 @@ push_image_on_stack(char* filename)
       if(path != filename)
 	free(path);
       return indexempty;
-    }
-  else if(index != -1)
-    {
-      SDL_mutexP(image_mutex);
-      ADD_REF(index);
-      SDL_mutexV(image_mutex);
-      return index;
     }
   else
     {
