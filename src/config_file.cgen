@@ -21,6 +21,7 @@ config_file.c: declare a function or two to load scheme files from a configurati
 */
 
 #include "config_file.h"
+SDL_mutex* directive_lock;
 convertors(directive_t);
 sequence directives = {0,0};
 
@@ -90,13 +91,16 @@ register_directive(char* name, void (*func)(char*))
   directive_t d;
   d.name = name;
   d.func = func;
+  SDL_mutexP(directive_lock);
   sequence_append(&directives,make_directive_t_obj(d));
+  SDL_mutexV(directive_lock);
 }
 
 void
 directives_init()
 {
   directives = sequence_init();
+  directive_lock = SDL_CreateMutex();
   register_directive(strdup("include"),exec_config_file);
   register_directive(strdup("scheme-dir"),add_scheme_dir);
   register_directive(strdup("image-dir"),add_image_dir);

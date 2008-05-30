@@ -139,12 +139,9 @@ SCM
 guile_move_mob_all (SCM mobindex, SCM tilecountx, SCM tilecounty,
 		    SCM frametotal)
 {
-  /*Since we use the direct pointer here, it makes no sense to actually have the callee mob_move_all do the locking (one may wish to call it on a mob not part of the sequence), so take care of it here. The same logic applies to many other guile mob primitives. However, since guile.cgen should only use data in sequences, this still needs fixing. Perhaps the most practical way to do this is to expose only the 'safe' sequence-based primitives and declare the more primitive language static. The downside of this approach is that the exposed interface loses its generality. Whether or not it has any utility to deal with data outside of the sequences (hence data that will never be processed to begin with), especially when guile userspace has no way to do so is doubtful. */
-  SDL_mutexP(mob_mutex);
-  mob_move_all ((mob *) mobs.data[scm_to_int (mobindex)].data,
-		scm_to_int (tilecountx), scm_to_int (tilecounty),
-		scm_to_int (frametotal));
-  SDL_mutexV(mob_mutex);
+  mob_move_all_by_index (scm_to_int(mobindex),
+			 scm_to_int (tilecountx), scm_to_int (tilecounty),
+			 scm_to_int (frametotal));
   return scm_from_int (0);
 }
 
@@ -152,21 +149,17 @@ SCM
 guile_set_mob_animation (SCM mobindex, SCM animation, SCM start,
 			 SCM targetframe, SCM framesbetween, SCM loop)
 {
-  SDL_mutexP(mob_mutex);
-  mob_set_animation ((mob *) mobs.data[scm_to_int (mobindex)].data,
-		     scm_to_int (animation), scm_to_int (start),
-		     scm_to_int (targetframe), scm_to_int (framesbetween),
-		     scm_to_bool (loop));
-  SDL_mutexV(mob_mutex);
+  mob_set_animation_by_index (scm_to_int(mobindex),
+			      scm_to_int (animation), scm_to_int (start),
+			      scm_to_int (targetframe), scm_to_int (framesbetween),
+			      scm_to_bool (loop));
   return scm_from_int (0);
 }
 
 SCM
 guile_stop_mob_animation (SCM mobindex)
 {
-  SDL_mutexP(mob_mutex);
-  mob_stop_animation ((mob *) mobs.data[scm_to_int (mobindex)].data);
-  SDL_mutexV(mob_mutex);
+  mob_stop_animation_by_index (scm_to_int(mobindex));
   return scm_from_int (0);
 }
 
@@ -241,13 +234,7 @@ guile_get_global_event (SCM userindex)
 SCM
 guile_set_mob_userdata (SCM index, SCM newdata)
 {
-  SDL_mutexP(mob_mutex);
-  scm_gc_unprotect_object (((mob *) mobs.data[scm_to_int (index)].data)->
-			   userdata);
-  ((mob *) mobs.data[scm_to_int (index)].data)->userdata = newdata;
-  scm_gc_protect_object (((mob *) mobs.data[scm_to_int (index)].data)->
-			 userdata);
-  SDL_mutexV(mob_mutex);
+  set_mob_userdata_by_index(scm_to_int(index),newdata);
   return SCM_UNSPECIFIED;
 }
 
@@ -367,10 +354,7 @@ guile_destroy_text (SCM textindex)
 SCM
 guile_add_mob_movement (SCM mob, SCM xtile, SCM ytile, SCM frames)
 {
-  SDL_mutexP(mob_mutex);
-  mob_add_movement (mobs.data[scm_to_int (mob)].data, scm_to_int (xtile),
-		    scm_to_int (ytile), scm_to_int (frames));
-  SDL_mutexV(mob_mutex);
+  mob_add_movement_by_index(scm_to_int(mob),scm_to_int(xtile),scm_to_int(ytile),scm_to_int(frames));
   return SCM_UNSPECIFIED;
 }
 
@@ -447,10 +431,7 @@ guile_safe_load(SCM filename)
 SCM
 guile_set_mob_frame(SCM index, SCM animation, SCM framenum)
 {
-  SDL_mutexP(mob_mutex);
-  ((mob*)mobs.data[scm_to_int(index)].data)->frame = scm_to_uint(framenum);
-  ((mob*)mobs.data[scm_to_int(index)].data)->animation = scm_to_uint(animation);
-  SDL_mutexV(mob_mutex);
+  set_mob_frame_by_index(scm_to_int(index),scm_to_uint(animation),scm_to_uint(framenum));
   return SCM_UNSPECIFIED;
 }
 

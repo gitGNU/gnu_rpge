@@ -186,9 +186,9 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("stop-repl",0,0,0,guile_stop_repl);
   SCM_TICK;
   global_usereventstack = eventstack_init();
-  images = mobs = argvs = fonts =  sequence_init();
-  image_mutex = SDL_CreateMutex();
-  mob_mutex = SDL_CreateMutex();
+  argvs = fonts =  sequence_init();
+  mobs_init();
+  images_init();
   init_tiles();
   init_windows();
   directives_init();

@@ -27,6 +27,14 @@ convertors(image);
 #define GET_REF(n) ((image*)images.data[n].data)->count
 #define GET_PERM(n) ((image*)images.data[n].data)->permanence
 
+/*The usual initialization function, for... abstraction and convenience purposes*/
+void
+images_init(void)
+{
+  images = sequence_init();
+  image_mutex = SDL_CreateMutex();
+}
+
 /*
 The SDL_Surface* data is usually passed from load_image in video.c or a similar procedure, forcing it to be properly optimized for blitting on our output surface.
 */

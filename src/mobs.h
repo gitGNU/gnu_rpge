@@ -54,19 +54,21 @@ typedef struct
 }  move_descriptor;
 
 extern sequence mobs;
-extern SDL_mutex* mob_mutex;
 
+void mobs_init(void);
 mob create_mob_using_sprite (unsigned int, unsigned int,unsigned grid, char *);
 int push_mob_on_array (mob);
 void remove_mob(int);
-void mob_set_animation(mob* m, unsigned int animation, unsigned int startframe, unsigned int targetframe, unsigned int framesperframe, char looping);
+void mob_set_animation_by_index(int ind, unsigned int animation, unsigned int startframe, unsigned int targetframe, unsigned int framesperframe, char looping);
 void  animate_mobs();
 void  move_mobs();
 void  mob_set_movement(mob* m, int xam, double xrate, int yam, double yrate);
-void  mob_move_all (mob * m, int xtiles, int ytiles, int frames);
-void  mob_stop_animation(mob* m);
-void  mob_add_movement(mob* m, int xtile, int ytile, int frames);
 void  mob_stop_movement(mob* m);
+void mob_move_all_by_index(int ind, int xtiles, int ytiles, int frames);
+void mob_add_movement_by_index(int ind, int xtiles, int ytiles, int frames);
+void mob_stop_animation_by_index(int ind);
+void set_mob_frame_by_index(int ind,unsigned int animation,unsigned int framenum);
+void set_mob_userdata_by_index(int ind, SCM newdata);
 
 /*Self-dependent include*/
 #include "tile.h"

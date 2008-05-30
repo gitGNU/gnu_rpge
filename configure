@@ -705,23 +705,29 @@ GNULIB_GETSUBOPT
 GNULIB_MKDTEMP
 GNULIB_MKSTEMP
 GNULIB_PUTENV
+GNULIB_RPMATCH
 GNULIB_SETENV
+GNULIB_STRTOD
 GNULIB_UNSETENV
 HAVE_CALLOC_POSIX
 HAVE_GETSUBOPT
 HAVE_MALLOC_POSIX
 HAVE_MKDTEMP
 HAVE_REALLOC_POSIX
+HAVE_RPMATCH
 HAVE_SETENV
+HAVE_STRTOD
 HAVE_UNSETENV
 REPLACE_MKSTEMP
 REPLACE_PUTENV
+REPLACE_STRTOD
 VOID_UNSETENV
 INCLUDE_NEXT
 NEXT_STDLIB_H
 GNULIB_MEMMEM
 GNULIB_MEMPCPY
 GNULIB_MEMRCHR
+GNULIB_RAWMEMCHR
 GNULIB_STPCPY
 GNULIB_STPNCPY
 GNULIB_STRCHRNUL
@@ -752,6 +758,7 @@ GNULIB_STRSIGNAL
 HAVE_DECL_MEMMEM
 HAVE_MEMPCPY
 HAVE_DECL_MEMRCHR
+HAVE_RAWMEMCHR
 HAVE_STPCPY
 HAVE_STPNCPY
 HAVE_STRCHRNUL
@@ -5008,6 +5015,10 @@ else
 fi
 
 #GNUlib
+
+
+
+
 { echo "$as_me:$LINENO: checking whether strerror_r is declared" >&5
 echo $ECHO_N "checking whether strerror_r is declared... $ECHO_C" >&6; }
 if test "${ac_cv_have_decl_strerror_r+set}" = set; then
@@ -5376,17 +5387,22 @@ esac
   GNULIB_MKDTEMP=0;
   GNULIB_MKSTEMP=0;
   GNULIB_PUTENV=0;
+  GNULIB_RPMATCH=0;
   GNULIB_SETENV=0;
+  GNULIB_STRTOD=0;
   GNULIB_UNSETENV=0;
     HAVE_CALLOC_POSIX=1;
   HAVE_GETSUBOPT=1;
   HAVE_MALLOC_POSIX=1;
   HAVE_MKDTEMP=1;
   HAVE_REALLOC_POSIX=1;
+  HAVE_RPMATCH=1;
   HAVE_SETENV=1;
+  HAVE_STRTOD=1;
   HAVE_UNSETENV=1;
   REPLACE_MKSTEMP=0;
   REPLACE_PUTENV=0;
+  REPLACE_STRTOD=0;
   VOID_UNSETENV=0;
 
 
@@ -5617,6 +5633,7 @@ done
   GNULIB_MEMMEM=0;
   GNULIB_MEMPCPY=0;
   GNULIB_MEMRCHR=0;
+  GNULIB_RAWMEMCHR=0;
   GNULIB_STPCPY=0;
   GNULIB_STPNCPY=0;
   GNULIB_STRCHRNUL=0;
@@ -5647,6 +5664,7 @@ done
     HAVE_DECL_MEMMEM=1;
   HAVE_MEMPCPY=1;
   HAVE_DECL_MEMRCHR=1;
+  HAVE_RAWMEMCHR=1;
   HAVE_STPCPY=1;
   HAVE_STPNCPY=1;
   HAVE_STRCHRNUL=1;
@@ -6027,7 +6045,14 @@ fi
 
 
 
+
+
+
+
+
   gl_source_base='lib'
+
+
 
 
 
@@ -6098,6 +6123,7 @@ if test $ac_cv_lib_error_at_line = no; then
 
 
 
+
   gl_LIBOBJS="$gl_LIBOBJS error.$ac_objext"
 
 fi
@@ -6114,6 +6140,7 @@ fi
 
 
   XGETTEXT_EXTRA_OPTIONS="$XGETTEXT_EXTRA_OPTIONS --flag=error_at_line:5:c-format"
+
 
 
 
@@ -6258,6 +6285,7 @@ echo "${ECHO_T}$gl_cv_next_stdlib_h" >&6; }
 
 
 
+
   gl_LIBOBJS="$gl_LIBOBJS strerror.$ac_objext"
 
 
@@ -6349,6 +6377,7 @@ echo "${ECHO_T}$gl_cv_next_unistd_h" >&6; }
 
 
 
+
   gl_LIBOBJS="$gl_LIBOBJS xmalloc.$ac_objext"
 
 
@@ -6364,12 +6393,25 @@ echo "${ECHO_T}$gl_cv_next_unistd_h" >&6; }
 
 
 
+
+
+
+
+
   gltests_libdeps=
   gltests_ltlibdeps=
 
 
 
+
+
+
+
+
   gl_source_base='tests'
+
+
+
 
 
 
@@ -7864,13 +7906,13 @@ GNULIB_GETSUBOPT!$GNULIB_GETSUBOPT$ac_delim
 GNULIB_MKDTEMP!$GNULIB_MKDTEMP$ac_delim
 GNULIB_MKSTEMP!$GNULIB_MKSTEMP$ac_delim
 GNULIB_PUTENV!$GNULIB_PUTENV$ac_delim
+GNULIB_RPMATCH!$GNULIB_RPMATCH$ac_delim
 GNULIB_SETENV!$GNULIB_SETENV$ac_delim
+GNULIB_STRTOD!$GNULIB_STRTOD$ac_delim
 GNULIB_UNSETENV!$GNULIB_UNSETENV$ac_delim
 HAVE_CALLOC_POSIX!$HAVE_CALLOC_POSIX$ac_delim
 HAVE_GETSUBOPT!$HAVE_GETSUBOPT$ac_delim
 HAVE_MALLOC_POSIX!$HAVE_MALLOC_POSIX$ac_delim
-HAVE_MKDTEMP!$HAVE_MKDTEMP$ac_delim
-HAVE_REALLOC_POSIX!$HAVE_REALLOC_POSIX$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -7912,16 +7954,22 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+HAVE_MKDTEMP!$HAVE_MKDTEMP$ac_delim
+HAVE_REALLOC_POSIX!$HAVE_REALLOC_POSIX$ac_delim
+HAVE_RPMATCH!$HAVE_RPMATCH$ac_delim
 HAVE_SETENV!$HAVE_SETENV$ac_delim
+HAVE_STRTOD!$HAVE_STRTOD$ac_delim
 HAVE_UNSETENV!$HAVE_UNSETENV$ac_delim
 REPLACE_MKSTEMP!$REPLACE_MKSTEMP$ac_delim
 REPLACE_PUTENV!$REPLACE_PUTENV$ac_delim
+REPLACE_STRTOD!$REPLACE_STRTOD$ac_delim
 VOID_UNSETENV!$VOID_UNSETENV$ac_delim
 INCLUDE_NEXT!$INCLUDE_NEXT$ac_delim
 NEXT_STDLIB_H!$NEXT_STDLIB_H$ac_delim
 GNULIB_MEMMEM!$GNULIB_MEMMEM$ac_delim
 GNULIB_MEMPCPY!$GNULIB_MEMPCPY$ac_delim
 GNULIB_MEMRCHR!$GNULIB_MEMRCHR$ac_delim
+GNULIB_RAWMEMCHR!$GNULIB_RAWMEMCHR$ac_delim
 GNULIB_STPCPY!$GNULIB_STPCPY$ac_delim
 GNULIB_STPNCPY!$GNULIB_STPNCPY$ac_delim
 GNULIB_STRCHRNUL!$GNULIB_STRCHRNUL$ac_delim
@@ -7952,6 +8000,7 @@ GNULIB_STRSIGNAL!$GNULIB_STRSIGNAL$ac_delim
 HAVE_DECL_MEMMEM!$HAVE_DECL_MEMMEM$ac_delim
 HAVE_MEMPCPY!$HAVE_MEMPCPY$ac_delim
 HAVE_DECL_MEMRCHR!$HAVE_DECL_MEMRCHR$ac_delim
+HAVE_RAWMEMCHR!$HAVE_RAWMEMCHR$ac_delim
 HAVE_STPCPY!$HAVE_STPCPY$ac_delim
 HAVE_STPNCPY!$HAVE_STPNCPY$ac_delim
 HAVE_STRCHRNUL!$HAVE_STRCHRNUL$ac_delim
@@ -8002,15 +8051,9 @@ NEXT_UNISTD_H!$NEXT_UNISTD_H$ac_delim
 HAVE_UNISTD_H!$HAVE_UNISTD_H$ac_delim
 LIBGNU_LIBDEPS!$LIBGNU_LIBDEPS$ac_delim
 LIBGNU_LTLIBDEPS!$LIBGNU_LTLIBDEPS$ac_delim
-LIBOBJS!$LIBOBJS$ac_delim
-LTLIBOBJS!$LTLIBOBJS$ac_delim
-gl_LIBOBJS!$gl_LIBOBJS$ac_delim
-gl_LTLIBOBJS!$gl_LTLIBOBJS$ac_delim
-gltests_LIBOBJS!$gltests_LIBOBJS$ac_delim
-gltests_LTLIBOBJS!$gltests_LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 96; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
@@ -8042,6 +8085,55 @@ N; s/^.*\n//; s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g; b n
 ' >>$CONFIG_STATUS <conf$$subs.sed
 rm -f conf$$subs.sed
 cat >>$CONFIG_STATUS <<_ACEOF
+CEOF$ac_eof
+_ACEOF
+
+
+ac_delim='%!_!# '
+for ac_last_try in false false false false false :; do
+  cat >conf$$subs.sed <<_ACEOF
+LIBOBJS!$LIBOBJS$ac_delim
+LTLIBOBJS!$LTLIBOBJS$ac_delim
+gl_LIBOBJS!$gl_LIBOBJS$ac_delim
+gl_LTLIBOBJS!$gl_LTLIBOBJS$ac_delim
+gltests_LIBOBJS!$gltests_LIBOBJS$ac_delim
+gltests_LTLIBOBJS!$gltests_LTLIBOBJS$ac_delim
+_ACEOF
+
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 6; then
+    break
+  elif $ac_last_try; then
+    { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
+echo "$as_me: error: could not make $CONFIG_STATUS" >&2;}
+   { (exit 1); exit 1; }; }
+  else
+    ac_delim="$ac_delim!$ac_delim _$ac_delim!! "
+  fi
+done
+
+ac_eof=`sed -n '/^CEOF[0-9]*$/s/CEOF/0/p' conf$$subs.sed`
+if test -n "$ac_eof"; then
+  ac_eof=`echo "$ac_eof" | sort -nru | sed 1q`
+  ac_eof=`expr $ac_eof + 1`
+fi
+
+cat >>$CONFIG_STATUS <<_ACEOF
+cat >"\$tmp/subs-3.sed" <<\CEOF$ac_eof
+/@[a-zA-Z_][a-zA-Z_0-9]*@/!b end
+_ACEOF
+sed '
+s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g
+s/^/s,@/; s/!/@,|#_!!_#|/
+:n
+t n
+s/'"$ac_delim"'$/,g/; t
+s/$/\\/; p
+N; s/^.*\n//; s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g; b n
+' >>$CONFIG_STATUS <conf$$subs.sed
+rm -f conf$$subs.sed
+cat >>$CONFIG_STATUS <<_ACEOF
+:end
+s/|#_!!_#|//g
 CEOF$ac_eof
 _ACEOF
 
@@ -8295,7 +8387,7 @@ s&@abs_top_builddir@&$ac_abs_top_builddir&;t t
 s&@INSTALL@&$ac_INSTALL&;t t
 s&@MKDIR_P@&$ac_MKDIR_P&;t t
 $ac_datarootdir_hack
-" $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" | sed 's/|#_!!_#|//g' >$tmp/out
+" $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" | sed -f "$tmp/subs-3.sed" >$tmp/out
 
 test -z "$ac_datarootdir_hack$ac_datarootdir_seen" &&
   { ac_out=`sed -n '/\${datarootdir}/p' "$tmp/out"`; test -n "$ac_out"; } &&
