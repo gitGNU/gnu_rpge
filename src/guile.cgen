@@ -466,12 +466,7 @@ guile_resize_window(SCM index, SCM dimensions)
 SCM
 guile_move_text(SCM index, SCM point)
 {
-  int ind = scm_to_int(index);
-  text * t = (text*)texts.data[ind].data;
-  SDL_mutexP(text_mutex);
-  t->x = scm_to_uint(scm_car(point));
-  t->y = scm_to_uint(scm_cdr(point));
-  SDL_mutexV(text_mutex);
+  move_text(scm_to_int(index),scm_to_int(scm_car(point)),scm_to_int(scm_cdr(point)));  
   return SCM_UNSPECIFIED;
 }
 

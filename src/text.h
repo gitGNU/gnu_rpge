@@ -40,7 +40,6 @@ typedef struct
 } font;
 
 extern sequence texts;
-extern SDL_mutex* font_mutex, *text_mutex;
 extern sequence fonts;
 
 int open_font(char* filename, int size);
@@ -49,5 +48,6 @@ text make_text(unsigned int x, unsigned int y, char* string, int fontindex, SDL_
 void print_text(text t);
 int add_text(text t);
 void remove_text(int index);
+void move_text(int index, unsigned int x, unsigned int y);
 
 #endif

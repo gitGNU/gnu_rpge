@@ -33,7 +33,7 @@ typedef struct
   SDL_Surface* data;
   char* filename;
   int count;
-  char permanence; /*In a similar vein as guile's capability to force the GC to always mark an object, this forces the imagestack to never release an image.*/
+  char permanence; /*In a similar vein as guile's capability to force the GC to always mark an object, this forces the imagestack to never release an image, unless explicitly asked*/
 } image;
 
 extern sequence images;

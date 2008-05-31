@@ -200,3 +200,12 @@ remove_text(int index)
   SDL_mutexV(text_mutex);
 }
 
+void
+move_text(int index,unsigned int x,unsigned int y)
+{
+  text* t = texts.data[index].data;
+  SDL_mutexP(text_mutex);
+  t->x = x;
+  t->y = y;
+  SDL_mutexV(text_mutex);
+}
