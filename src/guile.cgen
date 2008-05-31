@@ -466,7 +466,7 @@ guile_resize_window(SCM index, SCM dimensions)
 SCM
 guile_move_text(SCM index, SCM point)
 {
-  move_text(scm_to_int(index),scm_to_int(scm_car(point)),scm_to_int(scm_cdr(point)));  
+  move_text(scm_to_int(index),scm_to_uint(scm_car(point)),scm_to_uint(scm_cdr(point)));  
   return SCM_UNSPECIFIED;
 }
 
