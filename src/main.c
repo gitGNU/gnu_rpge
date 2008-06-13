@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 #include "main.h"
-SDL_mutex* repl_signal; /*Used to signal whether the REPL can run. While unlocked, the REPL may run (and will acquire the lock, evaluate an expression and release the lock). */
+
+static SDL_mutex* repl_signal; /*Used to signal whether the REPL can run. While unlocked, the REPL may run (and will acquire the lock, evaluate an expression and release the lock). */
 
 int
 exec_guile_shell (void *unused_arg)
@@ -91,51 +92,10 @@ void dispatch_event(SDL_Event e)
     eventstack_addevent(&global_usereventstack,ev);
 }
 
-
-int
-main (int argc, char **argv)
+static inline void
+init_scm()
 {
-  char* initfile = ".RPGE", option_char;
-  int longopt_index = 0;
-  struct option options[] = {
-  {"version",0,NULL,'v'},
-  {"help",0,NULL,'h'}
-  };
-  while((option_char = getopt_long(argc,argv,"vhf:",options,&longopt_index)) != -1)
-    {
-      switch(option_char)
-        {
-          case 'v':
-            puts(VERSION_STRING);
-            exit(EXIT_SUCCESS);
-            break;
-          case 'h':
-            puts(HELP_STRING);
-            exit(EXIT_SUCCESS);
-            break;
-          case 'f':
-            initfile = strdup(optarg);
-            break;
-        }
-    }
-  SDL_Surface *screen;
-  SDL_Event *event = xmalloc (sizeof (SDL_Event));
-  int next, now;
-  SDL_Init (SDL_INIT_EVERYTHING);
-  TTF_Init ();
-  screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE);
-  if (screen == NULL)
-    {
-      fprintf (stderr, "SDL_SetVideoMode failed: %s\n", SDL_GetError ());
-      return 1;
-    }
-  SDL_WM_SetCaption ("RPGE", "RPGE");
-  /*
-    Enable UNICODE conversion for keysyms so we can map the ASCII characters to their relevant descriptions, provided they are not equal to a few special chars.
-    This does have some overhead according to the docs, so we might want to come up with a different, possibly faster scheme to take care of this later.
-  */
-  SDL_EnableUNICODE(1);
-  scm_init_guile ();
+ scm_init_guile ();
   /*Define the load mutex as a recursive mutex. This is necessary for safe loading*/
   scm_c_define("load-mutex",scm_make_recursive_mutex());
   scm_c_define_gsubr ("create-mob", 4, 0, 0, guile_create_mob);
@@ -184,15 +144,69 @@ main (int argc, char **argv)
   scm_c_define_gsubr ("get-main-grid",0,0,0,guile_get_main_grid);
   scm_c_define_gsubr ("run-repl",0,0,0,guile_run_repl);
   scm_c_define_gsubr ("stop-repl",0,0,0,guile_stop_repl);
-  SCM_TICK;
+}
+
+static inline void
+init()
+{
   global_usereventstack = eventstack_init();
-  argvs = fonts =  sequence_init();
+  argvs_init();
+  text_rendering_init();
+  dispatch_init();
   mobs_init();
   images_init();
   init_tiles();
   init_windows();
   directives_init();
   paths_init();
+}
+
+int
+main (int argc, char **argv)
+{
+  char* initfile = ".RPGE", option_char;
+  int longopt_index = 0;
+  struct option options[] = {
+  {"version",0,NULL,'v'},
+  {"help",0,NULL,'h'}
+  };
+  while((option_char = getopt_long(argc,argv,"vhf:",options,&longopt_index)) != -1)
+    {
+      switch(option_char)
+        {
+          case 'v':
+            puts(VERSION_STRING);
+            exit(EXIT_SUCCESS);
+            break;
+          case 'h':
+            puts(HELP_STRING);
+            exit(EXIT_SUCCESS);
+            break;
+          case 'f':
+            initfile = strdup(optarg);
+            break;
+        }
+    }
+  SDL_Surface *screen;
+  SDL_Event *event = xmalloc (sizeof (SDL_Event));
+  int next, now;
+  SDL_Init (SDL_INIT_EVERYTHING);
+  TTF_Init ();
+  screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE);
+  if (screen == NULL)
+    {
+      fprintf (stderr, "SDL_SetVideoMode failed: %s\n", SDL_GetError ());
+      return 1;
+    }
+  SDL_WM_SetCaption ("RPGE", "RPGE");
+  /*
+    Enable UNICODE conversion for keysyms so we can map the ASCII characters to their relevant descriptions, provided they are not equal to a few special chars.
+    This does have some overhead according to the docs, so we might want to come up with a different, possibly faster scheme to take care of this later.
+  */
+  SDL_EnableUNICODE(1);
+  init_scm();
+  SCM_TICK;
+  init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
   scm_gc_protect_object(global_userdata);
   exec_config_file(initfile);

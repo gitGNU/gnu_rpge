@@ -20,7 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 SCM global_userdata = SCM_EOL;
 sequence argvs;
+SDL_mutex* argv_lock;
 convertors(thread_argv);
+
+void
+argvs_init()
+{
+  argvs = sequence_init();
+  argv_lock = SDL_CreateMutex();
+}
 
 static SCM
 scm_ncar (SCM list, int n)
@@ -284,6 +292,7 @@ guile_exec_script_with_argv (char *filename, SCM argv)
   Uint32 threadid = SDL_ThreadID ();
   int index = sequence_position (argvs, make_Uint32_obj (threadid),
 				 guile_argv_threadids_equalp);
+  SDL_mutexP(argv_lock);
   if (index != -1)
     argvs.data[index] =
       make_thread_argv_obj (make_threadargv (threadid, argv));
@@ -292,8 +301,11 @@ guile_exec_script_with_argv (char *filename, SCM argv)
       sequence_append (&argvs,
 		       make_thread_argv_obj (make_threadargv
 					     (threadid, argv)));
+  SDL_mutexV(argv_lock);
   scm_c_primitive_load (filename);
+  SDL_mutexP(argv_lock);
   sequence_remove_at (&argvs, index);
+  SDL_mutexV(argv_lock);
 }
 
 SCM

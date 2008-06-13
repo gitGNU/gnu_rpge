@@ -33,11 +33,11 @@ typedef struct
   SCM (* datafunc)(SDL_Event);
 }  dispatch_pair;
 
-extern sequence event_dispatch_pairs;
 
 dispatch_pair make_dispatch_pair(Uint32 eventtype, SCM (* typeproc)(SDL_Event) , SCM(* dataproc)(SDL_Event) );
 void add_dispatch_pair(dispatch_pair dp);
 void remove_dispatch_pair(dispatch_pair dp);
 SCM dispatch(SDL_Event e);
+void dispatch_init();
 
 #endif

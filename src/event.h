@@ -38,7 +38,7 @@ typedef struct
   SDL_mutex* lock;
 } eventstack;
 
-extern eventstack global_usereventstack; //holds all generic game events, with the minor exception of quitting events.
+extern eventstack global_usereventstack;
 
 eventstack eventstack_init();
 void eventstack_clear(eventstack* stackptr);

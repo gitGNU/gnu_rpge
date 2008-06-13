@@ -17,12 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 /*
-  dispatch.c: Implement dispatching.
+  dispatch.cgen: Implement dispatching.
 */
 
 #include "dispatch.h"
-sequence event_dispatch_pairs = { 0, 0 };
-
+sequence event_dispatch_pairs;
+SDL_mutex* dispatch_lock;
 convertors(dispatch_pair);
 
 dispatch_pair
@@ -37,9 +37,18 @@ make_dispatch_pair (Uint32 eventtype, SCM (*typeproc) (SDL_Event),
 }
 
 void
+dispatch_init()
+{
+  event_dispatch_pairs = sequence_init();
+  dispatch_lock = SDL_CreateMutex();
+}
+
+void
 add_dispatch_pair (dispatch_pair dp)
 {
+  SDL_mutexP(dispatch_lock);
   sequence_append (&event_dispatch_pairs, make_dispatch_pair_obj (dp));
+  SDL_mutexV(dispatch_lock);
 }
 
 /*
@@ -60,7 +69,9 @@ void
 remove_dispatch_pair (dispatch_pair dp)
 {
   object compobj = make_dispatch_pair_obj (dp);
+  SDL_mutexP(dispatch_lock);
   sequence_remove (&event_dispatch_pairs, compobj, obj_dp_eq_proc);
+  SDL_mutexV(dispatch_lock);
   free (compobj.data);
 }
 

@@ -39,8 +39,8 @@ typedef struct
   unsigned int size;
 } font;
 
-extern sequence texts;
 extern sequence fonts;
+extern sequence texts;
 
 int open_font(char* filename, int size);
 void close_font(int index);
@@ -49,5 +49,6 @@ void print_text(text t);
 int add_text(text t);
 void remove_text(int index);
 void move_text(int index, unsigned int x, unsigned int y);
+void text_rendering_init();
 
 #endif

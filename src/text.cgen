@@ -24,6 +24,15 @@ convertors(font);
 convertors(text);
 SDL_mutex *font_mutex,*text_mutex;
 
+void
+text_rendering_init()
+{
+  texts = sequence_init();
+  fonts = sequence_init();
+  font_mutex = SDL_CreateMutex();
+  text_mutex = SDL_CreateMutex();
+}
+
 font
 make_font(TTF_Font* fontptr, char* filename,unsigned int size)
 {
@@ -127,7 +136,7 @@ make_text(unsigned int x, unsigned int y, char* string, int fontindex, SDL_Color
       char* str = strdup(string);
       char* token = strtok_r(str,"\n",&saveptr);
       if(token)
-        sequence_append(&t.buffers,make_string_obj(token));
+	sequence_append(&t.buffers,make_string_obj(token));
       else
         {
           return t;

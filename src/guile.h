@@ -41,6 +41,7 @@ extern sequence argvs;
 #define RELEASE_REPL_MUTEX 0
 #define ACQUIRE_REPL_MUTEX 1
 
+void argvs_init();
 SCM guile_create_mob(SCM,SCM,SCM,SCM);
 SCM guile_create_tile(SCM sprite, SCM partclip, SCM blocking);
 SCM guile_set_all_tiles(SCM grid,SCM tile);
