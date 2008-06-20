@@ -21,6 +21,13 @@
 (define (bind-key key proc)
   (add-to-table! (get-bindings) key proc))
 
+(define (add-binding key proc)
+  (let ((current-b (get-binding key)))
+    (if (null? current-b)
+	(bind-key key proc)
+	(begin (remove-binding key)
+	       (bind-key key (interleave current-b proc))))))
+
 (define (get-binding key)
   (get-from-table (get-bindings) key))
 

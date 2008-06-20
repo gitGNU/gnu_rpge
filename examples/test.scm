@@ -29,14 +29,14 @@
 ;Tell mob_event_test.scm to get a move on and track this mob.
 (add-tracked-mob! m)
 (bind-mob-event m 'tile-change (lambda (event)(set-camera-x (caddr event)) (set-camera-y (cdddr event))))
-(bind-key 'd (lambda() (add-mob-movement m 1 0 16)))
-(bind-key 'a (lambda() (add-mob-movement m -1 0 16)))
-(bind-key 's (lambda() (add-mob-movement m 0 1 16)))
-(bind-key 'w (lambda() (add-mob-movement m 0 -1 16)))
+(add-binding 'd (lambda() (add-mob-movement m 1 0 16)))
+(add-binding 'a (lambda() (add-mob-movement m -1 0 16)))
+(add-binding 's (lambda() (add-mob-movement m 0 1 16)))
+(add-binding 'w (lambda() (add-mob-movement m 0 -1 16)))
 ;Binding for dialog system, yay
-(bind-key 'q (lambda () (if (not (null? (get-dialog-queue))) (dialogs-next (get-current-dialog-id )))))
-;Menu fun
-(bind-key 'e (lambda () 
+(add-binding 'q (lambda () (if (not (null? (get-dialog-queue))) (dialogs-next (get-current-dialog-id )))))
+;Menu fun, this really needs to be abstracted and put in the standard library...... which needs rewriting.
+(add-binding 'e (lambda () 
 	       (if (null? (get-dialog-queue))
 		   '()
 		   (let ((d (get-dialog (get-current-dialog-id))))

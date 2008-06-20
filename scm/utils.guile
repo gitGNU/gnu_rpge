@@ -36,3 +36,10 @@
    `(let ((,s ,expression))
       (lambda () ,s))))
         
+;Generally used in case one needs to combine two procedures, essentially, for bodies b and c, this produces a lambda whose body is roughly the equivalent
+;of (begin b c).
+
+(define (interleave p q)
+  (lambda args
+    (apply p args)
+    (apply q args)))

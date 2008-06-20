@@ -21,6 +21,9 @@
 
 #Do the expansion, putting the result in.. a sed-generated replacement.
 cp $1 $2.tmp
+if test "(! -e $2)"; then
+    touch $2;
+fi
 sed 's/convertors[:space:]*(\([[:alnum:]_]*\));/convertors(\1,\1);/g' $2.tmp -i
 
 sed 's/convertors[:space:]*(\([[:alnum:]_*]*\),\([[:alnum:]_]*\));/inline object\

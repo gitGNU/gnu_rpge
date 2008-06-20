@@ -24,6 +24,12 @@
       (set-in-table! (get-global-data) 'mob-bootstrap-proc proc)
       (add-to-table! (get-global-data) 'mob-bootstrap-proc proc)))
 
+(define (add-mob-bootstrap-proc! p)
+  (let ((current-p (get-mob-bootstrap-proc)))
+    (if (null? current-p)
+	(set-mob-bootstrap-proc! p)
+	(set-mob-bootstrap-proc! (interleave current-p p)))))
+
 (define (make-mob x y grid sprite)
   (let ((mobby (create-mob x y grid sprite)))
     (if (not (null? (get-mob-bootstrap-proc)))

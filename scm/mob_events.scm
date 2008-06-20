@@ -35,6 +35,12 @@
     (cond ((null? stored) (add-to-table! (get-mob-bindings mob) event proc))
           (else
             (set-in-table! (get-mob-bindings mob) event proc)))))
+
+(define (add-mob-binding mob event proc)
+  (let ((current-b (get-mob-binding mob event)))
+    (if (null? current-b) 
+	(bind-mob-event mob event proc)
+	(bind-mob-event mob event (interleave current-b proc)))))
             
 (define (get-mob-binding mob event)
   (get-from-table (get-mob-bindings mob) event))
