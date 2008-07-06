@@ -32,10 +32,18 @@ typedef struct
 
 typedef struct
 {
+  unsigned int index;
+  char block;
+} user;
+
+typedef struct
+{
   sequence events;
   sequence indices;
   /*We give all eventstacks their own mutex locks, to prevent having object-specific stacks lock each other out for no reason.*/
   SDL_mutex* lock;
+  /*Basically, threads block on this if they want to wait for events to pop up*/
+  SDL_cond* block;
 } eventstack;
 
 extern eventstack global_usereventstack;
@@ -45,7 +53,7 @@ void eventstack_clear(eventstack* stackptr);
 void eventstack_addevent(eventstack* stackptr, event event);
 event eventstack_getfirstevent(eventstack* stackptr);
 event make_event(SCM type, SCM data);
-unsigned long int eventstack_open(eventstack* es);
+unsigned long int eventstack_open(eventstack* es,char block);
 void eventstack_close(eventstack* es,unsigned long int luser);
 event evenstack_get_next_event(eventstack es, unsigned long int luser);
 int eventstack_get_index_of_user(eventstack es, unsigned long int luser);

@@ -220,7 +220,7 @@ guile_destroy_window (SCM index)
 SCM
 guile_open_global_eventstack ()
 {
-  return scm_from_int (eventstack_open (&global_usereventstack));
+  return scm_from_int (eventstack_open (&global_usereventstack,1));
 }
 
 SCM
@@ -399,7 +399,7 @@ guile_set_camera_y(SCM newvalue)
 SCM 
 guile_open_mob_eventstack(SCM mobindex)
 {
-  return scm_from_uint(eventstack_open(&(((mob*)mobs.data[scm_to_int(mobindex)].data)->events)));
+  return scm_from_uint(eventstack_open(&(((mob*)mobs.data[scm_to_int(mobindex)].data)->events),1));
 }
 
 SCM

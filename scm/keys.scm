@@ -25,10 +25,11 @@
                (binding))))))
 
 (define (check-for-events)
+  (display "Checking")
+  (newline)
   (let ((event (get-global-event index)))
     (cond  
     ((not (null? (car event))) (branch event))))
-  (usleep 250000)
   (check-for-events))
 
 ;signal that the next load may be executed

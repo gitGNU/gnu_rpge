@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define TYPE_DIRECTIVE_T 13
 #define TYPE_TILELAYER 14
 #define TYPE_IMAGECOUNTER 15
+#define TYPE_USER 16
   
 typedef struct
 {

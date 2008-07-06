@@ -25,6 +25,7 @@ eventstack global_usereventstack;
 #define UNLOCK_STACK(s) s->lock? SDL_mutexV(s->lock) : -1
 
 convertors(event);
+convertors(user);
 
 event
 make_event (SCM type, SCM data)
@@ -43,6 +44,7 @@ eventstack_init (void)
   eventstack es;
   es.indices = es.events = sequence_init ();
   es.lock = SDL_CreateMutex();
+  es.block = SDL_CreateCond();
   return es;
 }
 
@@ -63,6 +65,7 @@ eventstack_addevent (eventstack * stackptr, event e)
     {
       LOCK_STACK(stackptr);
       sequence_append (&stackptr->events, make_event_obj (e));
+      SDL_CondBroadcast(stackptr->block);
       UNLOCK_STACK(stackptr);
     }
 }
@@ -87,27 +90,29 @@ find_empty_luser (eventstack es)
 {
   for (int i = 0; i < es.indices.objcount; i++)
     {
-      if (*((int *) es.indices.data[i].data) == -1)
+      if (((user *) es.indices.data[i].data)->index == -1)
 	return i;
     }
   return -1;
 }
 
 unsigned long int
-eventstack_open (eventstack * es)
+eventstack_open (eventstack * es,char block)
 {
   int index = find_empty_luser (*es);
   if (index != -1)
     {
       LOCK_STACK(es);
-      *((int *) es->indices.data[index].data) = 0;
+      ((user *) es->indices.data[index].data)->index = 0;
       UNLOCK_STACK(es);
       return index;
     }
   else
     {
       LOCK_STACK(es);
-      int index = sequence_append(&es->indices,make_int_obj(0));
+      user u = {0,0};
+      u.block = block;
+      int index = sequence_append(&es->indices,make_user_obj(u));
       UNLOCK_STACK(es);
       return index;
     }
@@ -118,7 +123,7 @@ void
 eventstack_close (eventstack * es, unsigned long int luser)
 {
   LOCK_STACK(es);
-  *((int *) es->indices.data[luser].data) = -1;
+  ((user *) es->indices.data[luser].data)->index = -1;
   UNLOCK_STACK(es);
 }
 
@@ -128,7 +133,7 @@ eventstack_get_index_of_user (eventstack es, unsigned long int luser)
   if (luser >= es.indices.objcount)
     return -1;
   else
-    return *((int *) es.indices.data[luser].data);
+    return ((user *) es.indices.data[luser].data)->index;
 }
 
 /*
@@ -139,9 +144,11 @@ void
 eventstack_clean_stack (eventstack * es)
 {
   int index, lowest = -1;
+  user checked;
   for (int i = 0; i < es->indices.objcount; i++)
     {
-      index = get_obj_int (es->indices.data[i]);
+      checked = get_obj_user (es->indices.data[i]);
+      index = checked.index;
       if (!index)
 	{
 	  lowest = -1;
@@ -169,7 +176,7 @@ eventstack_clean_stack (eventstack * es)
 	}
       for (int j = 0; j < es->indices.objcount; j++)
 	{
-	  *((int *) es->indices.data[j].data) -= lowest;
+	  ((user *) es->indices.data[j].data)->index -= lowest;
 	}
       UNLOCK_STACK(es);
     }
@@ -180,11 +187,20 @@ eventstack_get_first_of_user (eventstack * es, unsigned long int luser)
 {
   int index;
   eventstack_clean_stack (es);
-  index = eventstack_get_index_of_user (*es, luser);
+  char block = ((user*)es->indices.data[luser].data)->block;
+  /*Note: index must be reset every iteration, just in case our waits actually are interrupted early and/or someone else collected events, changing our index*/
+  while((index = eventstack_get_index_of_user(*es,luser)) >= es->events.objcount && block)
+    {
+      printf("%d %d\n",es->events.objcount, index);
+      LOCK_STACK(es);
+      if(SDL_CondWait(es->block,es->lock))
+	fprintf("Error: %s\n",SDL_GetError());
+      UNLOCK_STACK(es);
+    }
   if (index != -1 && index < es->events.objcount)
     {
       LOCK_STACK(es);
-      (*((int *) es->indices.data[luser].data))++;
+      (((user *) es->indices.data[luser].data)->index)++;
       UNLOCK_STACK(es);
       return *((event *) es->events.data[index].data);
     }
