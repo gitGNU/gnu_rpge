@@ -217,10 +217,17 @@ guile_destroy_window (SCM index)
   return scm_from_int (0);
 }
 
-SCM
-guile_open_global_eventstack ()
+char
+scm_to_blocking_flag(flag)
 {
-  return scm_from_int (eventstack_open (&global_usereventstack,1));
+  return flag == SCM_BOOL_T;
+}
+
+SCM
+guile_open_global_eventstack (SCM flag)
+{
+  char block = scm_to_blocking_flag(flag);
+  return scm_from_int (eventstack_open (&global_usereventstack,block));
 }
 
 SCM
@@ -397,9 +404,10 @@ guile_set_camera_y(SCM newvalue)
 }
 
 SCM 
-guile_open_mob_eventstack(SCM mobindex)
+guile_open_mob_eventstack(SCM mobindex,SCM flag)
 {
-  return scm_from_uint(eventstack_open(&(((mob*)mobs.data[scm_to_int(mobindex)].data)->events),1));
+  char block = scm_to_blocking_flag(flag);
+  return scm_from_uint(eventstack_open(&(((mob*)mobs.data[scm_to_int(mobindex)].data)->events),block));
 }
 
 SCM

@@ -191,10 +191,9 @@ eventstack_get_first_of_user (eventstack * es, unsigned long int luser)
   /*Note: index must be reset every iteration, just in case our waits actually are interrupted early and/or someone else collected events, changing our index*/
   while((index = eventstack_get_index_of_user(*es,luser)) >= es->events.objcount && block)
     {
-      printf("%d %d\n",es->events.objcount, index);
       LOCK_STACK(es);
       if(SDL_CondWait(es->block,es->lock))
-	fprintf("Error: %s\n",SDL_GetError());
+	fprintf(stderr,"Error: %s\n",SDL_GetError());
       UNLOCK_STACK(es);
     }
   if (index != -1 && index < es->events.objcount)

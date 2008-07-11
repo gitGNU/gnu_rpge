@@ -16,7 +16,7 @@
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
 
-(define index (open-global-events))
+(define index (open-global-events #t))
 
 (define (branch event)
   (cond ((eq? (car event) 'key-down)
@@ -25,8 +25,6 @@
                (binding))))))
 
 (define (check-for-events)
-  (display "Checking")
-  (newline)
   (let ((event (get-global-event index)))
     (cond  
     ((not (null? (car event))) (branch event))))

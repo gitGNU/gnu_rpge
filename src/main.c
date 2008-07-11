@@ -110,7 +110,7 @@ init_scm()
   scm_c_define_gsubr ("stop-mob-animation",1,0,0,guile_stop_mob_animation);
   scm_c_define_gsubr ("create-window",7,0,0,guile_make_window);
   scm_c_define_gsubr ("remove-window",1,0,0,guile_destroy_window);
-  scm_c_define_gsubr ("open-global-events",0,0,0,guile_open_global_eventstack);
+  scm_c_define_gsubr ("open-global-events",1,0,0,guile_open_global_eventstack);
   scm_c_define_gsubr ("close-global-events",1,0,0,guile_close_global_eventstack);
   scm_c_define_gsubr ("get-global-event",1,0,0,guile_get_global_event);
   scm_c_define_gsubr ("get-mob-data",1,0,0,guile_get_mob_userdata);
@@ -128,7 +128,7 @@ init_scm()
   scm_c_define_gsubr ("get-camera-y",0,0,0,guile_get_camera_y);
   scm_c_define_gsubr ("set-camera-x",1,0,0,guile_set_camera_x);
   scm_c_define_gsubr ("set-camera-y",1,0,0,guile_set_camera_y);
-  scm_c_define_gsubr ("open-mob-events",1,0,0,guile_open_mob_eventstack);
+  scm_c_define_gsubr ("open-mob-events",2,0,0,guile_open_mob_eventstack);
   scm_c_define_gsubr ("get-mob-event",2,0,0,guile_get_mob_event);
   scm_c_define_gsubr ("close-mob-events",2,0,0,guile_close_mob_eventstack);
   scm_c_define_gsubr ("safe-load",1,0,0,guile_safe_load);
