@@ -19,10 +19,18 @@
 (define index (open-global-events))
 
 (define (branch event)
-  (cond ((eq? (car event) 'key-down)
-	 (let ((binding (get-binding (cdr event))))
-           (if (not (null? binding))
-               (binding))))))
+  'DONE)
+
+(define (add-branch proc)
+  (set! branch (interleave branch proc)))
+
+(define (make-matcher event-type proc)
+  (lambda (event)
+    (cond ((eq? (car event) event-type) (proc event)))))
+
+(add-branch (make-matcher 'key-down (lambda (e) 
+				      (let ((b (get-binding (cdr event))))
+					(if (not (null? b)) (b))))))
 
 (define (check-for-events)
   (display "Checking")
@@ -35,3 +43,5 @@
 ;signal that the next load may be executed
 (unlock-mutex load-mutex)
 (check-for-events)
+
+
