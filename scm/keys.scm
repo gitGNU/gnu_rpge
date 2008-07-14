@@ -29,7 +29,7 @@
     (cond ((eq? (car event) event-type) (proc event)))))
 
 (add-branch (make-matcher 'key-down (lambda (e) 
-				      (let ((b (get-binding (cdr event))))
+				      (let ((b (get-binding (cdr e))))
 					(if (not (null? b)) (b))))))
 
 (define (check-for-events)
