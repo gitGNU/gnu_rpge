@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 eventstack global_usereventstack;
 
 /*Some macros to make locking stacks easier*/
-#define LOCK_STACK(s) s->lock? SDL_mutexP(s->lock) : -1
-#define UNLOCK_STACK(s) s->lock? SDL_mutexV(s->lock) : -1
+#define LOCK_STACK(s) s->lock? SDL_mutexP(s->lock) : -1;
+#define UNLOCK_STACK(s) s->lock? SDL_mutexV(s->lock) : -1;
 
 convertors(event);
 convertors(user);
@@ -65,17 +65,17 @@ eventstack_addevent (eventstack * stackptr, event e)
     {
       LOCK_STACK(stackptr);
       sequence_append (&stackptr->events, make_event_obj (e));
-      SDL_CondBroadcast(stackptr->block);
       UNLOCK_STACK(stackptr);
-    }
-}
+      SDL_CondBroadcast(stackptr->block);
+    } 
+} 
 
-event
+event 
 eventstack_getfirstevent (eventstack * stackptr)
-{
+{ 
   if (!stackptr->events.objcount)
     return make_event (SCM_UNDEFINED, SCM_UNDEFINED);
-  else
+  else 
     {
       event event = get_obj_event (stackptr->events.data[0]);
       LOCK_STACK(stackptr);
@@ -96,7 +96,7 @@ find_empty_luser (eventstack es)
   return -1;
 }
 
-unsigned long int
+unsigned long int 
 eventstack_open (eventstack * es,char block)
 {
   int index = find_empty_luser (*es);
@@ -145,6 +145,7 @@ eventstack_clean_stack (eventstack * es)
 {
   int index, lowest = -1;
   user checked;
+  LOCK_STACK(es);
   for (int i = 0; i < es->indices.objcount; i++)
     {
       checked = get_obj_user (es->indices.data[i]);
@@ -167,7 +168,6 @@ eventstack_clean_stack (eventstack * es)
       /*
          Performance note: This bit here's sluggish, there should be a sequence_remove_upto, which I'll get around to some other time. Also deprotects objects in the events.
        */
-      LOCK_STACK(es);
       for (int j = 0; j < lowest; j++)
 	{
 	  scm_gc_unprotect_object (((event *) es->events.data[0].data)->type);
@@ -178,22 +178,26 @@ eventstack_clean_stack (eventstack * es)
 	{
 	  ((user *) es->indices.data[j].data)->index -= lowest;
 	}
-      UNLOCK_STACK(es);
     }
+  UNLOCK_STACK(es);
 }
 
 event
 eventstack_get_first_of_user (eventstack * es, unsigned long int luser)
 {
-  int index;
+  int index,status;
   eventstack_clean_stack (es);
   char block = ((user*)es->indices.data[luser].data)->block;
   /*Note: index must be reset every iteration, just in case our waits actually are interrupted early and/or someone else collected events, changing our index*/
   while((index = eventstack_get_index_of_user(*es,luser)) >= es->events.objcount && block)
     {
       LOCK_STACK(es);
-      if(SDL_CondWait(es->block,es->lock))
-	fprintf(stderr,"Error: %s\n",SDL_GetError());
+      while(status = SDL_CondWaitTimeout(es->block,es->lock,250)==SDL_MUTEX_TIMEDOUT)
+	SCM_TICK;
+      if(status == -1)
+	{
+	  fprintf(stderr,"Error: %s\n",SDL_GetError());
+	}
       UNLOCK_STACK(es);
     }
   if (index != -1 && index < es->events.objcount)

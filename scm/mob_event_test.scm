@@ -22,7 +22,8 @@
             (let ((event (get-mob-event mob index)))
               (cond ((null? (car event))  '())
                     (else
-                      (execute-mob-binding mob event)))))) 
+                      (execute-mob-binding mob event)
+		      (execute-global-mob-binding mob event))))))	    
        (cdr (tracked-mob-table)))
   (check-mob-events))
 

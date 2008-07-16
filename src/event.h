@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #ifndef EVENT_H
 #define EVENT_H
+#include <SDL/SDL.h>
 #include <stdlib.h>
 #include <string.h>
 #include <libguile.h>

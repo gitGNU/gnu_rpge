@@ -49,3 +49,22 @@
   (let ((proc (get-mob-binding mob (car event))))
     (if (null? proc) '()
         (proc event))))
+
+(define global-mob-bindings (make-table-closure))
+
+(define (bind-global-mob-event event proc)
+  (let ((b (get-global-mob-binding event)))
+    (if (null? b) (add-to-table! (global-mob-bindings) event proc)
+	          (set-in-table! (global-mob-bindings) event proc))))
+
+(define (add-global-mob-binding event proc)
+  (let ((b (get-global-mob-binding event)))
+    (if (null? b) (add-to-table! (global-mob-bindings) event proc)
+	          (set-in-table! (global-mob-bindings) event (interleave b proc)))))
+
+(define (get-global-mob-binding event)
+  (get-from-table (global-mob-bindings) event))
+
+(define (execute-global-mob-binding mob event)
+  (let ((b (get-global-mob-binding (car event))))
+    (if (not (null? b)) (b mob event))))

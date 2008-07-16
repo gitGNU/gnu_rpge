@@ -62,7 +62,6 @@ void remove_mob(int);
 void mob_set_animation_by_index(int ind, unsigned int animation, unsigned int startframe, unsigned int targetframe, unsigned int framesperframe, char looping);
 void  animate_mobs();
 void  move_mobs();
-void  mob_set_movement(mob* m, int xam, double xrate, int yam, double yrate);
 void  mob_stop_movement(mob* m);
 void mob_move_all_by_index(int ind, int xtiles, int ytiles, int frames);
 void mob_add_movement_by_index(int ind, int xtiles, int ytiles, int frames);
