@@ -19,8 +19,6 @@
 (define dialog-config (make-table-closure))
 (define dialogs (make-table-closure))
 
-
-
 (define (dialogs-init initial-width initial-height initial-font sprite-name sprite-width sprite-height)
   (add-to-table! (dialog-config) 'dimensions (cons initial-width initial-height))
   (add-to-table! (dialog-config) 'font initial-font)

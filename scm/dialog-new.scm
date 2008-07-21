@@ -25,7 +25,15 @@
 	 (font (get-font type data)) 
 	 (sprite-data (get-sprite type data)) 
 	 (window (create-window (car sizes) (cdr sizes) x y (car sprite-data) (cadr sprite-data) (caddr sprite-data))))
-    (list type window font ((get-process-proc type) data))))
+    (display sizes)
+    (newline)
+    (display font)
+    (newline)
+    (display sprite-data)
+    (newline)
+    (display window)
+    (newline)
+    (list type window font ((get-process-proc type) type data font sprite-data window))))
 
 (define get-type car)
 (define get-window cadr)
@@ -59,29 +67,48 @@
   (let ((d (make-dialog x y type data)))
     (if (null? (get-current-dialog)) (set-current-dialog! dialogid d) (enqueue-dialog! dialogid d))))
 
+(define (destroy-dialog! d)
+  (close-font (get-font d))
+  (remove-window (get-window d)))
+
 (define (next-message)
   (let ((current-d (get-current-dialog)))
     (if ((get-next-proc (get-type current-d)) current-d) 
-	(let ((next-dialog (dialog-queue 'get-next!)))
-	  (set-current-dialog! (car next-dialog) (cdr next-dialog))))))
+	(begin
+	  (destroy-dialog! current-d)
+	  (let ((next-dialog (dialog-queue 'get-next!)))
+	    (set-current-dialog! (car next-dialog) (cdr next-dialog)))))))
 
-(define dialog-config-get
-  ;This bit here really needs a (init-tables next-procs ...)
-  (let ((next-procs (init-table)) 
-	(process-procs (init-table))
-	(font-procs (init-table))
-	(dimension-procs (init-table))
-	(sprite-procs (init-table)))
-    (lambda (message key)
-      ;This also needs work
-      (cond ((eq? message 'next-proc)      (get-from-table next-procs key))
-	    ((eq? message 'process-proc)   (get-from-table process-procs key))
-	    ((eq? message 'font-proc)      (get-from-table font-procs key))
-	    ((eq? message 'dimension-proc) (get-from-table dimension-procs key))
-	    ((eq? message 'sprite-proc)    (get-from-table dimension-procs key))))))
+(define (create-config-proc tables)
+  ;Create an assoc list of the bound tables and convert it to a table
+  (let ((bindings (make-table-from-assoc-list (map (lambda (x) (cons x (init-table))) tables))))
+    ;This should be replaced by a similar-to-the-above 'bind lambdas to symbols' scheme.
+    (lambda (command table . args)
+      (cond ((eq? command 'get)
+	     (get-from-table (get-from-table bindings table) (car args)))
+	    ((eq? command 'add!)
+	     (add-to-table! (get-from-table bindings table) (car args) (cadr args)))
+	    ((eq? command 'set!)
+	     (set-in-table! (get-from-table bindings table) (car args) (cadr args)))))))
+
+
+(define dialog-config
+  (create-config-proc '(next-proc font-proc dimension-proc sprite-proc process-proc)))
+
+(define (dialog-config-get table key)
+  (dialog-config 'get table key))
+
+(define (dialog-config-add! table key value)
+  (dialog-config 'add! table key value))
+
+(define (dialog-config-set! table key value)
+  (dialog-config 'set! table key value))
 
 (define (get-next-proc type)
   (dialog-config-get 'next-proc type))
+
+(define (get-process-proc type)
+  (dialog-config-get 'process-proc type))
 
 (define (get-font type data)
   ((dialog-config-get 'font-proc type) data))
@@ -91,3 +118,10 @@
 
 (define (get-sprite type data)
   ((dialog-config-get 'sprite-proc type) data))
+
+(define (add-dialog-type! type next-proc process-proc font-proc dimension-proc sprite-proc)
+  (dialog-config-add! 'next-proc type next-proc)
+  (dialog-config-add! 'process-proc type process-proc)
+  (dialog-config-add! 'font-proc type font-proc)
+  (dialog-config-add! 'dimension-proc type dimension-proc)
+  (dialog-config-add! 'sprite-proc type sprite-proc))

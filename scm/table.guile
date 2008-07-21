@@ -117,3 +117,6 @@
     
 (define (make-table-closure)
   (closure-gen (init-table)))        
+
+(define (make-table-from-assoc-list list)
+  (cons 'table list))

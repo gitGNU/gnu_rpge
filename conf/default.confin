@@ -9,3 +9,5 @@ key-funcs.scm 		#Key API
 stats.scm		#Statistics system
 mob_events.scm		#Mob event binding system
 dialog.scm              #Text dialog API(Currently in alpha state at best)
+dialog-new.scm		#New dialog API, much cleaner than the old one
+dialog-types.scm 	#Defines built-in dialog types
