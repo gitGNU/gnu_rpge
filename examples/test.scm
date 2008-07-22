@@ -34,7 +34,7 @@
 (add-binding 's (lambda() (add-mob-movement m 0 1 16)))
 (add-binding 'w (lambda() (add-mob-movement m 0 -1 16)))
 ;Binding for dialog system, yay
-(add-binding 'q (lambda () (if (not (null? (get-dialog-queue))) (dialogs-next (get-current-dialog-id )))))
+(add-binding 'q next-message)
 ;Menu fun, this really needs to be abstracted and put in the standard library...... which needs rewriting.
 (add-binding 'e (lambda () 
 	       (if (null? (get-dialog-queue))

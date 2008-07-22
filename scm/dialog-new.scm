@@ -45,7 +45,7 @@
 	 (define (add-dialog d)
 	   (set! queue (append! queue (list d))))
 	 (define (get-next-dialog!)
-	   (if (null? queue) '()
+	   (if (null? queue) (cons '() '())
 	       (let ((d (car queue)))
 		 (set! queue (cdr queue))
 		 d)))

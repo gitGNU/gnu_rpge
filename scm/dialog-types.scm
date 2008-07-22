@@ -21,7 +21,7 @@
 		    (let ((data (get-dialog-data dialog)))
 		      ;Contract: data is a list of a text index and any number of to-be-rendered messages.
 		      (destroy-text (car data))
-		      (if (cdr data)
+		      (if (not (null? (cdr data)))
 			  (let* ((window (get-dialog-window dialog)) 
 				 (font (get-dialog-font dialog)) 
 				 (window-sizes (get-window-dimensions window))
