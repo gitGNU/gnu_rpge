@@ -16,134 +16,106 @@
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
 
-(define dialog-config (make-table-closure))
-(define dialogs (make-table-closure))
+;Essentially a closure over (dialog-id . dialog)
+(define dialog-state (closure-gen (cons '() '())))
+(define dialog-types (make-table-closure))
 
-(define (dialogs-init initial-width initial-height initial-font sprite-name sprite-width sprite-height)
-  (add-to-table! (dialog-config) 'dimensions (cons initial-width initial-height))
-  (add-to-table! (dialog-config) 'font initial-font)
-  (add-to-table! (dialog-config) 'sprite sprite-name)
-  (add-to-table! (dialog-config) 'sprite-width sprite-width)
-  (add-to-table! (dialog-config) 'sprite-height sprite-height))
+(define (make-dialog x y type data)
+  (let* ((sizes (get-dimensions type data)) 
+	 (font (get-font type data)) 
+	 (sprite-data (get-sprite type data)) 
+	 (window (create-window (car sizes) (cdr sizes) x y (car sprite-data) (cadr sprite-data) (caddr sprite-data))))
+    (list type window font ((get-process-proc type) type data font sprite-data window))))
 
-(define (get-dialog id)
-  (get-from-table (dialogs) id))
-
-(define (make-dialog dialogid x y stringlist)
-  (let ((sizes (get-from-table (dialog-config) 'dimensions)) (font (get-from-table (dialog-config) 'font)))
-    (let ((w (create-window (car sizes) (cdr sizes) x y (get-from-table (dialog-config) 'sprite) (get-from-table (dialog-config) 'sprite-width) (get-from-table (dialog-config) 'sprite-width))))
-      (let ((dialog (list w -1 font stringlist)))
-	(add-to-table! (dialogs) dialogid dialog)
-	(dialogs-next dialogid)
-	dialog))))
-
-(define (dialogs-next dialogid)
-  (let ((dialog (get-dialog dialogid)))
-    (cond
-     ((null? dialog) '())
-     (else 
-      (let ((text (get-next-text-string dialog)))
-	(cond ((null? text) (destroy-dialog! dialogid) 
-	       (show-next-dialog!))
-	      (else
-	       (if (> (get-dialog-text dialog) -1)
-		   (destroy-text (get-dialog-text dialog)))
-	       (set-dialog-text! dialog (make-text (get-dialog-text-x dialog) (get-dialog-text-y dialog) text (get-dialog-font dialog) 255 255 255)))))))))
-
-(define get-dialog-text cadr)
-
-(define get-dialog-window car)
-
+(define get-dialog-type car)
+(define get-dialog-window cadr)
 (define get-dialog-font caddr)
+(define get-dialog-data cadddr)
+(define (set-dialog-data! dialog val)
+  (set-car! (cdddr dialog) val))
+    
+(define (set-current-dialog! dialogid dialog)
+  (set-car! (dialog-state) dialogid)
+  (set-cdr! (dialog-state) dialog))
 
-(define (get-next-text-string dialog)
-  (let ((list (cadddr dialog)))
-    (if (null? list) '() 
-	(let ((t (car list)))
-	  (cond ((eq? t 'menu) 
-		 (let ((ind (cadr list)))
-		   (set-car! (cdr list) (+ ind 1))
-		   (if (= (cadr list) (length (cddr list)))
-		       (set-car! (cdr list) 0))
-		   (car (list-ref (cddr list) (cadr list)))))
-		(else
-		 (set-car! (cdddr dialog) (cdr list))
-		 t))))))
+(define (get-current-dialog) (cdr (dialog-state)))
 
-(define (get-dialog-text-x dialog)
-  (let ((w (get-dialog-window dialog)))
-    (let ((sizes (get-window-dimensions w))(position (get-window-coordinates w)))
-      (+ (/ (car sizes) 10) (car position)))))
+(define dialog-queue 
+  (begin (define queue '())
+	 (define (add-dialog d)
+	   (set! queue (append! queue (list d))))
+	 (define (get-next-dialog!)
+	   (if (null? queue) (cons '() '())
+	       (let ((d (car queue)))
+		 (set! queue (cdr queue))
+		 d)))
+	 (lambda (message . args)
+	   (cond ((eq? message 'get) queue)
+		 ((eq? message 'add) (apply add-dialog args))
+		 ((eq? message 'get-next!) (get-next-dialog!))))))
 
-(define (get-dialog-text-y dialog)
-  (let ((w (get-dialog-window dialog)))
-    (let ((sizes (get-window-dimensions w)) (position (get-window-coordinates w)))
-      (+ (/ (cdr sizes) 10) (cdr position)))))
+(define (enqueue-dialog! dialogid d)
+  (dialog-queue 'add (cons dialogid d)))
 
-(define (set-dialog-text! dialog val)
-  (set-car! (cdr dialog) val))
+(define (add-new-dialog! dialogid x y type data)
+  (let ((d (make-dialog x y type data)))
+    (if (null? (get-current-dialog)) (set-current-dialog! dialogid d) (enqueue-dialog! dialogid d))))
 
-(define (destroy-dialog! id)
-  (let ((dialog (get-dialog id)))
-    (remove-window (get-dialog-window dialog))
-    (destroy-text (get-dialog-text dialog))
-    (remove-from-table! (dialogs) id)))
+(define (destroy-dialog! d)
+  (close-font (get-dialog-font d))
+  (remove-window (get-dialog-window d)))
 
-(define (set-current-dialog! id)
-  (dialog-queue 'set (list id)))
+(define (next-message)
+  (let ((current-d (get-current-dialog)))
+    (if ((get-next-proc (get-dialog-type current-d)) current-d) 
+	(begin
+	  (destroy-dialog! current-d)
+	  (let ((next-dialog (dialog-queue 'get-next!)))
+	    (set-current-dialog! (car next-dialog) (cdr next-dialog)))))))
 
-(define (queue-dialog id x y stringlist)
-  (if (null? (dialog-queue 'get)) (begin (make-dialog id x y stringlist) (set-current-dialog! id))
-      (append! (dialog-queue 'get) (list (list id x y stringlist)))))
+(define (create-config-proc tables)
+  ;Create an assoc list of the bound tables and convert it to a table
+  (let ((bindings (make-table-from-assoc-list (map (lambda (x) (cons x (init-table))) tables))))
+    ;This should be replaced by a similar-to-the-above 'bind lambdas to symbols' scheme.
+    (lambda (command table . args)
+      (cond ((eq? command 'get)
+	     (get-from-table (get-from-table bindings table) (car args)))
+	    ((eq? command 'add!)
+	     (add-to-table! (get-from-table bindings table) (car args) (cadr args)))
+	    ((eq? command 'set!)
+	     (set-in-table! (get-from-table bindings table) (car args) (cadr args)))))))
 
-;The below definition of dialog-queue is equivalent to the one used, but should be left commented out until mkobject is accepted into the library proper.
-;(define dialog-queue (mkobject ((queue '())) (get (lambda whatever queue) 
-	;				      set (lambda (self val) (set! queue val)) 
-		;			      update (lambda (self) (cond ((null? (self 'get)) '())
-			;						  ((null? (cdr (self 'get))) (self 'set '()))
-				;					  (else
-					;				   (let ((next (cadr (self 'get))))
-						;			     (self 'set (cons (car next) (cddr (self 'get))))
-							;		     next)))))))
 
-(define dialog-queue
-  (begin
-    (define queue '())
-    (define (set-queue! val)
-      (set! queue val))
-    (define (update-queue!)
-      (cond ((null? queue) '())
-	    ((null? (cdr queue)) (set-queue! '()))
-	    (else
-	     (let ((next (cadr queue)))
-	       (set-queue! (cons (car next) (cddr queue)))
-	       next))))
-    (lambda (message . args)
-      (cond ((eq? message 'get) queue)
-	    ((eq? message 'set) (set-queue! (car args)))
-	    ((eq? message 'update) (update-queue!))))))
+(define dialog-config
+  (create-config-proc '(next-proc font-proc dimension-proc sprite-proc process-proc)))
 
-(define (get-dialog-queue)
-  (dialog-queue 'get))
+(define (dialog-config-get table key)
+  (dialog-config 'get table key))
 
-(define (get-current-dialog-id)
-  (car (get-dialog-queue)))
+(define (dialog-config-add! table key value)
+  (dialog-config 'add! table key value))
 
-(define get-string-list cadddr)
-(define get-menu-choices cddr)
-(define get-menu-action cdr)
-(define get-index cadr)
+(define (dialog-config-set! table key value)
+  (dialog-config 'set! table key value))
 
-(define (make-menu id x y choices)
-  (make-dialog id x y (append (list 'menu -1) choices)))
+(define (get-next-proc type)
+  (dialog-config-get 'next-proc type))
 
-(define (queue-menu id x y choices)
-  (queue-dialog id x y (append (list 'menu -1) choices)))
+(define (get-process-proc type)
+  (dialog-config-get 'process-proc type))
 
-(define (destroy-current-dialog)
-  (destroy-dialog! (get-current-dialog-id))
-  (show-next-dialog!))
+(define (get-font type data)
+  ((dialog-config-get 'font-proc type) data))
 
-(define (show-next-dialog!)
-  (let ((next (dialog-queue 'update)))
-    (if (null? next) '() (apply make-dialog next))))
+(define (get-dimensions type data)
+  ((dialog-config-get 'dimension-proc type) data))
+
+(define (get-sprite type data)
+  ((dialog-config-get 'sprite-proc type) data))
+
+(define (add-dialog-type! type next-proc process-proc font-proc dimension-proc sprite-proc)
+  (dialog-config-add! 'next-proc type next-proc)
+  (dialog-config-add! 'process-proc type process-proc)
+  (dialog-config-add! 'font-proc type font-proc)
+  (dialog-config-add! 'dimension-proc type dimension-proc)
+  (dialog-config-add! 'sprite-proc type sprite-proc))

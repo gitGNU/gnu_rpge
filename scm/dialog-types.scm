@@ -44,3 +44,36 @@
 		    (cons 300 200))
 		  (lambda (data)
 		    (list "tile1.png" 16 16)))
+
+(add-dialog-type! 'cycling-menu 
+		  ;Contract: Data is (text-index index-in-list . list-of-usable-stuff)
+		  (lambda (dialog)
+		    (let* ((data (get-dialog-data dialog)) 
+			   (index (cadr data))
+			   (text (car data))
+			   (stringlist (cddr data))
+			   (stringlen (length stringlist)))
+		      (cond
+		       ((= stringlen 1) #f)
+		       (else
+			(let* ((coords (get-text-coordinates text)) (newindex (remainder (+ index 1) stringlen)))
+			  (destroy-text text)
+			  (set-dialog-data! dialog (cons (make-text (car coords) (cdr coords) (list-ref stringlist newindex) (get-dialog-font dialog) 255 255 255) 
+							 (cons newindex stringlist)))
+			  #f)))))
+		  (lambda (type data font sprite-data window)
+		    (let* ((sizes (get-window-dimensions window))
+			   (coords (get-window-coordinates window))
+			   (text-x (+ (car coords) (/ (car sizes) 10)))
+			   (text-y (+ (cdr coords) (/ (cdr sizes) 10))))
+		      (cons (make-text text-x text-y (car data) font 255 255 255)
+			    (cons 0 data))))
+		  (lambda (data)
+		    (open-font "FreeMono.ttf" 32))
+		  (lambda (data)
+		    (cons 300 200))
+		  (lambda (data)
+		    (list "tile1.png" 16 16)))
+			
+		      
+		      
