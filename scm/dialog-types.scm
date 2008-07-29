@@ -75,5 +75,49 @@
 		  (lambda (data)
 		    (list "tile1.png" 16 16)))
 			
+(add-dialog-type! 'vertical-menu
+		  ;Data is (cursor-index . ((string . text-index) ..))
+		  (lambda (dialog)
+		    (let* ((font (get-dialog-font dialog))
+			   (data (get-dialog-data dialog))
+			   (cursor-index (car data))
+			   (texts-list (cdr data))
+			   (texts-count (length texts-list))
+			   (current-entry (list-ref texts-list cursor-index))			   
+			   (next-index (remainder (+ cursor-index 1) texts-count))
+			   (next-entry (list-ref texts-list next-index))
+			   (current-coords (get-text-coordinates (cdr current-entry)))
+			   (next-coords (get-text-coordinates (cdr next-entry))))
+		      (display current-entry)
+		      (newline)
+		      (display next-entry)
+		      (newline)
+		      (destroy-text (cdr current-entry))
+		      (destroy-text (cdr next-entry))
+		      (set-cdr! current-entry (make-text (car current-coords) (cdr current-coords) (car current-entry) font 255 255 255))
+		      (set-cdr! next-entry (make-text (car next-coords)    (cdr next-coords)    (car next-entry)    font 0   255 255))
+		      (set-car! data next-index)
+		      #f))
+		  (lambda (type data font sprite-data window)
+		    (let* ((sizes (get-window-dimensions window))
+			   (coords (get-window-coordinates window))
+			   (text-x (+ (car coords) (/ (car sizes) 10)))
+			   (text-dy (/ (cdr sizes) 10))
+			   (text-y (+ (cdr coords) text-dy)))
+		      (let ((first #t))
+			(cons 0 (map (lambda (s) (cons s 
+					       (let ((y text-y))
+						 (set! text-y (+ text-y text-dy))
+						 (apply make-text text-x y s font (if first (begin (set! first #f) '(0 255 255)) '(255 255 255)))))) data)))))
+		  (lambda whatever
+		    (open-font "FreeMono.ttf" 32))
+		  (lambda whatever
+		    (cons 300 200))
+		  (lambda whatever
+		    (list "tile1.png" 16 16)))
+
 		      
+			   
+		      
+			   
 		      
