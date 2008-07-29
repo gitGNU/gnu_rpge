@@ -115,9 +115,3 @@
 		    (cons 300 200))
 		  (lambda whatever
 		    (list "tile1.png" 16 16)))
-
-		      
-			   
-		      
-			   
-		      
