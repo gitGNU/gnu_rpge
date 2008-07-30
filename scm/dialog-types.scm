@@ -16,6 +16,16 @@
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
 
+(define dialog-defaults (make-table-closure))
+
+(define get-default-dialog-font       (table-getter (dialog-defaults ) 'font))
+(define get-default-dialog-dimensions (table-getter (dialog-defaults ) 'dimensions))
+(define get-default-dialog-sprite     (table-getter (dialog-defaults ) 'sprite))
+
+(define set-default-dialog-font       (table-setter (dialog-defaults ) 'font))
+(define set-default-dialog-dimensions (table-setter (dialog-defaults ) 'dimensions))
+(define set-default-dialog-sprite     (table-setter (dialog-defaults ) 'sprite))
+
 (add-dialog-type! 'standard-dialog 
 		  (lambda (dialog)
 		    (let ((data (get-dialog-data dialog)))
@@ -38,12 +48,9 @@
 			   (text-x (+ (car coords) (/ (car sizes) 10)))
 			   (text-y (+ (cdr coords) (/ (cdr sizes) 10))))
 		      (cons (make-text text-x text-y (car data) font 255 255 255) (cdr data))))
-		  (lambda (data)
-		    (open-font "FreeMono.ttf" 32))
-		  (lambda (data)
-		    (cons 300 200))
-		  (lambda (data)
-		    (list "tile1.png" 16 16)))
+		  get-default-dialog-font
+		  get-default-dialog-dimensions
+		  get-default-dialog-sprite)
 
 (add-dialog-type! 'cycling-menu 
 		  ;Contract: Data is (text-index index-in-list . list-of-usable-stuff)
@@ -68,12 +75,9 @@
 			   (text-y (+ (cdr coords) (/ (cdr sizes) 10))))
 		      (cons (make-text text-x text-y (car data) font 255 255 255)
 			    (cons 0 data))))
-		  (lambda (data)
-		    (open-font "FreeMono.ttf" 32))
-		  (lambda (data)
-		    (cons 300 200))
-		  (lambda (data)
-		    (list "tile1.png" 16 16)))
+		  get-default-dialog-font
+		  get-default-dialog-dimensions
+		  get-default-dialog-sprite)
 			
 (add-dialog-type! 'vertical-menu
 		  ;Data is (cursor-index . ((string . text-index) ..))
@@ -88,10 +92,6 @@
 			   (next-entry (list-ref texts-list next-index))
 			   (current-coords (get-text-coordinates (cdr current-entry)))
 			   (next-coords (get-text-coordinates (cdr next-entry))))
-		      (display current-entry)
-		      (newline)
-		      (display next-entry)
-		      (newline)
 		      (destroy-text (cdr current-entry))
 		      (destroy-text (cdr next-entry))
 		      (set-cdr! current-entry (make-text (car current-coords) (cdr current-coords) (car current-entry) font 255 255 255))
@@ -109,9 +109,6 @@
 					       (let ((y text-y))
 						 (set! text-y (+ text-y text-dy))
 						 (apply make-text text-x y s font (if first (begin (set! first #f) '(0 255 255)) '(255 255 255)))))) data)))))
-		  (lambda whatever
-		    (open-font "FreeMono.ttf" 32))
-		  (lambda whatever
-		    (cons 300 200))
-		  (lambda whatever
-		    (list "tile1.png" 16 16)))
+		  get-default-dialog-font
+		  get-default-dialog-dimensions
+		  get-default-dialog-sprite)

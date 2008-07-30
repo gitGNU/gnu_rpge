@@ -120,3 +120,14 @@
 
 (define (make-table-from-assoc-list list)
   (cons 'table list))
+
+(define (table-getter table symbol)
+  ;For simplicity, since arguments don't matter anyway here and dialog-types.scm would rather like them not to, we use a variable arg list
+  (lambda we-dont-care (get-from-table table symbol)))
+
+(define (table-setter table symbol)
+  (lambda (val) 
+    (if (null? (get-from-table table symbol))
+	(add-to-table! table symbol val)
+	(set-in-table! table symbol val))))
+		      

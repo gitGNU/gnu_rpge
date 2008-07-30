@@ -198,7 +198,7 @@ main (int argc, char **argv)
       fprintf (stderr, "SDL_SetVideoMode failed: %s\n", SDL_GetError ());
       return 1;
     }
-  SDL_WM_SetCaption ("RPGE", "RPGE");
+  SDL_WM_SetCaption ("rpge", "rpge");
   /*
     Enable UNICODE conversion for keysyms so we can map the ASCII characters to their relevant descriptions, provided they are not equal to a few special chars.
     This does have some overhead according to the docs, so we might want to come up with a different, possibly faster scheme to take care of this later.
@@ -243,7 +243,7 @@ main (int argc, char **argv)
       render_screen (screen);
       if (SDL_Flip (screen) == -1)
 	{
-	  fprintf (stderr, "RPGE:Cannot render frame, flip failure: %s\n",
+	  fprintf (stderr, "rpge:Cannot render frame, flip failure: %s\n",
 		   SDL_GetError ());
 	  return 1;
 	}

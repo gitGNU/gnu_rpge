@@ -58,8 +58,7 @@
   (dialog-queue 'add (cons dialogid d)))
 
 (define (add-new-dialog! dialogid x y type data)
-  (let ((d (make-dialog x y type data)))
-    (if (null? (get-current-dialog)) (set-current-dialog! dialogid d) (enqueue-dialog! dialogid d))))
+  (if (null? (get-current-dialog)) (set-current-dialog! dialogid (make-dialog x y type data)) (enqueue-dialog! dialogid (list x y type data))))
 
 (define (destroy-dialog! d)
   (close-font (get-dialog-font d))
@@ -71,7 +70,7 @@
 	(begin
 	  (destroy-dialog! current-d)
 	  (let ((next-dialog (dialog-queue 'get-next!)))
-	    (set-current-dialog! (car next-dialog) (cdr next-dialog)))))))
+	    (set-current-dialog! (car next-dialog) (apply make-dialog (cdr next-dialog))))))))
 
 (define (create-config-proc tables)
   ;Create an assoc list of the bound tables and convert it to a table
