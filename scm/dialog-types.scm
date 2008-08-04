@@ -50,7 +50,8 @@
 		      (cons (make-text text-x text-y (car data) font 255 255 255) (cdr data))))
 		  get-default-dialog-font
 		  get-default-dialog-dimensions
-		  get-default-dialog-sprite)
+		  get-default-dialog-sprite
+		  (lambda whatever (cons #f '())))
 
 (add-dialog-type! 'cycling-menu 
 		  ;Contract: Data is (text-index index-in-list . list-of-usable-stuff)
@@ -77,7 +78,14 @@
 			    (cons 0 data))))
 		  get-default-dialog-font
 		  get-default-dialog-dimensions
-		  get-default-dialog-sprite)
+		  get-default-dialog-sprite
+		  (lambda (dialog)
+		    (let* ((data (get-dialog-data dialog))
+			   (stringlist (cddr data))
+			   (index (cadr data))
+			   (string (list-ref stringlist index)))
+		      (destroy-text (car data))
+		      (cons #t string))))
 			
 (add-dialog-type! 'vertical-menu
 		  ;Data is (cursor-index . ((string . text-index) ..))
@@ -111,4 +119,10 @@
 						 (apply make-text text-x y s font (if first (begin (set! first #f) '(0 255 255)) '(255 255 255)))))) data)))))
 		  get-default-dialog-font
 		  get-default-dialog-dimensions
-		  get-default-dialog-sprite)
+		  get-default-dialog-sprite
+		  (lambda (dialog)
+		    (let* ((data (get-dialog-data dialog))
+			   (ind (car data))
+			   (string (car (list-ref (cdr data) ind))))
+		      (for-each (lambda (pair) (destroy-text (cdr pair))) (cdr data))
+		      (cons #t string))))

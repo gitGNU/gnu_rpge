@@ -33,16 +33,9 @@
 (add-binding 'a (lambda() (add-mob-movement m -1 0 16)))
 (add-binding 's (lambda() (add-mob-movement m 0 1 16)))
 (add-binding 'w (lambda() (add-mob-movement m 0 -1 16)))
-;Binding for dialog system, yay
+;Bindings for dialog system, both from dialog.scm
 (add-binding 'q next-message)
-;Menu fun, this really needs to be abstracted and put in the standard library...... which needs rewriting.
-(add-binding 'e (lambda () 
-	       (if (null? (get-dialog-queue))
-		   '()
-		   (let ((d (get-dialog (get-current-dialog-id))))
-		     ;Check if we're dealing with a menu
-		     (cond ((null? d) '())
-			   ((eq? (car (get-string-list d)) 'menu) ((get-menu-action (list-ref (get-menu-choices (get-string-list d)) (get-index (get-string-list d)))))))))))
+(add-binding 'e decide)
 (set-tile grid 5 5 (create-tile "tile1.png" (make-rect 0 0 16 16) block-all-undirectional))
 (set-main-grid grid)
 (add-global-mob-binding 'tile-change (lambda (mob event) (display event)(newline)))

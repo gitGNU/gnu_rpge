@@ -64,13 +64,15 @@
   (close-font (get-dialog-font d))
   (remove-window (get-dialog-window d)))
 
+(define (switch-to-next-dialog)
+  (destroy-dialog! (get-current-dialog))
+  (let ((new (dialog-queue 'get-next!)))
+    (set-current-dialog! (car new) (if (null? (cdr new)) (cdr new) (apply make-dialog (cdr new))))))
+
 (define (next-message)
   (let ((current-d (get-current-dialog)))
     (if ((get-next-proc (get-dialog-type current-d)) current-d) 
-	(begin
-	  (destroy-dialog! current-d)
-	  (let ((next-dialog (dialog-queue 'get-next!)))
-	    (set-current-dialog! (car next-dialog) (apply make-dialog (cdr next-dialog))))))))
+	(switch-to-next-dialog))))
 
 (define (create-config-proc tables)
   ;Create an assoc list of the bound tables and convert it to a table
@@ -86,7 +88,7 @@
 
 
 (define dialog-config
-  (create-config-proc '(next-proc font-proc dimension-proc sprite-proc process-proc)))
+  (create-config-proc '(next-proc font-proc dimension-proc sprite-proc process-proc choice-proc)))
 
 (define (dialog-config-get table key)
   (dialog-config 'get table key))
@@ -103,6 +105,9 @@
 (define (get-process-proc type)
   (dialog-config-get 'process-proc type))
 
+(define (get-choice-proc type)
+  (dialog-config-get 'choice-proc type))
+
 (define (get-font type data)
   ((dialog-config-get 'font-proc type) data))
 
@@ -112,9 +117,19 @@
 (define (get-sprite type data)
   ((dialog-config-get 'sprite-proc type) data))
 
-(define (add-dialog-type! type next-proc process-proc font-proc dimension-proc sprite-proc)
+(define (add-dialog-type! type next-proc process-proc font-proc dimension-proc sprite-proc choice-proc)
   (dialog-config-add! 'next-proc type next-proc)
   (dialog-config-add! 'process-proc type process-proc)
   (dialog-config-add! 'font-proc type font-proc)
   (dialog-config-add! 'dimension-proc type dimension-proc)
-  (dialog-config-add! 'sprite-proc type sprite-proc))
+  (dialog-config-add! 'sprite-proc type sprite-proc)
+  (dialog-config-add! 'choice-proc type choice-proc))
+
+(define (decide)
+  (let* ((d (get-current-dialog)) (c-proc (get-choice-proc (get-dialog-type d))))
+    (if (not (null? c-proc)) 
+	(let ((res (c-proc d)))
+	  (if (car res)
+	      (begin (destroy-dialog! d)
+		     (switch-to-next-dialog)))
+	  (cdr res)))))
