@@ -48,7 +48,7 @@
 (define (execute-mob-binding mob event)
   (let ((proc (get-mob-binding mob (car event))))
     (if (null? proc) '()
-        (proc event))))
+        (exec proc event))))
 
 (define global-mob-bindings (make-table-closure))
 
@@ -67,4 +67,4 @@
 
 (define (execute-global-mob-binding mob event)
   (let ((b (get-global-mob-binding (car event))))
-    (if (not (null? b)) (b mob event))))
+    (if (not (null? b)) (exec b mob event))))

@@ -43,3 +43,7 @@
   (lambda args
     (apply p args)
     (apply q args)))
+
+(define (exec p . args)
+  (if (string? p) (load-with-argv p args)
+      (if (procedure? p) (apply p args))))

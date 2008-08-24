@@ -26,11 +26,11 @@
 
 (define (make-matcher event-type proc)
   (lambda (event)
-    (cond ((eq? (car event) event-type) (proc event)))))
+    (cond ((eq? (car event) event-type) (exec proc event)))))
 
 (add-branch (make-matcher 'key-down (lambda (e) 
 				      (let ((b (get-binding (cdr e))))
-					(if (not (null? b)) (b))))))
+					(if (not (null? b)) (exec b))))))
 
 (define (check-for-events)
   (let ((event (get-global-event index)))
