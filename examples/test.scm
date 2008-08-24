@@ -38,7 +38,6 @@
 (add-binding 'e decide)
 (set-tile grid 5 5 (create-tile "tile1.png" (make-rect 0 0 16 16) block-all-undirectional))
 (set-main-grid grid)
-(add-global-mob-binding 'tile-change (lambda (mob event) (display event)(newline)))
 (make-thread safe-load "keys.scm")
 (make-thread safe-load "mob_event_test.scm")
 (run-repl)
