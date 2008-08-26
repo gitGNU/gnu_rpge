@@ -108,7 +108,7 @@ init_scm()
   scm_c_define_gsubr ("remove-tilegrid",1,0,0,guile_remove_grid);
   scm_c_define_gsubr ("set-mob-animation",6,0,0,guile_set_mob_animation);
   scm_c_define_gsubr ("stop-mob-animation",1,0,0,guile_stop_mob_animation);
-  scm_c_define_gsubr ("create-window",7,0,0,guile_make_window);
+  scm_c_define_gsubr ("create-window",6,0,0,guile_make_window);
   scm_c_define_gsubr ("remove-window",1,0,0,guile_destroy_window);
   scm_c_define_gsubr ("open-global-events",1,0,0,guile_open_global_eventstack);
   scm_c_define_gsubr ("close-global-events",1,0,0,guile_close_global_eventstack);

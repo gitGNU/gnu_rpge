@@ -30,7 +30,7 @@ init_windows()
 }
 
 window
-create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename,unsigned int spritew,unsigned int spriteh)
+create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename,SDL_Rect clip)
 {
   window win;
   win.width = w;
@@ -38,19 +38,17 @@ create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, ch
   win.x = x;
   win.y = y;
   win.imageindex = push_image_on_stack(spritefilename);
-  win.tilew = spritew;
-  win.tileh = spriteh;
+  win.clip_rect = clip;
   return win;
 }
 
 void
 render_window(SDL_Surface* dest,window w)
 {
-  SDL_Rect clip;
-  if(w.width <= w.tilew && w.height <= w.tileh)
+  SDL_Rect clip = w.clip_rect;
+  unsigned int tilew = clip.w, tileh = clip.h;
+  if(w.width <= tilew && w.height <= tileh)
     {
-      clip.x = 0;
-      clip.y = 0;
       clip.w = w.width;
       clip.h = w.height;
       apply_surface(w.x,w.y,((image*)images.data[w.imageindex].data)->data,dest,&clip);
@@ -58,41 +56,37 @@ render_window(SDL_Surface* dest,window w)
     }
   else
     {
-      SDL_Rect clip;
-      clip.x = clip.y = 0;
-      clip.w = w.tilew;
-      clip.h = w.tileh;
       unsigned int x = w.x,y,remainingy;
       for(unsigned int remainingx=w.width;remainingx > 0; )
         {
-          y = w.y;
-          remainingy = w.height;
-          if(remainingx < w.tilew)
+	  y = w.y;
+	  remainingy = w.height;
+          if(remainingx < clip.w)
             {
               clip.w = remainingx;
               remainingx = 0;
             }
           else
             {
-              clip.w = w.tilew;
-              remainingx -= w.tilew;
+              clip.w = tilew;
+              remainingx -= tilew;
             }
           while(remainingy > 0)
             {
-              if(remainingy < w.tileh)
+              if(remainingy < clip.h)
                 {
                   clip.h = remainingy;
                   remainingy = 0;
                 }
               else
                 {
-                  clip.h = w.tileh;
-                  remainingy -= w.tileh;
-                  }
+                  clip.h = tileh;
+                  remainingy -= tileh;
+                }
               apply_surface(x,y,((image*)images.data[w.imageindex].data)->data,dest,&clip);
-              y+= w.tileh;
+              y+= tileh;
             }
-          x += w.tilew;
+          x += tilew;
         }
     }
 }
@@ -104,8 +98,10 @@ char windows_equalp(window w1, window w2)
          w1.x == w2.x &&
          w1.y == w2.y &&
          w1.imageindex == w2.imageindex &&
-         w1.tilew == w2.tilew &&
-         w1.tileh == w2.tileh;
+         w1.clip_rect.x == w2.clip_rect.x &&
+         w1.clip_rect.y == w2.clip_rect.y &&
+         w1.clip_rect.w == w2.clip_rect.w &&
+         w1.clip_rect.h == w2.clip_rect.h;
 }
 
 int find_window(window w)

@@ -199,15 +199,20 @@ guile_remove_grid(SCM index)
 
 SCM
 guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,
-		   SCM tilew, SCM tileh)
+		   SCM rect)
 {
+  SDL_Rect clip;
+  clip.x = scm_to_uint(scm_nth(rect,1));
+  clip.y = scm_to_uint(scm_nth(rect,2));
+  clip.w = scm_to_uint(scm_nth(rect,3));
+  clip.h = scm_to_uint(scm_nth(rect,4));
   return
     scm_from_int (windowstack_addwindow
 		  (create_window
 		   (scm_to_uint (width), scm_to_uint (height),
 		    scm_to_uint (x), scm_to_uint (y),
-		    scm_to_locale_string (filename), scm_to_uint (tilew),
-		    scm_to_uint (tileh))));
+		    scm_to_locale_string (filename),
+		    clip)));
 }
 
 SCM

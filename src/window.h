@@ -27,13 +27,13 @@ typedef struct
 {
   unsigned int width, height,x, y;
   int imageindex; 
-  unsigned int tilew, tileh;
+  SDL_Rect clip_rect;
 } window;
 
 extern sequence windows;
 
 void init_windows();
-window  create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename,unsigned int spritew,unsigned int spriteh);
+window  create_window(unsigned int w, unsigned int h, unsigned int x, unsigned int y, char* spritefilename, SDL_Rect clip);
 void render_window(SDL_Surface* dest,window w);
 void clear_windowstack(void);
 int windowstack_addwindow(window w);

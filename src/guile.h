@@ -52,7 +52,7 @@ SCM guile_remove_grid(SCM index);
 SCM guile_set_mob_animation(SCM mobindex, SCM animation, SCM start, SCM targetframe, SCM framesbetween, SCM loop);
 SCM guile_stop_mob_animation(SCM mobindex);
 SCM guile_destroy_mob(SCM mobindex);
-SCM guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,SCM tilew, SCM tileh);
+SCM guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,SCM  rect);
 SCM guile_destroy_window(SCM index);
 SCM guile_open_global_eventstack(SCM flag);
 SCM guile_close_global_eventstack(SCM userindex);

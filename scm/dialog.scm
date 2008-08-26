@@ -24,7 +24,7 @@
   (let* ((sizes (get-dimensions type data)) 
 	 (font (get-font type data)) 
 	 (sprite-data (get-sprite type data)) 
-	 (window (create-window (car sizes) (cdr sizes) x y (car sprite-data) (cadr sprite-data) (caddr sprite-data))))
+	 (window (create-window (car sizes) (cdr sizes) x y (car sprite-data) (cadr sprite-data))))
     (list type window font ((get-process-proc type) type data font sprite-data window))))
 
 (define get-dialog-type car)
