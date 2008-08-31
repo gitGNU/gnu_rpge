@@ -29,11 +29,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 extern sequence image_paths;
 extern sequence scheme_paths;
+extern sequence font_paths;
 
 void paths_init(void);
 void add_path(sequence* pathgroup, char* path);
 char* get_path(sequence pathgroup, char* file);
 void add_scheme_dir(char* dir);
 void add_image_dir(char* dir);
+void add_font_dir(char* dir);
 
 #endif

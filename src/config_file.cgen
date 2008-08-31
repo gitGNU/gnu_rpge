@@ -104,6 +104,7 @@ directives_init()
   register_directive(strdup("include"),exec_config_file);
   register_directive(strdup("scheme-dir"),add_scheme_dir);
   register_directive(strdup("image-dir"),add_image_dir);
+  register_directive(strdup("font-dir"),add_font_dir);
 }
 
 /*

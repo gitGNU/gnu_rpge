@@ -78,7 +78,9 @@ open_font(char* filename, int size)
     }
   else
     {
-      font_to_add.font = TTF_OpenFont(filename,size);
+      char* new_filename = get_path(font_paths,filename);
+      font_to_add.font = TTF_OpenFont(new_filename,size);
+      free(new_filename);
       if(!font_to_add.font)
         return -1;
       else

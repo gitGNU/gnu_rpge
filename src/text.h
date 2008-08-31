@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "stdio.h"
 #include "sequence.h"
+#include "path.h"
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL.h>
 

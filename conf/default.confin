@@ -2,6 +2,7 @@
 scheme-dir:datadir/scm/
 scheme-dir:datadir/examples/
 image-dir:datadir/images/
+font-dir:datadir/fonts/
 table.guile		#Table API
 utils.guile		#Utility functions
 mobutils.scm		#Mob-related utilities

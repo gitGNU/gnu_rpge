@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
   path.c:Implement path system
 */
 
-sequence image_paths, scheme_paths;
+sequence image_paths, scheme_paths,font_paths;
 
 /*
   Initialize necessary sequences.
@@ -29,7 +29,7 @@ sequence image_paths, scheme_paths;
 void 
 paths_init(void)
 {
-  image_paths = scheme_paths = sequence_init();
+  image_paths = scheme_paths = font_paths =  sequence_init();
 }
 
 /*
@@ -101,4 +101,10 @@ void
 add_image_dir(char* dir)
 {
   add_path(&image_paths,strdup(dir));
+}
+
+void
+add_font_dir(char* dir)
+{
+  add_path(&font_paths,strdup(dir));
 }
