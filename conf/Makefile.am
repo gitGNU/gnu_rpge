@@ -1,5 +1,5 @@
 #RPGE conf Makefile.am, handling configuration issues.
-confdir=$(datadir)/rpge/conf
+confdir=$(DESTDIR)$(datadir)/rpge/conf
 conf_DATA=default.conf
 noinst_DATA=skeleton.conf
 EXTRA_DIST=default.confin skeleton.confin 

@@ -14,8 +14,6 @@
 
 @SET_MAKE@
 
-#Makefile.am for the scm subdirectory containing the scheme libraries
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -263,8 +261,10 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-scmfiles = key-funcs.scm keys.scm mob_events.scm mob_event_test.scm mobutils.scm stats.scm utils.guile table.guile dialog.scm dialog-types.scm
-scmdir = $(datadir)/rpge/scm
+
+#Makefile.am for the scm subdirectory containing the scheme libraries
+scmfiles = key-funcs.scm keys.scm mob_events.scm mob_event_test.scm mobutils.scm stats.scm utils.guile table.guile dialog.scm dialog-types.scm 
+scmdir = $(DESTDIR)$(datadir)/rpge/scm
 scm_DATA = $(scmfiles)
 EXTRA_DIST = $(scmfiles)
 all: all-am
