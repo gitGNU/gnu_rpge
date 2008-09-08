@@ -25,10 +25,10 @@
 (set-all-tiles grid (create-tile "tile2.png" (make-rect 0 0 16 16) block-none))
 (define m (make-mob 0 0 grid "sprite_letter.png"))
 (define n (make-mob 5 0 grid "sprite_letter.png"))
-;Camera locking is now handled externally, so these are back to their old simplicity.
 ;Tell mob_event_test.scm to get a move on and track this mob.
 (add-tracked-mob! m)
 (bind-mob-event m 'tile-change (lambda (event)(set-camera-x (caddr event)) (set-camera-y (cdddr event))))
+;Camera locking is now handled externally, so these are back to their old simplicity.
 (add-binding 'd (lambda() (add-mob-movement m 1 0 16)))
 (add-binding 'a (lambda() (add-mob-movement m -1 0 16)))
 (add-binding 's (lambda() (add-mob-movement m 0 1 16)))
