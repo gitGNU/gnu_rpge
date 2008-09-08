@@ -19,8 +19,8 @@
 (define tracked-mob-table (make-table-closure))
 
 (define (add-tracked-mob! mob)
-  (add-to-table! (tracked-mob-table) mob (open-mob-events mob #t)))
- 
+  (add-to-table! (tracked-mob-table) mob (open-mob-events mob #f)))
+
 (define (remove-tracked-mob! mob)
   (remove-from-table! (tracked-mob-table) mob))
 
