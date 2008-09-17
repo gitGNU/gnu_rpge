@@ -117,13 +117,11 @@
 (define (get-sprite type data)
   ((dialog-config-get 'sprite-proc type) data))
 
-(define (add-dialog-type! type next-proc process-proc font-proc dimension-proc sprite-proc choice-proc)
-  (dialog-config-add! 'next-proc type next-proc)
-  (dialog-config-add! 'process-proc type process-proc)
-  (dialog-config-add! 'font-proc type font-proc)
-  (dialog-config-add! 'dimension-proc type dimension-proc)
-  (dialog-config-add! 'sprite-proc type sprite-proc)
-  (dialog-config-add! 'choice-proc type choice-proc))
+(define (add-dialog-type! type  . specifiers)
+  (do ((l specifiers (cdr l)))
+      ((null? l) 'DONE)
+    (dialog-config-add! (caar l) type (cdar l))))
+
 
 (define (decide)
   (let* ((d (get-current-dialog)) (c-proc (get-choice-proc (get-dialog-type d))))
