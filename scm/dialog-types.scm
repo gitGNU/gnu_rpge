@@ -16,16 +16,6 @@
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
 
-(define dialog-defaults (make-table-closure))
-
-(define get-default-dialog-font       (table-getter (dialog-defaults ) 'font))
-(define get-default-dialog-dimensions (table-getter (dialog-defaults ) 'dimensions))
-(define get-default-dialog-sprite     (table-getter (dialog-defaults ) 'sprite))
-
-(define set-default-dialog-font       (table-setter (dialog-defaults ) 'font))
-(define set-default-dialog-dimensions (table-setter (dialog-defaults ) 'dimensions))
-(define set-default-dialog-sprite     (table-setter (dialog-defaults ) 'sprite))
-
 (add-dialog-type! 'standard-dialog 
 		  (list 
 		   'next-proc 
@@ -50,9 +40,7 @@
 				 (coords (get-window-coordinates window))
 				 (text-x (+ (car coords) (/ (car sizes) 10)))
 				 (text-y (+ (cdr coords) (/ (cdr sizes) 10))))
-			    (cons (make-text text-x text-y (car data) font 255 255 255) (cdr data)))))
-		  (list 'choice-proc
-			(lambda whatever (cons #f '()))))
+			    (cons (make-text text-x text-y (car data) font 255 255 255) (cdr data))))))
 
 (add-dialog-type! 'cycling-menu 
 		  ;Contract: Data is (text-index index-in-list . list-of-usable-stuff)

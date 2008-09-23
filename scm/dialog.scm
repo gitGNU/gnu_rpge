@@ -90,13 +90,6 @@
 (define dialog-config
   (create-config-proc '(next-proc font-proc dimension-proc sprite-proc process-proc choice-proc)))
 
-(defmacro default-proc-wrap (name)
-  (let ((x (gensym)) (y (gensym)))
-   `(lambda (,y)
-      (let ((,x (dialog-config-get ,name ,y)))
-	(if (null? ,x)
-	    (get-from-table (get-from-table (dialog-defaults) ,name) ,y))))))
-
 (define (dialog-config-get table key)
   (dialog-config 'get table key))
 
@@ -106,23 +99,35 @@
 (define (dialog-config-set! table key value)
   (dialog-config 'set! table key value))
 
-(define (get-next-proc type)
-  (dialog-config-get 'next-proc type))
+(define (config-getter table)
+  (lambda (type)
+    (dialog-config-get table type)))
 
-(define (get-process-proc type)
-  (dialog-config-get 'process-proc type))
+(define dialog-defaults (make-table-closure))
 
-(define (get-choice-proc type)
-  (dialog-config-get 'choice-proc type))
+(define get-default-dialog-font       (table-getter (dialog-defaults ) 'font))
+(define get-default-dialog-dimensions (table-getter (dialog-defaults ) 'dimensions))
+(define get-default-dialog-sprite     (table-getter (dialog-defaults ) 'sprite))
+
+(define set-default-dialog-font       (table-setter (dialog-defaults ) 'font))
+(define set-default-dialog-dimensions (table-setter (dialog-defaults ) 'dimensions))
+(define set-default-dialog-sprite     (table-setter (dialog-defaults ) 'sprite))
+
+(define get-next-proc      (cond-interleave (config-getter 'next-proc)    (lambda anything (lambda whatever #f))))
+(define get-process-proc   (cond-interleave (config-getter 'process-proc) (lambda anything (lambda whatever '()))))
+(define get-choice-proc    (cond-interleave (config-getter 'choice-proc)  (lambda anything (lambda whatever (cons #f '())))))
+(define get-font-proc      (cond-interleave (config-getter 'font-proc)    (lambda anything get-default-dialog-font)))
+(define get-dimension-proc (cond-interleave (config-getter 'dimension-proc) (lambda anything get-default-dialog-dimensions)))
+(define get-sprite-proc    (cond-interleave (config-getter 'sprite-proc)  (lambda anything get-default-dialog-sprite)))
 
 (define (get-font type data)
-  ((dialog-config-get 'font-proc type) data))
+  ((get-font-proc type) data))
 
 (define (get-dimensions type data)
-  ((dialog-config-get 'dimension-proc type) data))
+  ((get-dimension-proc type) data))
 
 (define (get-sprite type data)
-  ((dialog-config-get 'sprite-proc type) data))
+  ((get-sprite-proc type) data))
 
 (define (add-dialog-type! type  . specifiers)
   (do ((l specifiers (cdr l)))

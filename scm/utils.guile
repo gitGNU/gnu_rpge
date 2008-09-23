@@ -47,3 +47,14 @@
 (define (exec p . args)
   (if (string? p) (load-with-argv p args)
       (if (procedure? p) (apply p args))))
+
+(defmacro cond-interleave (p q)
+  (let ((x (gensym)) (y (gensym)))
+  `(lambda ,x
+     (let ((,y (apply ,p ,x)))
+       (if (null? ,y)
+	   (apply ,q ,x)
+	   ,y)))))
+
+(define (no-op . anything)
+  'DONE)
