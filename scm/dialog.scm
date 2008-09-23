@@ -90,6 +90,13 @@
 (define dialog-config
   (create-config-proc '(next-proc font-proc dimension-proc sprite-proc process-proc choice-proc)))
 
+(defmacro default-proc-wrap (name)
+  (let ((x (gensym)) (y (gensym)))
+   `(lambda (,y)
+      (let ((,x (dialog-config-get ,name ,y)))
+	(if (null? ,x)
+	    (get-from-table (get-from-table (dialog-defaults) ,name) ,y))))))
+
 (define (dialog-config-get table key)
   (dialog-config 'get table key))
 
