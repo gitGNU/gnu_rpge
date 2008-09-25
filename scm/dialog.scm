@@ -132,7 +132,7 @@
 (define (add-dialog-type! type  . specifiers)
   (do ((l specifiers (cdr l)))
       ((null? l) 'DONE)
-    (dialog-config-add! (caar l) type (cdar l))))
+    (dialog-config-add! (caar l) type (cadar l))))
 
 
 (define (decide)

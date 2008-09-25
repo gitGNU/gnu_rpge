@@ -28,7 +28,7 @@ exec_guile_shell (void *unused_arg)
   scm_set_current_module(scm_c_resolve_module("guile-user"));
   /*Prepare some procedures to deal with guile-level errors*/
   SCM evaluator = scm_c_eval_string("(lambda () (display (primitive-eval (read (current-input-port)))))");
-  SCM handler = scm_c_eval_string("(lambda (type . args) (if (eq? type 'quit) (exit) (format (current-output-port) \"ERROR: ~a\" type)))");
+  SCM handler = scm_c_eval_string("(lambda (type . args) (if (eq? type 'quit) (exit) (format (current-output-port) \"ERROR: ~a, with: ~a\" type args)))");
   /*Horribly inefficient*/
   while(1)
     {
