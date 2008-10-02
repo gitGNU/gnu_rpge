@@ -24,7 +24,7 @@
   (let* ((sizes (get-dimensions type data)) 
 	 (font (get-font type data)) 
 	 (sprite-data (get-sprite type data)) 
-	 (window (create-window (car sizes) (cdr sizes) x y (car sprite-data) (cadr sprite-data))))
+	 (window ((get-window-proc type) (car sizes) (cdr sizes) x y (car sprite-data) (cadr sprite-data))))
     (list type window font ((get-process-proc type) type data font sprite-data window))))
 
 (define get-dialog-type car)
@@ -113,12 +113,17 @@
 (define set-default-dialog-dimensions (table-setter (dialog-defaults ) 'dimensions))
 (define set-default-dialog-sprite     (table-setter (dialog-defaults ) 'sprite))
 
-(define get-next-proc      (cond-interleave (config-getter 'next-proc)    (lambda anything (lambda whatever #f))))
-(define get-process-proc   (cond-interleave (config-getter 'process-proc) (lambda anything (lambda whatever '()))))
-(define get-choice-proc    (cond-interleave (config-getter 'choice-proc)  (lambda anything (lambda whatever (cons #f '())))))
-(define get-font-proc      (cond-interleave (config-getter 'font-proc)    (lambda anything get-default-dialog-font)))
-(define get-dimension-proc (cond-interleave (config-getter 'dimension-proc) (lambda anything get-default-dialog-dimensions)))
-(define get-sprite-proc    (cond-interleave (config-getter 'sprite-proc)  (lambda anything get-default-dialog-sprite)))
+;A simple macro to simplify our definitions below.
+(defmacro generate-getter (name default) 
+  `(define ,(string->symbol (string-append "get-" (symbol->string name)))  (cond-interleave (config-getter ',name) (lambda ,(gensym) ,default))))
+
+(generate-getter next-proc      (lambda whatever #f))
+(generate-getter process-proc   (lambda anything '()))
+(generate-getter choice-proc    (lambda whatever (list #f)))
+(generate-getter font-proc      get-default-dialog-font)
+(generate-getter dimension-proc get-default-dialog-dimensions)
+(generate-getter sprite-proc    get-default-dialog-sprite)
+(generate-getter window-proc    create-window)
 
 (define (get-font type data)
   ((get-font-proc type) data))
@@ -129,7 +134,7 @@
 (define (get-sprite type data)
   ((get-sprite-proc type) data))
 
-(define (add-dialog-type! type  . specifiers)
+(define (add-dialog-type! type  . specifiers)  
   (do ((l specifiers (cdr l)))
       ((null? l) 'DONE)
     (dialog-config-add! (caar l) type (cadar l))))
