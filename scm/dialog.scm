@@ -106,23 +106,26 @@
 (define dialog-defaults (make-table-closure))
 
 (define get-default-dialog-font       (table-getter (dialog-defaults ) 'font))
-(define get-default-dialog-dimensions (table-getter (dialog-defaults ) 'dimensions))
+(define get-default-dialog-dimension  (table-getter (dialog-defaults ) 'dimensions))
 (define get-default-dialog-sprite     (table-getter (dialog-defaults ) 'sprite))
 
 (define set-default-dialog-font       (table-setter (dialog-defaults ) 'font))
-(define set-default-dialog-dimensions (table-setter (dialog-defaults ) 'dimensions))
+(define set-default-dialog-dimension  (table-setter (dialog-defaults ) 'dimensions))
 (define set-default-dialog-sprite     (table-setter (dialog-defaults ) 'sprite))
 
 ;A simple macro to simplify our definitions below.
 (defmacro generate-getter (name default) 
   `(define ,(string->symbol (string-append "get-" (symbol->string name)))  (cond-interleave (config-getter ',name) (lambda ,(gensym) ,default))))
 
+(defmacro default-getter (sym)
+  `(generate-getter ,(string->symbol (string-append (symbol->string sym) "-proc")) ,(string->symbol (string-append "get-default-dialog-" (symbol->string sym)))))
+
 (generate-getter next-proc      (lambda whatever #f))
 (generate-getter process-proc   (lambda anything '()))
 (generate-getter choice-proc    (lambda whatever (list #f)))
-(generate-getter font-proc      get-default-dialog-font)
-(generate-getter dimension-proc get-default-dialog-dimensions)
-(generate-getter sprite-proc    get-default-dialog-sprite)
+(default-getter font)
+(default-getter dimension)
+(default-getter sprite)
 (generate-getter window-proc    create-window)
 
 (define (get-font type data)
