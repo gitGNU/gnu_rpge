@@ -62,7 +62,7 @@
 
 (define (destroy-dialog! d)
   (close-font (get-dialog-font d))
-  (remove-window (get-dialog-window d)))
+  ((get-window-destruction-proc (get-dialog-type d)) (get-dialog-window d)))
 
 (define (switch-to-next-dialog)
   (destroy-dialog! (get-current-dialog))
@@ -115,10 +115,12 @@
 
 ;A simple macro to simplify our definitions below.
 (defmacro generate-getter (name default) 
-  `(define ,(string->symbol (string-append "get-" (symbol->string name)))  (cond-interleave (config-getter ',name) (lambda ,(gensym) ,default))))
+  `(define ,(string->symbol (string-append "get-" (symbol->string name)))  
+           (cond-interleave (config-getter ',name) (lambda ,(gensym) ,default))))
 
 (defmacro default-getter (sym)
-  `(generate-getter ,(string->symbol (string-append (symbol->string sym) "-proc")) ,(string->symbol (string-append "get-default-dialog-" (symbol->string sym)))))
+  `(generate-getter ,(string->symbol (string-append (symbol->string sym) "-proc")) 
+		    ,(string->symbol (string-append "get-default-dialog-" (symbol->string sym)))))
 
 (generate-getter next-proc      (lambda whatever #f))
 (generate-getter process-proc   (lambda anything '()))
@@ -127,6 +129,7 @@
 (default-getter dimension)
 (default-getter sprite)
 (generate-getter window-proc    create-window)
+(generate-getter window-destruction-proc remove-window)
 
 (define (get-font type data)
   ((get-font-proc type) data))
