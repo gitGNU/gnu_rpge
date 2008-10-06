@@ -74,21 +74,23 @@
     (if ((get-next-proc (get-dialog-type current-d)) current-d) 
 	(switch-to-next-dialog))))
 
-(define (create-config-proc tables)
-  ;Create an assoc list of the bound tables and convert it to a table
-  (let ((bindings (make-table-from-assoc-list (map (lambda (x) (cons x (init-table))) tables))))
-    ;This should be replaced by a similar-to-the-above 'bind lambdas to symbols' scheme.
+(define (create-config-proc )
+  ;This should be replaced by a similar-to-the-above 'bind lambdas to symbols' scheme.
+  (let ((bindings (init-table)))
     (lambda (command table . args)
-      (cond ((eq? command 'get)
-	     (get-from-table (get-from-table bindings table) (car args)))
-	    ((eq? command 'add!)
-	     (add-to-table! (get-from-table bindings table) (car args) (cadr args)))
-	    ((eq? command 'set!)
-	     (set-in-table! (get-from-table bindings table) (car args) (cadr args)))))))
+      (let ((t (get-from-table bindings table)))
+	(if (null? t)
+	    (begin (set! t (init-table)) (add-to-table! bindings table t)))
+	(cond ((eq? command 'get)
+	       (get-from-table t (car args)))
+	      ((eq? command 'add!)
+	       (add-to-table! t (car args) (cadr args)))
+	      ((eq? command 'set!)
+	       (set-in-table! t (car args) (cadr args))))))))
 
 
 (define dialog-config
-  (create-config-proc '(next-proc font-proc dimension-proc sprite-proc process-proc choice-proc window-proc window-destruction-proc)))
+  (create-config-proc ))
 
 (define (dialog-config-get table key)
   (dialog-config 'get table key))
@@ -128,7 +130,7 @@
 (default-getter font)
 (default-getter dimension)
 (default-getter sprite)
-(generate-getter window-proc    create-window)
+(generate-getter window-proc             create-window)
 (generate-getter window-destruction-proc remove-window)
 
 (define (get-font type data)
