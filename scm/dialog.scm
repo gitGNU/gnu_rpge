@@ -88,7 +88,7 @@
 
 
 (define dialog-config
-  (create-config-proc '(next-proc font-proc dimension-proc sprite-proc process-proc choice-proc)))
+  (create-config-proc '(next-proc font-proc dimension-proc sprite-proc process-proc choice-proc window-proc window-destruction-proc)))
 
 (define (dialog-config-get table key)
   (dialog-config 'get table key))
