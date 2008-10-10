@@ -90,7 +90,7 @@
 
 
 (define dialog-config
-  (create-config-proc ))
+  (create-config-proc))
 
 (define (dialog-config-get table key)
   (dialog-config 'get table key))
@@ -156,3 +156,11 @@
 	      (begin (destroy-dialog! d)
 		     (switch-to-next-dialog)))
 	  (cdr res)))))
+
+;Still has a bug, doesn't take care of windowing dependencies. 
+(defmacro add-bordered-and-standard-dialog-type! (name args)
+  `(begin
+     (add-dialog-type! ,name ,args)
+     (add-dialog-type! ,(string->symbol (string-append "bordered-" (symbol->string name))) ,(append (list (cons 'window-proc make-bordered-window) 
+													  (cons 'window-destruction-proc remove-bordered-window)) args))))
+     
