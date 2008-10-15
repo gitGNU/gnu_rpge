@@ -58,3 +58,17 @@
 
 (define (no-op . anything)
   'DONE)
+
+;General looping stuff, used in bordered-window creation. 
+(defmacro collect-generic (combinator finalizer bindings test . expressions)
+         (let ((foo (gensym)))
+            `(do ,(cons (list foo (quote '())) bindings)
+                 (,test (,finalizer ,foo))
+               (set! ,foo (,combinator (begin ,@expressions)
+                                       ,foo)))))
+
+(defmacro collect (bindings test . expressions)
+         `(collect-generic cons reverse! ,bindings ,test ,@expressions))
+
+(defmacro collect-append (bindings test . expressions)
+         `(collect-generic (lambda (x y) (append y x)) (lambda (x) x) ,bindings ,test ,@expressions))
