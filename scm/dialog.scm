@@ -157,10 +157,12 @@
 		     (switch-to-next-dialog)))
 	  (cdr res)))))
 
-;Still has a bug, doesn't take care of windowing dependencies. 
-(defmacro add-bordered-and-standard-dialog-type! (name args)
+;Ok, it's ugly, but hey, it simplifies syntax and takes care of adding the bordered stuff.
+(defmacro add-bordered-and-standard-dialog-type! (name . args)
   `(begin
-     (add-dialog-type! ,name ,args)
-     (add-dialog-type! ,(string->symbol (string-append "bordered-" (symbol->string name))) ,(append (list (cons 'window-proc make-bordered-window) 
-													  (cons 'window-destruction-proc remove-bordered-window)) args))))
+     (add-dialog-type! ',name ,@(map (lambda (pair) (cons 'list (cons (list 'quote (car pair)) (cdr pair)))) args))
+     (add-dialog-type! ',(string->symbol (string-append "bordered-" (symbol->string name))) ,@(append (list (list 'list '(quote window-proc) 'make-bordered-window)
+													  (list 'list '(quote window-destruction-proc) 'remove-bordered-window))
+												     (map (lambda (pair) (cons 'list (cons (list 'quote (car pair)) (cdr pair))))
+ args)))))
      

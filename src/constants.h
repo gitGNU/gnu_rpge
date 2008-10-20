@@ -26,6 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define SPRITE_WIDTH TILE_WIDTH
 #define SPRITE_HEIGHT TILE_HEIGHT
 #define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 640
+#define SCREEN_HEIGHT 600
 
 #endif

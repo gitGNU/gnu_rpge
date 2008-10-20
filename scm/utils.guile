@@ -72,3 +72,16 @@
 
 (defmacro collect-append (bindings test . expressions)
          `(collect-generic (lambda (x y) (append y x)) (lambda (x) x) ,bindings ,test ,@expressions))
+
+(define (hop proc l)
+  (do ((liz l (proc liz)) (res '() (cons (car liz) res)))
+      ((null? liz) (reverse! res))))
+
+(define (safe-repeater proc n)
+  (lambda (val)
+    (define (loop tmp m)
+      (cond ((or (null? tmp) (= m n)) tmp)
+	    (else 
+	     (loop (proc tmp) (1+ m)))))
+    (loop val 0)))
+	 
