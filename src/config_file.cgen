@@ -74,7 +74,9 @@ exclude_comments(char* str)
       len++;
       str++;
     }
-  /*Proceed to strip all space and space-like characters from the end of the string, starting just before the trailing \0 */
+  /*
+    Proceed to strip all space and space-like characters from the end of the string, starting just before the trailing \0.
+   */
   str--;
   while(len && isspace(*str))
     {

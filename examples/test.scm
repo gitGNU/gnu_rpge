@@ -28,14 +28,17 @@
 ;Tell mob_event_test.scm to get a move on and track this mob.
 (add-tracked-mob! m)
 (bind-mob-event m 'tile-change (lambda (event)(set-camera-x (caddr event)) (set-camera-y (cdddr event))))
+(define (binding-generator m x y)
+  (lambda () (if (null? (get-current-dialog))
+		 (add-mob-movement m x y 16))))
 ;Camera locking is now handled externally, so these are back to their old simplicity.
-(add-binding 'd (lambda() (add-mob-movement m 1 0 16)))
-(add-binding 'a (lambda() (add-mob-movement m -1 0 16)))
-(add-binding 's (lambda() (add-mob-movement m 0 1 16)))
-(add-binding 'w (lambda() (add-mob-movement m 0 -1 16)))
+(add-binding 'd (binding-generator m 1 0))
+(add-binding 'a (binding-generator m -1 0))
+(add-binding 's (binding-generator m 0 1))
+(add-binding 'w (binding-generator m 0 -1))
 ;Bindings for dialog system, both from dialog.scm
-(add-binding 'q next-message)
-(add-binding 'e decide)
+(add-binding 'q (lambda () (if (not (null? (get-current-dialog))) (next-message))))
+(add-binding 'e (lambda () (if (not (null? (get-current-dialog))) (decide))))
 (set-tile grid 5 5 (create-tile "tile1.png" (make-rect 0 0 16 16) block-all-undirectional))
 (set-main-grid grid)
 (make-thread safe-load "keys.scm")
