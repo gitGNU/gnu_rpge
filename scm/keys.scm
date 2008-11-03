@@ -16,21 +16,26 @@
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
 
+(define bindings (closure-gen (make-hash-table)))
+
 (define index (open-global-events #t))
 
 (define (branch event)
-  'DONE)
+  (let ((subtab (hashq-ref (bindings) (car event))))
+    (if subtab (hash-for-each (lambda (k v) (v event)) subtab))))
 
-(define (add-branch proc)
-  (set! branch (interleave branch proc)))
+(define (bind-event event proc)
+  (let ((subtab (hashq-ref (bindings) event)))
+    (if (not subtab)
+	(begin (set! subtab (make-hash-table))
+	       (hashq-set! (bindings) event subtab)))
+    (let ((sym (gensym)))
+      (hashq-set! subtab sym proc)
+      sym)))
 
-(define (make-matcher event-type proc)
-  (lambda (event)
-    (cond ((eq? (car event) event-type) (exec proc event)))))
-
-(add-branch (make-matcher 'key-down (lambda (e) 
-				      (let ((b (get-binding (cdr e))))
-					(if (not (null? b)) (exec b))))))
+(bind-event 'key-down (lambda (e) 
+			(let ((b (get-binding (cdr e))))
+			  (if (not (null? b)) (exec b)))))
 
 (define (check-for-events)
   (let ((event (get-global-event index)))
