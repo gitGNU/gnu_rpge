@@ -35,3 +35,16 @@
     (if (not (null? (get-mob-bootstrap-proc)))
 	((get-mob-bootstrap-proc) mobby))
     mobby))
+
+(define (get-mob-destruction-proc m)
+  (get-from-table (get-mob-data m) 'mob-destruction-proc))
+
+(define (remove-mob m)
+  ((get-mob-destruction-proc m) m)
+  (destroy-mob m))
+
+(define (add-mob-bootstrap-proc! m q)
+  (let ((p (get-mob-bootstrap-proc m)))
+    (if (null? p)
+	(add-to-table! (get-mob-data m) 'mob-destruction-proc q)
+	(set-in-table! (get-mob-data m) 'mob-destruction-proc (interleave p q)))))

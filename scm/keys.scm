@@ -37,6 +37,11 @@
 			(let ((b (get-binding (cdr e))))
 			  (if (not (null? b)) (exec b)))))
 
+(define (remove-binding event binding)
+  (let ((subtab (hashq-ref (bindings) event)))
+    (if subtab
+	(hashq-remove! subtab binding))))
+
 (define (check-for-events)
   (let ((event (get-global-event index)))
     (cond  

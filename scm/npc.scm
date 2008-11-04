@@ -18,8 +18,9 @@
 
 (define (make-npc x y z	sprite message)
   (let ((mob (make-mob x y z sprite)))
-    (bind-event 'collision
-		(lambda (e)
-		  (if (or (= (cadr e) mob) (= (cddr e) mob))
-		      (add-new-dialog! 'NPC 0 0  'bordered-standard-dialog (list message)))
-		  'DONE))))
+    (let ((binding (bind-event 'collision
+			       (lambda (e)
+				 (if (or (= (cadr e) mob) (= (cddr e) mob))
+				     (add-new-dialog! 'NPC 0 0  'bordered-standard-dialog (list message)))
+				 'DONE))))
+      (add-mob-destruction-proc mob (lambda () (remove-binding 'collision binding))))))
