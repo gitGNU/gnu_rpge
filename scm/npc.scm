@@ -23,4 +23,5 @@
 				 (if (or (= (cadr e) mob) (= (cddr e) mob))
 				     (add-new-dialog! 'NPC 0 0  'bordered-standard-dialog (list message)))
 				 'DONE))))
-      (add-mob-destruction-proc mob (lambda () (remove-binding 'collision binding))))))
+      (add-mob-destruction-proc! mob (lambda () (remove-binding 'collision binding))))))
+

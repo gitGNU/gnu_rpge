@@ -43,8 +43,8 @@
   ((get-mob-destruction-proc m) m)
   (destroy-mob m))
 
-(define (add-mob-bootstrap-proc! m q)
-  (let ((p (get-mob-bootstrap-proc m)))
+(define (add-mob-destruction-proc! m q)
+  (let ((p (get-mob-destruction-proc m)))
     (if (null? p)
 	(add-to-table! (get-mob-data m) 'mob-destruction-proc q)
 	(set-in-table! (get-mob-data m) 'mob-destruction-proc (interleave p q)))))
