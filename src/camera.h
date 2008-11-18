@@ -33,9 +33,9 @@ typedef struct
 
 extern camera global_camera;
 
-inline int get_camera_xoffset(camera c, int screenwidth);
-inline int get_camera_yoffset(camera y, int screenheight);
-inline void set_camera_x(camera c, int value);
-inline void set_camera_y(camera c, int value);
+int get_camera_xoffset(camera c, int screenwidth);
+int get_camera_yoffset(camera y, int screenheight);
+void set_camera_x(camera c, int value);
+void set_camera_y(camera c, int value);
 
 #endif 

@@ -27,7 +27,7 @@ exec_guile_shell (void *unused_arg)
   /*Like top-repl (see guile sources) called by scm_shell, evaluate our code in the guile-user module.*/
   scm_set_current_module(scm_c_resolve_module("guile-user"));
   /*Prepare some procedures to deal with guile-level errors*/
-  SCM evaluator = scm_c_eval_string("(lambda () (display (primitive-eval (read (current-input-port)))))");
+  SCM evaluator = scm_c_eval_string("(lambda () (let ((res (primitive-eval (read (current-input-port))))) (if (unspecified? res) '() (if (eof-object? res) (quit) (begin (display res) (newline))))))");
   SCM handler = scm_c_eval_string("(lambda (type . args) (if (eq? type 'quit) (exit) (format (current-output-port) \"ERROR: ~a, with: ~a\" type args)))");
   /*Horribly inefficient*/
   while(1)
@@ -36,7 +36,6 @@ exec_guile_shell (void *unused_arg)
       SDL_mutexP(repl_signal);
       scm_simple_format(scm_current_output_port(),scm_from_locale_string(PROMPT),SCM_EOL);
       scm_catch(SCM_BOOL_T,evaluator,handler);
-      scm_newline(scm_current_output_port());
       SDL_mutexV(repl_signal);
     }
   return 0;			//never reached, just here to please gcc.
