@@ -25,8 +25,24 @@
 (define (equipped-item mob slot)
   (get-from-table (get-mob-equipment mob) slot))
 
+(define equip-handler (item-getter 'equip-handler))
+(define unequip-handler (item-getter 'unequip-handler))
+
 (define (equip mob slot item)
   (let ((i (equipped-item mob slot)))
     (if (null? i)
 	(add-to-table! (get-mob-equipment mob) slot item)
-	(set-in-table! (get-mob-equipment mob) slot item))))
+	(set-in-table! (get-mob-equipment mob) slot item))
+    ;Call the equip handler with the mob AND the slot.
+    ;The slot argument is added for polymorphic items,
+    ;say swords that have a shield form as well.
+    ;Obviously, it makes no sense for the thing to 
+    ;add attack if attached to a non-weapon slot.
+    ((equip-handler item) mob slot)))
+
+(define (unequip mob slot)
+  (let ((i (equipped-item mob slot)))
+    (remove-from-table! (get-mob-equipment mob) slot)
+    ;For the same reason as above, the unequip handler is
+    ;called with both the mob and the slot.
+    ((unequip-handler i) mob slot)))

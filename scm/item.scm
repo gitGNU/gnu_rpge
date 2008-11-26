@@ -34,3 +34,22 @@
 			 (alist->hash-table `((get . ,(lambda (bindings . args) (apply hashq-ref (cons bindings args))))
 					      (set . ,(lambda(bindings .args) (apply hashq-set! (cons bindings args))))))))
 
+;Generic utility procedure
+(define (item-getter key)
+  (lambda (item)
+    (item 'get key)))
+
+;Gets the handler invoked upon item activation.
+(define activation-handler (item-getter 'activation-handler))
+
+;Called with a mob since items are always the property of one mob or another.
+;Of course, items may call any scheme code they wish, so they may create a menu or other
+;such fun thing to select something with. For example, they could temporarily pause the
+;game and start moving overlays around, or at least, once such things are implemented.
+;Activation handlers are called with the item itself as a second argument,
+;so potions and such things may be generalized rather than needing private handlers.
+;Of course, creating a bajillion closures can work just fine (heck, items themselves are closures),
+;but doing so might just not be the most comfortable way to code.
+(define (activate mob item)
+  ((activation-handler item) mob item))
+  
