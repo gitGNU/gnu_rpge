@@ -28,9 +28,23 @@
 (define equip-handler (item-getter 'equip-handler))
 (define unequip-handler (item-getter 'unequip-handler))
 
-(define (slot-allowed? i s)
-  (let ((slots ((item-getter 'allowed-slots) i)))
-    (hashq-ref slots s)))
+(define allowed-slots (item-getter 'allowed-slots))
+
+(define set-allowed-slots! (item-setter 'allowed-slots))
+
+(define (slot-twiddler p)
+  (lambda (i s . args)
+    (aif (allowed-slots i)
+	 (apply p `(,it ,s ,@args))
+	 (begin (set-allowed-slots! i (make-hash-table))
+		(apply p `(,(allowed-slots i) ,s ,@args))))))
+
+(define slot-allowed? (slot-twiddler hashq-ref))
+
+(define add-allowed-slot (slot-twiddler (lambda (slots slot . args)
+					  (hashq-set! slots slot #t))))
+
+(define remove-allowed-slot (slot-twiddler hashq-remove!))
 
 (define (equip mob slot item)
   (if (slot-allowed? item slot)
@@ -38,11 +52,11 @@
 	(if (not (null? i))
 	    (unequip mob slot))
 	(add-to-table! (get-mob-equipment mob) slot item)
-					;Call the equip handler with the mob AND the slot.
-					;The slot argument is added for polymorphic items,
-					;say swords that have a shield form as well.
-					;Obviously, it makes no sense for the thing to 
-					;add attack if attached to a non-weapon slot.
+	;Call the equip handler with the mob AND the slot.
+	;The slot argument is added for polymorphic items,
+        ;say swords that have a shield form as well.
+        ;Obviously, it makes no sense for the thing to 
+	;add attack if attached to a non-weapon slot.
 	((equip-handler item) mob slot))))
 
 (define (unequip mob slot)

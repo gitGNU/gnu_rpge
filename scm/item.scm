@@ -18,10 +18,9 @@
 
 (define (make-message-acceptor items bindings)
   (lambda (message . args)
-    (let ((p (hashq-ref bindings message)))
-      (if (null? p) 
-	  'MESSAGE-NOT-UNDERSTOOD
-	  (apply p items args)))))
+    (aif (hashq-ref bindings message)
+	 (apply it items args)
+	 'MESSAGE-NOT-UNDERSTOOD)))
 
 (define (alist->hash-table l)
   (let ((res (make-hash-table)))
@@ -32,12 +31,16 @@
 (define (make-item . bindings)
   (make-message-acceptor (alist->hash-table bindings) 
 			 (alist->hash-table `((get . ,(lambda (bindings . args) (apply hashq-ref (cons bindings args))))
-					      (set . ,(lambda(bindings .args) (apply hashq-set! (cons bindings args))))))))
+					      (set . ,(lambda (bindings . args) (apply hashq-set! (cons bindings args))))))))
 
 ;Generic utility procedure
 (define (item-getter key)
   (lambda (item)
     (item 'get key)))
+
+(define (item-setter key)
+  (lambda (item value)
+    (item 'set key value)))
 
 ;Gets the handler invoked upon item activation.
 (define activation-handler (item-getter 'activation-handler))
