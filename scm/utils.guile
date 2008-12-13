@@ -90,3 +90,7 @@
      (if it
          ,then
          ,else)))
+
+(defmacro alambda (arglist . body)
+  `(letrec ((self (lambda ,arglist ,@body)))
+     self))

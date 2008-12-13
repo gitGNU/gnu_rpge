@@ -42,3 +42,14 @@
 
 (define (remove-procedural-stat-proc! stat)
   (remove-from-table! (get-procstats-table) stat))
+
+(define (stat-setter stat)
+  (lambda (mob value)
+    (set-stat mob stat value)))
+
+(define (stat-getter stat)
+  (lambda (mob)
+    (get-stat mob stat)))
+
+(define set-mob-attack! (stat-setter 'attack))
+(define get-mob-attack (stat-getter 'attack))

@@ -27,17 +27,24 @@
 
 (define equip-handler (item-getter 'equip-handler))
 (define unequip-handler (item-getter 'unequip-handler))
+(define set-equip-handler! (item-setter 'equip-handler))
+(define set-unequip-handler! (item-setter 'unequip-handler))
 
 (define allowed-slots (item-getter 'allowed-slots))
 
 (define set-allowed-slots! (item-setter 'allowed-slots))
 
 (define (slot-twiddler p)
-  (lambda (i s . args)
+  (alambda (i s . args)
     (aif (allowed-slots i)
 	 (apply p `(,it ,s ,@args))
 	 (begin (set-allowed-slots! i (make-hash-table))
-		(apply p `(,(allowed-slots i) ,s ,@args))))))
+		(apply self `(,i ,s ,@args))))))
+
+(define (slot-conditional-proc slot proc)
+  (lambda (mob slotty)
+    (if (eq? slotty slot)
+	(proc mob slotty))))
 
 (define slot-allowed? (slot-twiddler hashq-ref))
 
@@ -46,22 +53,54 @@
 
 (define remove-allowed-slot (slot-twiddler hashq-remove!))
 
-(define (equip mob slot item)
-  (if (slot-allowed? item slot)
-      (let ((i (equipped-item mob slot)))
-	(if (not (null? i))
-	    (unequip mob slot))
-	(add-to-table! (get-mob-equipment mob) slot item)
-	;Call the equip handler with the mob AND the slot.
-	;The slot argument is added for polymorphic items,
-        ;say swords that have a shield form as well.
-        ;Obviously, it makes no sense for the thing to 
-	;add attack if attached to a non-weapon slot.
-	((equip-handler item) mob slot))))
+(define (equip-garded-proc proc)
+  (alambda (mob . args)
+    (if (null? (get-mob-equipment mob))
+	 (begin
+	   (initialize-mob-equipment mob)
+	   (apply self (cons mob args)))
+	 (apply proc (cons mob args)))))
 
-(define (unequip mob slot)
-  (let ((i (equipped-item mob slot)))
-    (remove-from-table! (get-mob-equipment mob) slot)
-    ;For the same reason as above, the unequip handler is
-    ;called with both the mob and the slot.
-    ((unequip-handler i) mob slot)))
+(define equip 
+  (equip-garded-proc 
+   (lambda (mob slot item) 
+     (if (slot-allowed? item slot)
+	 (let ((i (equipped-item mob slot)))
+	   (if (not (null? i))
+	       (unequip mob slot))
+	   (add-to-table! (get-mob-equipment mob) slot item)
+	   ;Call the equip handler with the mob AND the slot.
+	   ;The slot argument is added for polymorphic items,
+	   ;say swords that have a shield form as well.
+	   ;Obviously, it makes no sense for the thing to 
+	   ;add attack if attached to a non-weapon slot.
+	   ((equip-handler item) mob slot))))))
+
+(define unequip 
+  (equip-garded-proc 
+   (lambda (mob slot)
+     (let ((i (equipped-item mob slot)))
+       (remove-from-table! (get-mob-equipment mob) slot)
+       ;For the same reason as above, the unequip handler is
+       ;called with both the mob and the slot.
+       ((unequip-handler i) mob slot)))))
+
+(define (make-bare-equipment)
+  (make-item `(slots . ,(make-hash-table))))
+
+;Just a stab at making something plausibly non-horrific
+(define (make-weapon power type)
+  (let ((i (make-bare-equipment)))
+    (add-allowed-slot i 'weapon)
+    ((item-setter 'power) i power)
+    ((item-setter 'weapon-type) i type)
+    (set-equip-handler! i (slot-conditional-proc 'weapon 
+						 (lambda (m s) 
+						   (set-mob-attack! m (+ (get-mob-attack m) power)))))
+    (set-unequip-handler! i (slot-conditional-proc 'weapon 
+						   (lambda (m s) 
+						     (set-mob-attack! m (- (get-mob-attack m) power)))))
+    i))
+
+(define (make-sword power)
+  (make-weapon power 'sword))
