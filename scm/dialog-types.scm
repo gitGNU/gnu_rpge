@@ -42,7 +42,8 @@
 
 (add-bordered-and-standard-dialog-type! 
  cycling-menu 
-  ;Contract: Data is (text-index index-in-list . list-of-usable-stuff)
+  ;Contract: Data is (text-index index-in-list . list-of-usable-stuff), 
+  ;where list-of-usable-stuff is (string . lambda) ...
  (next-proc 
   (lambda (dialog)
     (let* ((data (get-dialog-data dialog)) 
@@ -55,7 +56,7 @@
        (else
 	(let* ((coords (get-text-coordinates text)) (newindex (remainder (+ index 1) stringlen)))
 	  (destroy-text text)
-	  (set-dialog-data! dialog (cons (make-text (car coords) (cdr coords) (list-ref stringlist newindex) (get-dialog-font dialog) 255 255 255) 
+	  (set-dialog-data! dialog (cons (make-text (car coords) (cdr coords) (car (list-ref stringlist newindex)) (get-dialog-font dialog) 255 255 255) 
 					 (cons newindex stringlist)))
 	  #f))))))
  (process-proc
@@ -64,16 +65,16 @@
 	   (coords (get-window-coordinates window))
 	   (text-x (+ (car coords) (/ (car sizes) 10)))
 	   (text-y (+ (cdr coords) (/ (cdr sizes) 10))))
-      (cons (make-text text-x text-y (car data) font 255 255 255)
+      (cons (make-text text-x text-y (caar data) font 255 255 255)
 	    (cons 0 data)))))
  (choice-proc
   (lambda (dialog)
     (let* ((data (get-dialog-data dialog))
 	   (stringlist (cddr data))
 	   (index (cadr data))
-	   (string (list-ref stringlist index)))
+	   (pair (list-ref stringlist index)))
       (destroy-text (car data))
-      (cons #t string)))))
+      (cons #t (cons ((cdr pair) dialog) string))))))
 			
 (add-bordered-and-standard-dialog-type! 
  vertical-menu
