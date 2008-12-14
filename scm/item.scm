@@ -56,3 +56,5 @@
 (define (activate mob item)
   ((activation-handler item) mob item))
   
+(define get-price (item-getter 'price))
+(define set-price! (item-setter 'price))

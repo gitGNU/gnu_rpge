@@ -85,12 +85,14 @@
        ;called with both the mob and the slot.
        ((unequip-handler i) mob slot)))))
 
-(define (make-bare-equipment)
-  (make-item `(slots . ,(make-hash-table))))
+(define (make-bare-equipment price)
+  (let ((i (make-item `(slots . ,(make-hash-table)))))
+    (set-price! i price)
+    i))
 
 ;Just a stab at making something plausibly non-horrific
-(define (make-weapon power type)
-  (let ((i (make-bare-equipment)))
+(define (make-weapon price power type)
+  (let ((i (make-bare-equipment price)))
     (add-allowed-slot i 'weapon)
     ((item-setter 'power) i power)
     ((item-setter 'weapon-type) i type)
@@ -102,5 +104,5 @@
 						     (set-mob-attack! m (- (get-mob-attack m) power)))))
     i))
 
-(define (make-sword power)
-  (make-weapon power 'sword))
+(define (make-sword price power)
+  (make-weapon price power 'sword))
