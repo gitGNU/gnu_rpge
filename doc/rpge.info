@@ -88,7 +88,9 @@ for possibly updated information), need the following:
    * The SimpleDirectmediaLayer libraries and development files,
      including the sdl-image and sdl-ttf libraries
 
-   * GUILE, including the development files and libraries
+   * GUILE, including the development files and libraries, 1.8 or
+     later. Several versions in the 1.8 series still appear to break
+     RPGE. Version 1.8.5 appears to work, at least on x86.
 
    If you have the above dependencies, you can install RPGE by moving
 to the directory containing the source code and running `./configure &&
@@ -1236,18 +1238,18 @@ Node: About RPGE and obtaining it847
 Node: About RPGE and this manual1084
 Node: Getting a copy1686
 Node: Installation2457
-Node: Invoking RPGE3510
-Node: A summary of command-line options3741
-Node: RPGE initialization files4319
-Node: RPGE's view of the world7771
-Node: Overview7982
-Node: Tiles8884
-Node: Mobs10494
-Node: Communication in RPGE14028
-Node: Event Reference15835
-Node: API Reference17177
-Node: Primitives17555
-Node: Scheme-level APIs23443
-Node: GNU Free Documentation License29483
+Node: Invoking RPGE3646
+Node: A summary of command-line options3877
+Node: RPGE initialization files4455
+Node: RPGE's view of the world7907
+Node: Overview8118
+Node: Tiles9020
+Node: Mobs10630
+Node: Communication in RPGE14164
+Node: Event Reference15971
+Node: API Reference17313
+Node: Primitives17691
+Node: Scheme-level APIs23579
+Node: GNU Free Documentation License29619
 
 End Tag Table

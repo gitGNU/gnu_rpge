@@ -32,3 +32,27 @@
 								    #t))
 							      #f)))
 						      (get-from-table (get-mob-data m) 'inventory))))
+
+(define (prim-get-money mob)
+  (get-from-table (get-mob-data mob) 'gold))
+
+(define (get-money mob)
+  (let ((res (prim-get-money mob)))
+    (if (null? res)
+	0
+	res)))
+
+(define (set-money! mob val)
+  (if (null? (prim-get-money mob))
+      (add-to-table! (get-mob-data mob) 'gold val)
+      (set-in-table! (get-mob-data mob) 'gold val)))
+
+(define (sufficient-money? mob price)
+  (>= (get-money mob) price))
+
+(define (money-twiddler proc)
+  (lambda (mob val)
+    (set-money! mob (proc (get-money mob) val))))
+
+(define add-money (money-twiddler +))
+(define deduct-money (money-twiddler -))
