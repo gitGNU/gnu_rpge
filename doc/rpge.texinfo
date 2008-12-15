@@ -76,7 +76,7 @@ need the following:
 @item A UNIX shell to execute GNU configure scripts
 @item GNU sed
 @item The SimpleDirectmediaLayer libraries and development files, including the sdl-image and sdl-ttf libraries
-@item GUILE, including the development files and libraries
+@item GUILE, including the development files and libraries, 1.8 or later. Several versions in the 1.8 series still appear to break RPGE. Version 1.8.5 appears to work, at least on x86.
 @end itemize
 
 If you have the above dependencies, you can install RPGE by moving to the directory containing the source code and running @code{./configure && make} to build RPGE.
