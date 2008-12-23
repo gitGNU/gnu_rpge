@@ -89,20 +89,3 @@
   (let ((i (make-item `(slots . ,(make-hash-table)))))
     (set-price! i price)
     i))
-
-;Just a stab at making something plausibly non-horrific
-(define (make-weapon price power type)
-  (let ((i (make-bare-equipment price)))
-    (add-allowed-slot i 'weapon)
-    ((item-setter 'power) i power)
-    ((item-setter 'weapon-type) i type)
-    (set-equip-handler! i (slot-conditional-proc 'weapon 
-						 (lambda (m s) 
-						   (set-mob-attack! m (+ (get-mob-attack m) power)))))
-    (set-unequip-handler! i (slot-conditional-proc 'weapon 
-						   (lambda (m s) 
-						     (set-mob-attack! m (- (get-mob-attack m) power)))))
-    i))
-
-(define (make-sword price power)
-  (make-weapon price power 'sword))

@@ -19,19 +19,27 @@
 (define (initialize-mob-inventory m)
   (add-to-table! (get-mob-data  m) 'inventory '()))
 
+(define (get-mob-inventory m)
+  (get-from-table (get-mob-data m) 'inventory))
+
+(define (set-mob-inventory! m v)
+  (if (null? (get-mob-inventory m))
+      (initialize-mob-inventory m))
+  (set-in-table! (get-mob-data m) 'inventory v))
+
 (define (give-item m i)
-  (set-in-table! (get-mob-data m) 'inventory (cons i (get-from-table (get-mob-data m) 'inventory))))
+  (set-mob-inventory! m (cons i (get-mob-inventory m))))
 
 (define (remove-item m i)
-  (set-in-table! (get-mob-data m) 'inventory (remove! (let ((done #f))
-							(lambda (x)
-							  (if (not done)
-							      (if (equal? x i)
-								  (begin
-								    (set! done #t)
-								    #t))
-							      #f)))
-						      (get-from-table (get-mob-data m) 'inventory))))
+  (set-mob-inventory! m (remove! (let ((done #f))
+				   (lambda (x)
+				     (if (not done)
+					 (if (equal? x i)
+					     (begin
+					       (set! done #t)
+					       #t))
+					 #f)))
+				 (get-mob-inventory m))))
 
 (define (prim-get-money mob)
   (get-from-table (get-mob-data mob) 'gold))
