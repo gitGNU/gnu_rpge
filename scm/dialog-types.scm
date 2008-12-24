@@ -91,12 +91,14 @@
 	   (next-entry (list-ref texts-list next-index))
 	   (current-coords (get-text-coordinates (cadr current-entry)))
 	   (next-coords (get-text-coordinates (cadr next-entry))))
-      (destroy-text (cadr current-entry))
-      (destroy-text (cadr next-entry))
-      (set-car! (cdr current-entry) (make-text (car current-coords) (cdr current-coords) (car current-entry) font 255 255 255))
-      (set-car! (cdr next-entry) (make-text (car next-coords)    (cdr next-coords)    (car next-entry)    font 0   255 255))
-      (set-car! data next-index)
+      (cond ((not (= cursor-index next-index))
+	     (destroy-text (cadr current-entry))
+	     (destroy-text (cadr next-entry))
+	    (set-car! (cdr current-entry) (make-text (car current-coords) (cdr current-coords) (car current-entry) font 255 255 255))
+	    (set-car! (cdr next-entry) (make-text (car next-coords)    (cdr next-coords)    (car next-entry)    font 0   255 255))
+	    (set-car! data next-index)))
       #f)))
+	    
  (process-proc
   (lambda (type data font sprite-data window)
     (let* ((sizes (get-window-dimensions window))
@@ -118,3 +120,6 @@
 	   (liz (list-ref (cdr data) ind)))
       (for-each (lambda (pair) (destroy-text (cadr pair))) (cdr data))
       (cons #t (cons ((caddr liz) dialog) (car liz)))))))
+
+(define (message-dialog message)
+  (add-new-dialog! 'message 0 0 'bordered-standard-dialog `(,message)))

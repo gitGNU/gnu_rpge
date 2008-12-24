@@ -133,20 +133,21 @@ make_text(unsigned int x, unsigned int y, char* string, int fontindex, SDL_Color
   t.color = color;
   if(string)
     {
+      string = strdup(string);
       char* saveptr = NULL;
       t.buffers = sequence_init();
-      char* str = strdup(string);
-      char* token = strtok_r(str,"\n",&saveptr);
+      char* token = strtok_r(string,"\n",&saveptr);
       if(token)
-	sequence_append(&t.buffers,make_string_obj(token));
+	sequence_append(&t.buffers,make_string_obj(strdup(token)));
       else
         {
           return t;
         }
       while((token = strtok_r(NULL,"\n",&saveptr)))
         {
-          sequence_append(&t.buffers,make_string_obj(token));
+          sequence_append(&t.buffers,make_string_obj(strdup(token)));
         }
+      free(string);
       return t;
     }
   else

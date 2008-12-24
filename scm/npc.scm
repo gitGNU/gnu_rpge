@@ -25,3 +25,34 @@
 				 'DONE))))
       (add-mob-destruction-proc! mob (lambda () (remove-binding 'collision binding))))))
 
+(define (sell-item buyer seller item)
+  (let ((p (get-price item)))
+    (if (sufficient-money? buyer p)
+	(begin
+	  (remove-item seller item)
+	  (give-item buyer item)
+	  (deduct-money buyer p)
+	  #t)
+	#f)))
+	
+
+(define (make-shop-menu-data buyer seller)
+  (map (lambda (item)
+	 (cons (string-append (item-name item) " " (number->string (get-price item)))
+	       (lambda anything
+		 (if (sell-item buyer seller item)
+		     (message-dialog "Thank you!")
+		     (message-dialog "You don't have enough money")))))
+       (get-mob-inventory seller)))
+	       
+(define (make-shop-proc seller)
+  (lambda (ev)
+    (let ((buyer (if (= (cadr ev) seller) (cddr ev) (cadr ev))))
+      ;Random constant x and ys definitely need work
+      (add-new-dialog! 'shop-menu 0 0 'vertical-menu (make-shop-menu-data buyer seller)))))
+
+(define (make-shop seller)
+  (let ((binding (bind-event 'collision
+			     (make-shop-proc seller))))
+    (add-mob-destruction-proc! seller (lambda () (remove-binding 'collision binding)))))
+    

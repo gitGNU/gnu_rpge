@@ -361,11 +361,14 @@ guile_make_text (SCM x, SCM y, SCM string, SCM font, SCM red, SCM green,
   c.r = scm_to_uint8 (red);
   c.g = scm_to_uint8 (green);
   c.b = scm_to_uint8 (blue);
-  return
+  char* str = scm_to_locale_string(string);
+  SCM retval = 
     scm_from_int (add_text
 		  (make_text
 		   (scm_to_uint (x), scm_to_uint (y),
-		    scm_to_locale_string (string), scm_to_int (font), c)));
+		    str, scm_to_int (font), c)));
+  free(str);
+  return retval;
 }
 
 SCM
