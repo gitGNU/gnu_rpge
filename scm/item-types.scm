@@ -22,8 +22,8 @@
 ;Currently, these have a price, power and type.
 ;Weapon types are unused right now, price is for shop purposes and power is used
 ;in this thing's own equip handlers. 
-(define (make-weapon price power type)
-  (let ((i (make-bare-equipment price)))
+(define (make-weapon name price power type)
+  (let ((i (make-bare-equipment name price)))
     (add-allowed-slot i 'weapon)
     ((item-setter 'power) i power)
     ((item-setter 'weapon-type) i type)
@@ -35,14 +35,14 @@
 						     (set-mob-attack! m (- (get-mob-attack m) power)))))
     i))
 
-(define (make-sword price power)
-  (make-weapon price power 'sword))
+(define (make-sword name price power)
+  (make-weapon name price power 'sword))
 
 ;Define a new potion, which is an item whose
 ;activation handler adds the amounts in stat-effects
 ;(an alist of stat/diff pairs) to the mob stats.
 ;These items have absolutely zero allowed slots.
-(define (make-potion . stat-effects)
+(define (make-potion name . stat-effects)
   (make-item `(activation-handler . ,(lambda (mob item) 
 				      (for-each (lambda (p)
 						  (set-stat mob

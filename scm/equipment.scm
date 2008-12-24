@@ -85,7 +85,7 @@
        ;called with both the mob and the slot.
        ((unequip-handler i) mob slot)))))
 
-(define (make-bare-equipment price)
-  (let ((i (make-item `(slots . ,(make-hash-table)))))
+(define (make-bare-equipment name price)
+  (let ((i (make-item name `(slots . ,(make-hash-table)))))
     (set-price! i price)
     i))

@@ -28,8 +28,8 @@
     res))
 
 ;This is so overly generic it's kind of ridiculous to name this an item...
-(define (make-item . bindings)
-  (make-message-acceptor (alist->hash-table bindings) 
+(define (make-item name . bindings)
+  (make-message-acceptor (alist->hash-table (cons `(name . ,name) bindings))
 			 (alist->hash-table `((get . ,(lambda (bindings . args) (apply hashq-ref (cons bindings args))))
 					      (set . ,(lambda (bindings . args) (apply hashq-set! (cons bindings args))))))))
 
@@ -58,3 +58,5 @@
   
 (define get-price (item-getter 'price))
 (define set-price! (item-setter 'price))
+
+(define item-name (item-getter 'name))
