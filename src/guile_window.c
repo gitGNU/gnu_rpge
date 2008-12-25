@@ -51,10 +51,10 @@ guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,
 		   SCM rect)
 {
   SDL_Rect clip;
-  clip.x = scm_to_uint(scm_list_ref(rect,0));
-  clip.y = scm_to_uint(scm_list_ref(rect,1));
-  clip.w = scm_to_uint(scm_list_ref(rect,2));
-  clip.h = scm_to_uint(scm_list_ref(rect,3));
+  clip.x = scm_to_uint(scm_list_ref(rect,scm_from_int(0)));
+  clip.y = scm_to_uint(scm_list_ref(rect,scm_from_int(1)));
+  clip.w = scm_to_uint(scm_list_ref(rect,scm_from_int(2)));
+  clip.h = scm_to_uint(scm_list_ref(rect,scm_from_int(3)));
   return
     scm_from_int (windowstack_addwindow
 		  (create_window

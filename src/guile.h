@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "guile_mob.h"
 #include "guile_camera.h"
 #include "guile_window.h"
+#include "guile_tile.h"
   
 typedef struct
 {
@@ -42,11 +43,6 @@ extern sequence argvs;
 #define ACQUIRE_REPL_MUTEX 1
 
 void argvs_init();
-SCM guile_create_tile(SCM sprite, SCM partclip, SCM blocking);
-SCM guile_set_all_tiles(SCM grid,SCM tile);
-SCM guile_set_tile(SCM grid,SCM x, SCM y, SCM tile);
-SCM guile_make_tilegrid(SCM width, SCM height);
-SCM guile_remove_grid(SCM index);
 SCM guile_open_global_eventstack(SCM flag);
 SCM guile_close_global_eventstack(SCM userindex);
 SCM guile_get_global_event(SCM userindex);
@@ -64,8 +60,6 @@ SCM guile_safe_load(SCM filename);
 SCM guile_move_text(SCM index, SCM point);
 SCM guile_get_text_coordinates(SCM index);
 SCM guile_get_text_line_list(SCM index);
-SCM guile_set_main_grid(SCM g);
-SCM guile_get_main_grid();
 SCM guile_run_repl();
 SCM guile_stop_repl();
 

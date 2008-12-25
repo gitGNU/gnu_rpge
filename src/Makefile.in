@@ -56,7 +56,8 @@ am_rpge_OBJECTS = main.$(OBJEXT) video.$(OBJEXT) mobs.$(OBJEXT) \
 	event.$(OBJEXT) window.$(OBJEXT) sequence.$(OBJEXT) \
 	text.$(OBJEXT) dispatch.$(OBJEXT) config_file.$(OBJEXT) \
 	camera.$(OBJEXT) path.$(OBJEXT) guile_mob.$(OBJEXT) \
-	guile_camera.$(OBJEXT) guile_window.$(OBJEXT)
+	guile_camera.$(OBJEXT) guile_window.$(OBJEXT) \
+	guile_tile.$(OBJEXT)
 rpge_OBJECTS = $(am_rpge_OBJECTS)
 rpge_DEPENDENCIES = $(top_builddir)/lib/libgnu.a
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -273,11 +274,11 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-rpge_SOURCES = main.c video.c video.h main.h mobs.h mobs.cgen imagestack.h imagestack.cgen tile.h tile.c guile.h guile.cgen constants.h event.cgen event.h window.h window.cgen sequence.cgen sequence.h text.cgen text.h dispatch.cgen dispatch.h config_file.cgen config_file.h camera.c camera.h path.h path.c guile_mob.cgen guile_mob.h guile_camera.c guile_camera.h guile_window.c guile_window.h
+rpge_SOURCES = main.c video.c video.h main.h mobs.h mobs.cgen imagestack.h imagestack.cgen tile.h tile.c guile.h guile.cgen constants.h event.cgen event.h window.h window.cgen sequence.cgen sequence.h text.cgen text.h dispatch.cgen dispatch.h config_file.cgen config_file.h camera.c camera.h path.h path.c guile_mob.c guile_mob.h guile_camera.c guile_camera.h guile_window.c guile_window.h guile_tile.c guile_tile.h
 rpge_LDADD = $(top_builddir)/lib/libgnu.a
 AM_CFLAGS = -I$(top_srcdir)/lib -I$(top_builddir)/lib -Wall
 SUFFIXES = .cgen
-MOSTLYCLEANFILES = dispatch.c imagestack.c mobs.c guile.c event.c window.c sequence.c text.c dispatch.c config_file.c guile_mob.c
+MOSTLYCLEANFILES = dispatch.c imagestack.c mobs.c guile.c event.c window.c sequence.c text.c dispatch.c config_file.c
 all: all-am
 
 .SUFFIXES:
@@ -351,6 +352,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guile_camera.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guile_mob.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guile_tile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guile_window.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imagestack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
