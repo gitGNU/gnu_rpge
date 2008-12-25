@@ -29,6 +29,18 @@ mobs_init(void)
   mobs = sequence_init();
 }
 
+static void
+lock_mobs()
+{
+  SDL_mutexP(mob_mutex);
+}
+
+static void
+unlock_mobs()
+{
+  SDL_mutexV(mob_mutex);
+}
+
 mob
 create_mob_using_sprite (unsigned x, unsigned y, unsigned grid, char *sprity)
 {
@@ -57,23 +69,29 @@ find_empty_mob ()
   return -1;
 }
 
-void
+static void
 set_mob_occupants(mob* m)
 {
   int tilex = (m->x+SPRITE_WIDTH/2)/TILE_WIDTH, tiley = (m->y+SPRITE_HEIGHT/2)/TILE_HEIGHT;
   set_occupant(tilex,tiley,m->grid,m);
 }
 
-void
+static inline void
 set_mob_tile_x(mob* m,int val)
 {
   m->x = val*TILE_WIDTH;
 }
 
-void
+static inline void
 set_mob_tile_y(mob* m, int val)
 {
   m->y = val*TILE_HEIGHT;
+}
+
+static inline void
+set_mob_grid(mob* m, int val)
+{
+  m->grid = val;
 }
 
 int
@@ -82,17 +100,17 @@ push_mob_on_array (mob m)
   int indexempty = find_empty_mob ();
   if (indexempty != -1)
     {
-      SDL_mutexP(mob_mutex);
+      lock_mobs();
       *((mob*)mobs.data[indexempty].data) = m;
-      SDL_mutexV(mob_mutex);
+      unlock_mobs();
       set_mob_occupants(mobs.data[indexempty].data);
       return indexempty;
     }
   else
     {
-      SDL_mutexP(mob_mutex);
+      lock_mobs();
       int index = sequence_append(&mobs,make_mob_obj(m));
-      SDL_mutexV(mob_mutex);
+      unlock_mobs();
       set_mob_occupants(mobs.data[index].data);
       return index;
     }
@@ -106,20 +124,20 @@ remove_mob (int index)
       mob m = *((mob*)mobs.data[index].data);
       int tilex = (m.x+SPRITE_WIDTH/2)/SPRITE_WIDTH,tiley = (m.y+SPRITE_HEIGHT/2)/SPRITE_HEIGHT;
       reset_occupant(tilex,tiley,maingrid_index);
-      SDL_mutexP(mob_mutex);
+      lock_mobs();
       release_image(((mob*)mobs.data[index].data)->imgindex);
       ((mob*)mobs.data[index].data)->imgindex = -1;
-      SDL_mutexV(mob_mutex);
+      unlock_mobs();
     }
 }
 
-inline char
+static inline char
 moving(mob m)
 {
   return (m.xmoveamount && m.xmoverate) || (m.ymoveamount && m.ymoverate);
 }
 
-void
+static void
 animate_mob (mob * m)
 {
   if (m->timetonextframe == -1)
@@ -160,12 +178,12 @@ animate_mob (mob * m)
 void
 animate_mobs ()
 {
-  SDL_mutexP(mob_mutex);
+  lock_mobs();
   for (int i = 0; i < mobs.objcount; i++)
     {
       animate_mob ((mob*)mobs.data[i].data);
     }
-  SDL_mutexV(mob_mutex);
+  unlock_mobs();
 }
 
 inline void
@@ -174,7 +192,7 @@ mob_stop_movement(mob* m)
   m->xmoveamount = m->xmoverate = m->ymoveamount = m->ymoverate = 0;
 }
 
-void
+static void
 add_mob_collision_event(mob* mob1, mob* mob2)
 {
   int index1 = -1, index2 = -1;
@@ -188,7 +206,7 @@ add_mob_collision_event(mob* mob1, mob* mob2)
   eventstack_addevent(&global_usereventstack,make_event(scm_from_locale_symbol("collision"),scm_cons(scm_from_int(index1),scm_from_int(index2))));
 }
 
-void
+static void
 add_mob_tilechange_event(mob* m, int oldx, int oldy, int newx, int newy)
 {
   SCM type = scm_from_locale_symbol("tile-change"), data = scm_cons(scm_cons(scm_from_int(oldx),scm_from_int(oldy)),scm_cons(scm_from_int(newx),scm_from_int(newy)));
@@ -199,7 +217,7 @@ add_mob_tilechange_event(mob* m, int oldx, int oldy, int newx, int newy)
 /*
 This can only be called safely from move_mob, since otherwise move_mob or something similar may attempt to reference it at any point in time.
 */
-inline void
+static inline void
 clear_mob_movement_queue(mob* m)
 {
   sequence_free(m->move_descriptors);
@@ -449,4 +467,30 @@ set_mob_userdata_by_index(int ind, SCM newdata)
   scm_gc_protect_object (((mob *) mobs.data[ind].data)->
 			 userdata);
   SDL_mutexV(mob_mutex);
+}
+
+mob*
+get_mob_by_index(int ind)
+{
+  return mobs.data[ind].data;
+}
+
+char
+set_mob_position_by_index(int ind,int x, int y, int g)
+{
+  mob* m = get_mob_by_index(ind);
+  int oldx = m->x , oldy = m->y , oldg = m->grid;
+  if(!occupied(x,y,g))
+    {
+      lock_mobs();
+      reset_occupant(oldx,oldy,oldg);
+      m->x = x;
+      m->y = y;
+      m->grid = g;
+      set_occupant(x,y,g,m);
+      unlock_mobs();
+      return 1;
+    }
+  else
+      return 0;
 }

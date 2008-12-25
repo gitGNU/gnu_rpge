@@ -132,6 +132,7 @@ init_scm()
   scm_c_define_gsubr ("close-mob-events",2,0,0,guile_close_mob_eventstack);
   scm_c_define_gsubr ("safe-load",1,0,0,guile_safe_load);
   scm_c_define_gsubr ("set-mob-frame",3,0,0,guile_set_mob_frame);
+  scm_c_define_gsubr ("get-mob-frame",1,0,0,guile_get_mob_frame);
   scm_c_define_gsubr ("primitive-get-window-coordinates",1,0,0,guile_get_window_coordinates);
   scm_c_define_gsubr ("primitive-get-window-dimensions",1,0,0,guile_get_window_dimensions);
   scm_c_define_gsubr ("primitive-move-window",2,0,0,guile_move_window);
@@ -143,6 +144,8 @@ init_scm()
   scm_c_define_gsubr ("get-main-grid",0,0,0,guile_get_main_grid);
   scm_c_define_gsubr ("run-repl",0,0,0,guile_run_repl);
   scm_c_define_gsubr ("stop-repl",0,0,0,guile_stop_repl);
+  scm_c_define_gsubr ("get-mob-position",1,0,0,guile_get_mob_position);
+  scm_c_define_gsubr ("set-mob-position",2,0,0,guile_set_mob_position);
 }
 
 static inline void

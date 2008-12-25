@@ -56,15 +56,7 @@ scm_nth (SCM list, int n)
   return scm_car (scm_ncdr (list, n - 1));
 }
 
-SCM
-guile_create_mob (SCM x, SCM y, SCM grid, SCM string)
-{
-  char *filename = scm_to_locale_string (string);
-  unsigned int xc = scm_to_uint (x), yc = scm_to_uint (y), gc = scm_to_uint(grid);
-  return
-    scm_from_int (push_mob_on_array
-		  (create_mob_using_sprite (xc, yc, gc, filename)));
-}
+
 
 static inline tile
 list_to_tile (SCM tilelist)
@@ -144,41 +136,6 @@ guile_set_all_tiles (SCM grid,SCM tile)
 }
 
 SCM
-guile_move_mob_all (SCM mobindex, SCM tilecountx, SCM tilecounty,
-		    SCM frametotal)
-{
-  mob_move_all_by_index (scm_to_int(mobindex),
-			 scm_to_int (tilecountx), scm_to_int (tilecounty),
-			 scm_to_int (frametotal));
-  return scm_from_int (0);
-}
-
-SCM
-guile_set_mob_animation (SCM mobindex, SCM animation, SCM start,
-			 SCM targetframe, SCM framesbetween, SCM loop)
-{
-  mob_set_animation_by_index (scm_to_int(mobindex),
-			      scm_to_int (animation), scm_to_int (start),
-			      scm_to_int (targetframe), scm_to_int (framesbetween),
-			      scm_to_bool (loop));
-  return scm_from_int (0);
-}
-
-SCM
-guile_stop_mob_animation (SCM mobindex)
-{
-  mob_stop_animation_by_index (scm_to_int(mobindex));
-  return scm_from_int (0);
-}
-
-SCM
-guile_destroy_mob (SCM mobindex)
-{
-  remove_mob (scm_to_int (mobindex));
-  return scm_from_int (0);
-}
-
-SCM
 guile_make_tilegrid (SCM width, SCM height)
 {
   tilelayer new_grid;
@@ -223,7 +180,7 @@ guile_destroy_window (SCM index)
 }
 
 char
-scm_to_blocking_flag(flag)
+scm_to_blocking_flag(SCM flag)
 {
   return flag == SCM_BOOL_T;
 }
@@ -248,20 +205,6 @@ guile_get_global_event (SCM userindex)
   event e = eventstack_get_first_of_user (&global_usereventstack,
 					  scm_to_int (userindex));
   return scm_cons (e.type, e.data);
-}
-
-
-SCM
-guile_set_mob_userdata (SCM index, SCM newdata)
-{
-  set_mob_userdata_by_index(scm_to_int(index),newdata);
-  return SCM_UNSPECIFIED;
-}
-
-SCM
-guile_get_mob_userdata (SCM index)
-{
-  return ((mob *) mobs.data[scm_to_int (index)].data)->userdata;
 }
 
 SCM
@@ -379,13 +322,6 @@ guile_destroy_text (SCM textindex)
 }
 
 SCM
-guile_add_mob_movement (SCM mob, SCM xtile, SCM ytile, SCM frames)
-{
-  mob_add_movement_by_index(scm_to_int(mob),scm_to_int(xtile),scm_to_int(ytile),scm_to_int(frames));
-  return SCM_UNSPECIFIED;
-}
-
-SCM
 guile_get_camera_x()
 {
   return scm_from_int(global_camera.tilex);
@@ -412,27 +348,6 @@ guile_set_camera_y(SCM newvalue)
 }
 
 SCM 
-guile_open_mob_eventstack(SCM mobindex,SCM flag)
-{
-  char block = scm_to_blocking_flag(flag);
-  return scm_from_uint(eventstack_open(&(((mob*)mobs.data[scm_to_int(mobindex)].data)->events),block));
-}
-
-SCM
-guile_get_mob_event(SCM mobindex, SCM luser)
-{
-  event e = eventstack_get_first_of_user(&((mob*)mobs.data[scm_to_int(mobindex)].data)->events,scm_to_uint(luser));
-  return scm_cons(e.type,e.data);
-}
-
-SCM
-guile_close_mob_eventstack(SCM mobindex, SCM luser)
-{
-  eventstack_close(&(((mob*)mobs.data[scm_to_int(mobindex)].data)->events),scm_to_uint(luser));
-  return SCM_UNSPECIFIED;
-}
-
-SCM 
 scm_c_safe_load(char* filename)
 {
   SCM load_mutex = scm_variable_ref(scm_c_lookup("load-mutex"));
@@ -453,13 +368,6 @@ guile_safe_load(SCM filename)
     }
   else
     fprintf(stderr,"RPGE: Cannot find Scheme source file in . or Scheme search paths: %s\n",scm_to_locale_string(filename));
-  return SCM_UNSPECIFIED;
-}
-
-SCM
-guile_set_mob_frame(SCM index, SCM animation, SCM framenum)
-{
-  set_mob_frame_by_index(scm_to_int(index),scm_to_uint(animation),scm_to_uint(framenum));
   return SCM_UNSPECIFIED;
 }
 
