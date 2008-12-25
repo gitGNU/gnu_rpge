@@ -21,12 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "event.h"
 #include "tile.h"
-#include "window.h"
 #include "text.h"
 #include <libguile.h>
 #include <SDL/SDL.h>
 #include "guile_mob.h"
 #include "guile_camera.h"
+#include "guile_window.h"
   
 typedef struct
 {
@@ -47,8 +47,6 @@ SCM guile_set_all_tiles(SCM grid,SCM tile);
 SCM guile_set_tile(SCM grid,SCM x, SCM y, SCM tile);
 SCM guile_make_tilegrid(SCM width, SCM height);
 SCM guile_remove_grid(SCM index);
-SCM guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,SCM  rect);
-SCM guile_destroy_window(SCM index);
 SCM guile_open_global_eventstack(SCM flag);
 SCM guile_close_global_eventstack(SCM userindex);
 SCM guile_get_global_event(SCM userindex);
@@ -63,10 +61,6 @@ SCM guile_make_text(SCM x, SCM y, SCM string, SCM font, SCM red, SCM green, SCM 
 SCM guile_destroy_text(SCM textindex);
 SCM scm_c_safe_load(char* filename);
 SCM guile_safe_load(SCM filename);
-SCM guile_get_window_coordinates(SCM index);
-SCM guile_get_window_dimensions(SCM index);
-SCM guile_move_window(SCM index, SCM point);
-SCM guile_resize_window(SCM index, SCM dimensions);
 SCM guile_move_text(SCM index, SCM point);
 SCM guile_get_text_coordinates(SCM index);
 SCM guile_get_text_line_list(SCM index);

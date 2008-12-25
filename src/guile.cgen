@@ -30,45 +30,17 @@ argvs_init()
   argv_lock = SDL_CreateMutex();
 }
 
-static SCM
-scm_ncar (SCM list, int n)
-{
-  for (int i = 0; i < n; i++)
-    {
-      list = scm_car (list);
-    }
-  return list;
-}
-
-static SCM
-scm_ncdr (SCM list, int n)
-{
-  for (int i = 0; i < n; i++)
-    {
-      list = scm_cdr (list);
-    }
-  return list;
-}
-
-static inline SCM
-scm_nth (SCM list, int n)
-{
-  return scm_car (scm_ncdr (list, n - 1));
-}
-
-
-
 static inline tile
 list_to_tile (SCM tilelist)
 {
   tile t;
   SDL_Rect clip;
   t.tilesheetindex = push_image_on_stack(scm_to_locale_string(scm_cadr(tilelist)));
-  clip.x = scm_to_int16 (scm_nth (tilelist,3));
-  clip.y = scm_to_int16 (scm_nth (tilelist, 4));
-  clip.w = scm_to_uint16 (scm_nth (tilelist, 5));
-  clip.h = scm_to_uint16 (scm_nth (tilelist, 6));
-  t.blocking = scm_to_char (scm_nth (tilelist, 7));
+  clip.x = scm_to_int16 (scm_list_ref (tilelist, scm_from_int(2)));
+  clip.y = scm_to_int16 (scm_list_ref (tilelist, scm_from_int(3)));
+  clip.w = scm_to_uint16 (scm_list_ref (tilelist, scm_from_int(4)));
+  clip.h = scm_to_uint16 (scm_list_ref (tilelist, scm_from_int(5)));
+  t.blocking = scm_to_char (scm_list_ref (tilelist, scm_from_int(6)));
   t.sheetclippinginfo = clip;
   t.occupant = NULL;
   return t;
@@ -152,31 +124,6 @@ guile_remove_grid(SCM index)
 {
   remove_grid_at(scm_to_int(index));
   return SCM_UNSPECIFIED;
-}
-
-SCM
-guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,
-		   SCM rect)
-{
-  SDL_Rect clip;
-  clip.x = scm_to_uint(scm_nth(rect,1));
-  clip.y = scm_to_uint(scm_nth(rect,2));
-  clip.w = scm_to_uint(scm_nth(rect,3));
-  clip.h = scm_to_uint(scm_nth(rect,4));
-  return
-    scm_from_int (windowstack_addwindow
-		  (create_window
-		   (scm_to_uint (width), scm_to_uint (height),
-		    scm_to_uint (x), scm_to_uint (y),
-		    scm_to_locale_string (filename),
-		    clip)));
-}
-
-SCM
-guile_destroy_window (SCM index)
-{
-  windowstack_remove (scm_to_int (index));
-  return scm_from_int (0);
 }
 
 char
@@ -342,34 +289,6 @@ guile_safe_load(SCM filename)
     }
   else
     fprintf(stderr,"RPGE: Cannot find Scheme source file in . or Scheme search paths: %s\n",scm_to_locale_string(filename));
-  return SCM_UNSPECIFIED;
-}
-
-SCM
-guile_get_window_coordinates(SCM index)
-{
-  window w = get_obj_window(windows.data[scm_to_int(index)]);
-  return scm_cons(scm_from_int(w.x),scm_from_int(w.y));
-}
-
-SCM
-guile_get_window_dimensions(SCM index)
-{
-  window w = get_obj_window(windows.data[scm_to_int(index)]);
-  return scm_cons(scm_from_int(w.width),scm_from_int(w.height));
-}
-
-SCM
-guile_move_window(SCM index, SCM point)
-{
-  move_window(scm_to_int(index),scm_to_uint(scm_car(point)),scm_to_uint(scm_cdr(point)));
-  return SCM_UNSPECIFIED;
-}
-
-SCM
-guile_resize_window(SCM index, SCM dimensions)
-{
-  resize_window(scm_to_int(index),scm_to_uint(scm_car(dimensions)),scm_to_uint(scm_cdr(dimensions)));
   return SCM_UNSPECIFIED;
 }
 

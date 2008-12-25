@@ -16,15 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-#ifndef GUILE_CAMERA_H
-#define GUILE_CAMERA_H
-
+#ifndef GUILE_WINDOW_H
+#define GUILE_WINDOW_H
+#include "window.h"
 #include <libguile.h>
-#include "camera.h"
 
-SCM guile_set_camera_x(SCM newvalue);
-SCM guile_set_camera_y(SCM newvalue);
-SCM guile_get_camera_x();
-SCM guile_get_camera_y();
+SCM guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,SCM  rect);
+SCM guile_destroy_window(SCM index);
+SCM guile_get_window_coordinates(SCM index);
+SCM guile_get_window_dimensions(SCM index);
+SCM guile_move_window(SCM index, SCM point);
+SCM guile_resize_window(SCM index, SCM dimensions);
 
-#endif /*GUILE_CAMERA*/
+#endif /*GUILE_WINDOW_H*/
