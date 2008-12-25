@@ -55,4 +55,4 @@
   (let ((binding (bind-event 'collision
 			     (make-shop-proc seller))))
     (add-mob-destruction-proc! seller (lambda () (remove-binding 'collision binding)))))
-    
+
