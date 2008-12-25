@@ -321,32 +321,6 @@ guile_destroy_text (SCM textindex)
   return SCM_UNSPECIFIED;
 }
 
-SCM
-guile_get_camera_x()
-{
-  return scm_from_int(global_camera.tilex);
-}
-
-SCM
-guile_get_camera_y()
-{
-  return scm_from_int(global_camera.tiley);
-}
-
-SCM 
-guile_set_camera_x(SCM newvalue)
-{
-  global_camera.tilex = scm_to_int(newvalue);
-  return SCM_UNSPECIFIED;
-}
-
-SCM
-guile_set_camera_y(SCM newvalue)
-{
-  global_camera.tiley = scm_to_int(newvalue);
-  return SCM_UNSPECIFIED;
-}
-
 SCM 
 scm_c_safe_load(char* filename)
 {

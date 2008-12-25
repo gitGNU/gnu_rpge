@@ -20,13 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define GUILE_H
 
 #include "event.h"
-#include "mobs.h"
 #include "tile.h"
 #include "window.h"
 #include "text.h"
-#include "camera.h"
 #include <libguile.h>
 #include <SDL/SDL.h>
+#include "guile_mob.h"
+#include "guile_camera.h"
   
 typedef struct
 {
@@ -45,7 +45,6 @@ void argvs_init();
 SCM guile_create_tile(SCM sprite, SCM partclip, SCM blocking);
 SCM guile_set_all_tiles(SCM grid,SCM tile);
 SCM guile_set_tile(SCM grid,SCM x, SCM y, SCM tile);
-SCM guile_move_mob_all(SCM mobindex, SCM tilecountx, SCM tilecounty, SCM frametotal);
 SCM guile_make_tilegrid(SCM width, SCM height);
 SCM guile_remove_grid(SCM index);
 SCM guile_make_window (SCM width, SCM height, SCM x, SCM y, SCM filename,SCM  rect);
@@ -62,10 +61,6 @@ SCM guile_open_font(SCM filename, SCM size);
 SCM guile_close_font(SCM index);
 SCM guile_make_text(SCM x, SCM y, SCM string, SCM font, SCM red, SCM green, SCM blue);
 SCM guile_destroy_text(SCM textindex);
-SCM guile_set_camera_x(SCM newvalue);
-SCM guile_set_camera_y(SCM newvalue);
-SCM guile_get_camera_x();
-SCM guile_get_camera_y();
 SCM scm_c_safe_load(char* filename);
 SCM guile_safe_load(SCM filename);
 SCM guile_get_window_coordinates(SCM index);

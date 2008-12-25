@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <guile_mob.h>
+#include "guile_mob.h"
 
 SCM
 guile_create_mob (SCM x, SCM y, SCM grid, SCM string)
