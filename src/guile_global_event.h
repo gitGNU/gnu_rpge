@@ -1,5 +1,5 @@
 /*
-Copyright Remco Bras 2007,2008
+Copyright Remco Bras 2008
 This file is part of RPGE.
 
 RPGE is free software; you can redistribute it and/or modify
@@ -16,33 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-#ifndef GUILE_H
-#define GUILE_H
-
 #include "event.h"
-#include "tile.h"
-#include "text.h"
 #include <libguile.h>
-#include <SDL/SDL.h>
-#include "guile_mob.h"
-#include "guile_camera.h"
-#include "guile_window.h"
-#include "guile_tile.h"
-#include "guile_text.h"
-#include "guile_global_event.h"
-#include "guile_load.h"
-  
 
-extern SCM global_userdata;   
+#ifndef GUILE_GLOBAL_EVENT_H
+#define GUILE_GLOBAL_EVENT_H
 
-/*Actually a SDL_USEREVENT code, but.. put here to decrease warnings*/
-#define RELEASE_REPL_MUTEX 0
-#define ACQUIRE_REPL_MUTEX 1
+SCM guile_open_global_eventstack(SCM flag);
+SCM guile_close_global_eventstack(SCM userindex);
+SCM guile_get_global_event(SCM userindex);
 
-void argvs_init();
-SCM guile_get_global_userdata(void);
-SCM guile_set_global_userdata(SCM newdata);
-SCM guile_run_repl();
-SCM guile_stop_repl();
-
-#endif
+#endif /*GUILE_GLOBAL_EVENT_H*/

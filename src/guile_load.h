@@ -1,5 +1,5 @@
 /*
-Copyright Remco Bras 2007,2008
+Copyright Remco Bras 2008
 This file is part of RPGE.
 
 RPGE is free software; you can redistribute it and/or modify
@@ -16,33 +16,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-#ifndef GUILE_H
-#define GUILE_H
+#ifndef GUILE_LOAD_H
+#define GUILE_LOAD_H
 
-#include "event.h"
-#include "tile.h"
-#include "text.h"
 #include <libguile.h>
-#include <SDL/SDL.h>
-#include "guile_mob.h"
-#include "guile_camera.h"
-#include "guile_window.h"
-#include "guile_tile.h"
-#include "guile_text.h"
-#include "guile_global_event.h"
-#include "guile_load.h"
-  
+#include "path.h"
+#include "sequence.h"
 
-extern SCM global_userdata;   
+typedef struct
+{
+  Uint32 threadid;
+  SCM argv;
+}  thread_argv;
 
-/*Actually a SDL_USEREVENT code, but.. put here to decrease warnings*/
-#define RELEASE_REPL_MUTEX 0
-#define ACQUIRE_REPL_MUTEX 1
+extern sequence argvs;
 
-void argvs_init();
-SCM guile_get_global_userdata(void);
-SCM guile_set_global_userdata(SCM newdata);
-SCM guile_run_repl();
-SCM guile_stop_repl();
+void guile_exec_script_with_argv(char* filename, SCM argv);
+SCM guile_API_exec_script_with_argv(SCM filename, SCM argv);
+SCM guile_get_argv();
+SCM scm_c_safe_load(char* filename);
+SCM guile_safe_load(SCM filename);
 
-#endif
+#endif /*GUILE_LOAD_H*/
