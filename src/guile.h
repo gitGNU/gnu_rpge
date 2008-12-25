@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "guile_camera.h"
 #include "guile_window.h"
 #include "guile_tile.h"
+#include "guile_text.h"
   
 typedef struct
 {
@@ -51,15 +52,8 @@ SCM guile_set_global_userdata(SCM newdata);
 void guile_exec_script_with_argv(char* filename, SCM argv);
 SCM guile_API_exec_script_with_argv(SCM filename, SCM argv);
 SCM guile_get_argv();
-SCM guile_open_font(SCM filename, SCM size);
-SCM guile_close_font(SCM index);
-SCM guile_make_text(SCM x, SCM y, SCM string, SCM font, SCM red, SCM green, SCM blue);
-SCM guile_destroy_text(SCM textindex);
 SCM scm_c_safe_load(char* filename);
 SCM guile_safe_load(SCM filename);
-SCM guile_move_text(SCM index, SCM point);
-SCM guile_get_text_coordinates(SCM index);
-SCM guile_get_text_line_list(SCM index);
 SCM guile_run_repl();
 SCM guile_stop_repl();
 
