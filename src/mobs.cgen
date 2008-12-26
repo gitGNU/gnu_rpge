@@ -207,9 +207,17 @@ add_mob_collision_event(mob* mob1, mob* mob2)
 }
 
 static void
-add_mob_tilechange_event(mob* m, int oldx, int oldy, int newx, int newy)
+add_mob_tilechange_event(mob* m, int oldx, int oldy, int oldg, int newx, int newy, int newg)
 {
-  SCM type = scm_from_locale_symbol("tile-change"), data = scm_cons(scm_cons(scm_from_int(oldx),scm_from_int(oldy)),scm_cons(scm_from_int(newx),scm_from_int(newy)));
+  SCM type = scm_from_locale_symbol("tile-change");
+  SCM data = scm_cons(scm_list_n(scm_from_int(oldx),
+				 scm_from_int(oldy),
+				 scm_from_int(oldg),
+				 SCM_UNDEFINED),
+		      scm_list_n(scm_from_int(newx),
+				 scm_from_int(newy),
+				 scm_from_int(newg),
+				 SCM_UNDEFINED));
   eventstack_addevent(&(m->events),make_event(type,data));
 }
 
@@ -365,7 +373,7 @@ move_mob (mob * m)
 	    }
           /*Add an event on the mob, so users can do whatever they want with this information*/
           if(tilex_center != old_tilex || tiley_center != old_tiley)
-	    add_mob_tilechange_event(m,old_tilex,old_tiley,tilex,tiley);
+	    add_mob_tilechange_event(m,old_tilex,old_tiley,m->grid,tilex,tiley,m->grid);
           set_mob_occupants(m);
         }
       else
