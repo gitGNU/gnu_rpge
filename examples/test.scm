@@ -27,7 +27,11 @@
 (define n (make-mob 5 0 (named-grid grid) "sprite_letter.png"))
 ;Tell mob_event_test.scm to get a move on and track this mob.
 (add-tracked-mob! m)
-(bind-mob-event m 'tile-change (lambda (event)(set-camera-x (caddr event)) (set-camera-y (cadddr event))))
+(bind-mob-event m 'tile-change (lambda (event)
+				 (let ((newpos (cddr event)))
+				   (set-camera-x (car newpos)) 
+				   (set-camera-y (cadr newpos))
+				   (set-main-grid (caddr newpos)))))
 (define (binding-generator m x y)
   (lambda () (if (null? (get-current-dialog))
 		 (add-mob-movement m x y 16))))
