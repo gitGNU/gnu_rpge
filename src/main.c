@@ -147,6 +147,10 @@ init_scm()
   scm_c_define_gsubr ("stop-repl",0,0,0,guile_stop_repl);
   scm_c_define_gsubr ("get-mob-position",1,0,0,guile_get_mob_position);
   scm_c_define_gsubr ("set-mob-position",2,0,0,guile_set_mob_position);
+  scm_c_define_gsubr ("get-text-color",1,0,0,guile_get_text_color);
+  scm_c_define_gsubr ("set-text-color!",2,0,0,guile_set_text_color);
+  scm_c_define_gsubr ("get-text-font",1,0,0,guile_get_text_font);
+  scm_c_define_gsubr ("set-text-font!",2,0,0,guile_set_text_font);
 }
 
 static inline void

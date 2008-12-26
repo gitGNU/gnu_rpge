@@ -29,5 +29,9 @@ SCM guile_destroy_text(SCM textindex);
 SCM guile_move_text(SCM index, SCM point);
 SCM guile_get_text_coordinates(SCM index);
 SCM guile_get_text_line_list(SCM index);
+SCM guile_get_text_font(SCM index);
+SCM guile_set_text_font(SCM index, SCM font);
+SCM guile_get_text_color(SCM index);
+SCM guile_set_text_color(SCM index, SCM val);
 
 #endif /*GUILE_TEXT_H*/

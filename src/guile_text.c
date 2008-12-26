@@ -105,3 +105,38 @@ guile_get_text_line_list(SCM index)
   return guile_sequence_to_list(((text*)texts.data[scm_to_int(index)].data)->buffers);
 }
 
+SCM
+guile_get_text_font(SCM index)
+{
+  return scm_from_int(((text*)texts.data[scm_to_int(index)].data)->fontindex);
+}
+
+SCM
+guile_set_text_font(SCM index, SCM font)
+{
+  ((text*)texts.data[scm_to_int(index)].data)->fontindex = scm_to_int(font);
+  return SCM_UNSPECIFIED;
+}
+
+SCM
+guile_get_text_color(SCM index)
+{
+  text* t = texts.data[scm_to_int(index)].data;
+  return scm_list_n(scm_from_uint8(t->color.r),
+		    scm_from_uint8(t->color.g),
+		    scm_from_uint8(t->color.b));
+}
+
+SCM
+guile_set_text_color(SCM index, SCM val)
+{
+  text* t = texts.data[scm_to_int(index)].data;
+  SDL_Color c;
+  c.r = scm_to_uint8(scm_car(val));
+  c.g = scm_to_uint8(scm_cadr(val));
+  c.b = scm_to_uint8(scm_caddr(val));
+  /*Well, as the name says, this isn't used anyway.*/
+  c.unused = 0;
+  t->color = c;
+  return SCM_UNSPECIFIED;
+}
