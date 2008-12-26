@@ -492,13 +492,23 @@ set_mob_position_by_index(int ind,int x, int y, int g)
     {
       lock_mobs();
       reset_occupant(oldx,oldy,oldg);
-      m->x = x;
-      m->y = y;
+      m->x = x * TILE_WIDTH;
+      m->y = y * TILE_HEIGHT;
       m->grid = g;
       set_occupant(x,y,g,m);
+      add_mob_tilechange_event(m,oldx,oldy,oldg,x,y,g);
       unlock_mobs();
       return 1;
     }
   else
       return 0;
+}
+
+void
+stop_mob_movement_by_index(int ind)
+{
+  lock_mobs();
+  mob_stop_movement(mobs.data[ind].data);
+  clear_mob_movement_queue(mobs.data[ind].data);
+  unlock_mobs();
 }

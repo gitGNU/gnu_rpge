@@ -23,8 +23,8 @@
       (do ((ev (get-mob-event mob ind) (get-mob-event mob ind)))
 	  ((get-from-table (tracked-mob-table) mob) (remove-from-table! (tracked-mob-table) mob))
 	(execute-mob-binding mob ev)
-	(execute-global-mob-binding mob ev)
-	(usleep 250000)))))
+	(execute-global-mob-binding mob ev)))))
+
 
 (define (add-thread-listener! mob)
   (make-thread (listener-proc mob)))

@@ -123,6 +123,7 @@ init_scm()
   scm_c_define_gsubr ("make-text",7,0,0,guile_make_text);
   scm_c_define_gsubr ("destroy-text",1,0,0,guile_destroy_text);
   scm_c_define_gsubr ("add-mob-movement",4,0,0,guile_add_mob_movement);
+  scm_c_define_gsubr ("stop-mob-movement",1,0,0,guile_stop_mob_movement);
   scm_c_define_gsubr ("get-camera-x",0,0,0,guile_get_camera_x);
   scm_c_define_gsubr ("get-camera-y",0,0,0,guile_get_camera_y);
   scm_c_define_gsubr ("set-camera-x",1,0,0,guile_set_camera_x);

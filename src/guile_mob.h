@@ -38,5 +38,6 @@ SCM guile_set_mob_frame(SCM, SCM, SCM);
 SCM guile_get_mob_frame(SCM);
 SCM guile_get_mob_position(SCM);
 SCM guile_set_mob_position(SCM, SCM);
+SCM guile_stop_mob_movement(SCM);
 
 #endif /*GUILE_MOB_H*/

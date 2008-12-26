@@ -62,7 +62,6 @@ void remove_mob(int);
 void mob_set_animation_by_index(int ind, unsigned int animation, unsigned int startframe, unsigned int targetframe, unsigned int framesperframe, char looping);
 void animate_mobs();
 void move_mobs();
-void mob_stop_movement(mob* m);
 void mob_move_all_by_index(int ind, int xtiles, int ytiles, int frames);
 void mob_add_movement_by_index(int ind, int xtiles, int ytiles, int frames);
 void mob_stop_animation_by_index(int ind);
@@ -70,6 +69,7 @@ void set_mob_frame_by_index(int ind,unsigned int animation,unsigned int framenum
 void set_mob_userdata_by_index(int ind, SCM newdata);
 char set_mob_position_by_index(int ind, int x, int y, int g);
 mob* get_mob_by_index(int ind);
+void stop_mob_movement_by_index(int ind);
 
 /*Self-dependent include*/
 #include "tile.h"

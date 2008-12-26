@@ -134,3 +134,10 @@ guile_set_mob_position(SCM mobby, SCM pos)
   else
     return SCM_BOOL_F;
 }
+
+SCM
+guile_stop_mob_movement(SCM mobby)
+{
+  stop_mob_movement_by_index(scm_to_int(mobby));
+  return SCM_UNSPECIFIED;
+}
