@@ -212,7 +212,7 @@ remove_text(int index)
 {
   SDL_mutexP(text_mutex);
   for(int i = 0; i < ((text*)texts.data[index].data)->buffers.objcount; i++)
-    free(((text*)texts.data[index].data)->buffers.data[i].data);
+    free(*((char**)((text*)texts.data[index].data)->buffers.data[i].data));
   sequence_free(((text*)texts.data[index].data)->buffers);
   ((text*)texts.data[index].data)->fontindex = -1;
   SDL_mutexV(text_mutex);
