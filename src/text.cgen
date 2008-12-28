@@ -120,7 +120,11 @@ close_font(int index)
 /*
 Technically, splitting width-based would be roughly more complicated, unless monospaced fonts are used. However, if we wish to properly support text in windows, we should do something about that some other time.
 
-WARNING: Texts do not manage the memory of their actual buffers, they ONLY manage the pointers (as per the sequence demand that any and all data of any and all objects should be freeable it's safer to store char**s as opposed to the buffers themselves). The buffers should be managed by their users at all times.
+String is copied by make_text, with the copy being quite reasonably destroyed. The actual 
+tokens stored in the buffers sequence are separate, malloced,freeable buffers,
+all of which should be destroyed by the caller once this text is no longer needed.
+
+String itself is left to the caller.
 */
 
 text 
@@ -207,6 +211,8 @@ void
 remove_text(int index)
 {
   SDL_mutexP(text_mutex);
+  for(int i = 0; i < ((text*)texts.data[index].data)->buffers.objcount; i++)
+    free(((text*)texts.data[index].data)->buffers.data[i].data);
   sequence_free(((text*)texts.data[index].data)->buffers);
   ((text*)texts.data[index].data)->fontindex = -1;
   SDL_mutexV(text_mutex);
