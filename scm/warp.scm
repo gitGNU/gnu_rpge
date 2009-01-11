@@ -26,7 +26,7 @@
 ;Define a warp from pos1 to pos2.
 ;Both the source position and the destination position may have
 ;a symbol for a grid component, in which case the grid is resolved.
-(define (make-warp pos1 pos2)
+(define (make-warp! pos1 pos2)
   (add-global-mob-binding! 'tile-change
 			  (lambda (m ev)
 			    (let* ((data (cdr ev))
@@ -34,3 +34,6 @@
 			      (cond ((equal? (denamify-position pos1) newpos)
 				     (stop-mob-movement m)
 				     (set-mob-position m (denamify-position pos2))))))))
+
+(define (remove-warp! warp)
+  (remove-global-mob-binding! 'tile-change warp))
