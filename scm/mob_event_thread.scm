@@ -42,20 +42,40 @@
 (define (get-mob-bindings mob)
   (get-from-table (get-mob-data mob) 'bindings))
   
-(define (bind-mob-event mob event proc)
-  (let ((stored (get-from-table (get-mob-bindings mob) event)))
-    (cond ((null? stored) (add-to-table! (get-mob-bindings mob) event proc))
-          (else
-            (set-in-table! (get-mob-bindings mob) event proc)))))
-
-(define (add-mob-binding mob event proc)
-  (let ((current-b (get-mob-binding mob event)))
-    (if (null? current-b) 
-	(bind-mob-event mob event proc)
-	(bind-mob-event mob event (interleave current-b proc)))))
-            
-(define (get-mob-binding mob event)
+(define (get-mob-binding-table mob event)
   (get-from-table (get-mob-bindings mob) event))
+
+(define (get-mob-binding mob event)
+  (let ((tab (get-mob-binding-table mob event)))
+    (if (null? tab)
+	'()
+	(reduce interleave
+		(lambda anything 'DONE)
+		(hash-map->list
+		 (lambda (k v) v)
+		 tab)))))
+
+(define (set-mob-binding! mob event proc)
+  (let ((tab (get-mob-binding-table mob event)))
+    (if (null? tab)
+	(let ((newtab (make-hash-table))
+	      (sym (gensym)))
+	  (add-to-table! (get-mob-bindings mob) event newtab)
+	  (hash-set! newtab sym proc)
+	  sym)
+	(let ((sym (gensym)))
+	  (hash-clear! tab)
+	  (hash-set! tab sym proc)
+	  sym))))
+
+(define (add-mob-binding! mob event proc)
+  (let ((sym (gensym))
+	(tab (get-mob-binding-table mob event)))
+    (if (null? tab)
+	(set-mob-binding! mob event proc)
+	(begin 
+	  (hash-set! tab sym proc)
+	  sym))))
             
 (define (execute-mob-binding mob event)
   (let ((proc (get-mob-binding mob (car event))))
@@ -68,11 +88,14 @@
   (get-from-table (global-mob-bindings) event))
 
 (define (get-global-mob-binding event)
-  (reduce interleave 
-	  (lambda anything 'DONE) 
-	  (hash-map->list
-	   (lambda (k v) v)
-	   (get-global-mob-binding-table event))))
+  (let ((tab (get-global-mob-binding-table event)))
+    (if (null? tab)
+	'()
+	(reduce interleave 
+		(lambda anything 'DONE) 
+		(hash-map->list
+		 (lambda (k v) v)
+		 tab)))))
 
 (define (set-global-mob-binding! event proc)
   (let ((tab (get-global-mob-binding-table event)))
@@ -92,8 +115,9 @@
 	(tab (get-global-mob-binding-table event)))
     (if (null? tab)
 	(set-global-mob-binding! event proc)
-	(hash-set! tab sym proc))
-    sym))
+	(begin 
+	  (hash-set! tab sym proc)
+	  sym))))
 
 (define (remove-global-mob-binding! event sym)
   (let ((tab (get-global-mob-binding-table event)))
