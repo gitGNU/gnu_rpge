@@ -37,3 +37,4 @@
   
 (define named-grid:set-tile! (named-grid-proc set-tile))
 (define named-grid:set-all-tiles! (named-grid-proc set-all-tiles))
+(define named-grid:remove-grid! (named-grid-proc remove-tilegrid))

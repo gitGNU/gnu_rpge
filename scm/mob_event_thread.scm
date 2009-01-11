@@ -64,18 +64,41 @@
 
 (define global-mob-bindings (make-table-closure))
 
-(define (bind-global-mob-event event proc)
-  (let ((b (get-global-mob-binding event)))
-    (if (null? b) (add-to-table! (global-mob-bindings) event proc)
-	          (set-in-table! (global-mob-bindings) event proc))))
-
-(define (add-global-mob-binding event proc)
-  (let ((b (get-global-mob-binding event)))
-    (if (null? b) (add-to-table! (global-mob-bindings) event proc)
-	          (set-in-table! (global-mob-bindings) event (interleave b proc)))))
+(define (get-global-mob-binding-table event)
+  (get-from-table (global-mob-bindings) event))
 
 (define (get-global-mob-binding event)
-  (get-from-table (global-mob-bindings) event))
+  (reduce interleave 
+	  (lambda anything 'DONE) 
+	  (hash-map->list
+	   (lambda (k v) v)
+	   (get-global-mob-binding-table event))))
+
+(define (set-global-mob-binding! event proc)
+  (let ((tab (get-global-mob-binding-table event)))
+    (if (null? tab)
+	(let ((newtab (make-hash-table))
+	      (sym (gensym)))
+	  (add-to-table! (global-mob-bindings) event newtab)
+	  (hash-set! newtab sym proc)
+	  sym)
+	(let ((sym (gensym)))
+	  (hash-clear! tab)
+	  (hash-set! tab sym proc)
+	  sym))))
+	
+(define (add-global-mob-binding! event proc)
+  (let ((sym (gensym))
+	(tab (get-global-mob-binding-table event)))
+    (if (null? tab)
+	(set-global-mob-binding! event proc)
+	(hash-set! tab sym proc))
+    sym))
+
+(define (remove-global-mob-binding! event sym)
+  (let ((tab (get-global-mob-binding-table event)))
+    (if (not (null? tab))
+	(hash-remove! tab sym))))
 
 (define (execute-global-mob-binding mob event)
   (let ((b (get-global-mob-binding (car event))))
