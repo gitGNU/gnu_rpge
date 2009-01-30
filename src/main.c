@@ -118,10 +118,9 @@ void dispatch_event(SDL_Event e)
     eventstack_addevent(&global_usereventstack,ev);
 }
 
-static inline void
-init_scm()
+static inline void*
+init_scm(void* unused)
 {
- scm_init_guile ();
   /*Define the load mutex as a recursive mutex. This is necessary for safe loading*/
   scm_c_define("load-mutex",scm_make_recursive_mutex());
   scm_c_define_gsubr ("create-mob", 4, 0, 0, guile_create_mob);
@@ -178,6 +177,7 @@ init_scm()
   scm_c_define_gsubr ("set-text-color!",2,0,0,guile_set_text_color);
   scm_c_define_gsubr ("get-text-font",1,0,0,guile_get_text_font);
   scm_c_define_gsubr ("set-text-font!",2,0,0,guile_set_text_font);
+  return NULL;
 }
 
 static inline void
@@ -238,7 +238,8 @@ main (int argc, char **argv)
     This does have some overhead according to the docs, so we might want to come up with a different, possibly faster scheme to take care of this later.
   */
   SDL_EnableUNICODE(1);
-  init_scm();
+  scm_with_guile(init_scm,NULL);
+  scm_init_guile();
   SCM_TICK;
   init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
