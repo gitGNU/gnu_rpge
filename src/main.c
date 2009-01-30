@@ -18,12 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include "main.h"
 
-static SDL_mutex* repl_signal; /*Used to signal whether the REPL can run. While unlocked, the REPL may run (and will acquire the lock, evaluate an expression and release the lock). */
+/*
+  Used to signal whether the REPL can run. 
+  While unlocked, the REPL may run (and will 
+  acquire the lock, evaluate an expression and release the lock). 
+*/
+static SDL_mutex* repl_signal; 
 
-int
-exec_guile_shell (void *unused_arg)
+/*
+  Execute the repl.
+  Executed by SDL_CreateThread from the initialization code in the rest
+  of this file. 
+  Communicates with main primarily through the repl-signal mutex.
+*/
+void*
+guile_shell_main(void* unused_arg)
 {
-  scm_init_guile();
   /*Like top-repl (see guile sources) called by scm_shell, evaluate our code in the guile-user module.*/
   scm_set_current_module(scm_c_resolve_module("guile-user"));
   /*Prepare some procedures to deal with guile-level errors*/
@@ -38,7 +48,17 @@ exec_guile_shell (void *unused_arg)
       scm_catch(SCM_BOOL_T,evaluator,handler);
       SDL_mutexV(repl_signal);
     }
-  return 0;			//never reached, just here to please gcc.
+  return NULL;
+}
+int
+exec_guile_shell (void *unused_arg)
+{
+  /*
+    This way to do things is used since it's more portable,
+    less ugly and more future-proof than scm_init_guile.
+  */
+  scm_with_guile(guile_shell_main,NULL);
+  return 0;
 }
 
 SCM
@@ -47,6 +67,16 @@ get_keydown_symbol(SDL_Event e)
   return scm_from_locale_symbol("key-down");
 }
 
+/*
+  To do: Fix this.
+  The problem with this code is that it relies on UNICODE conversion,
+  which SDL doesn't do at all for keyup events.
+  Said conversion also incurs an overhead and SDL has a function
+  to get the name of a keysym anyway.
+  The added benefit of doing so it that it also works for
+  things like left arrow keys without lots of special-purpose
+  silliness.
+*/
 SCM 
 get_keysym_symbol(SDL_Event e)
 {
@@ -82,9 +112,6 @@ get_keysym_symbol(SDL_Event e)
 
 void dispatch_event(SDL_Event e)
 {
-  /*TODO: do something or other to extract the relevant data from an event and get a proper symbol to shove into the type, then send all this off to the global eventstack.
-  */
-  /*For now, we'll just switch in a hardcoded, boring fashion. Technically, this needs some method of autodispatching and some separation into event.c, but the autodispatch and such need a good few more mailing list discussions to prevent creeping featurism, even though supporting every single scheme under the sun in some actually useful way could be good. Of course, this gets rather hairy organization-wise. */
   SCM c = dispatch(e);
   event ev = make_event(scm_car(c),scm_cdr(c));
   if(ev.type != SCM_EOL)
