@@ -177,6 +177,7 @@ init_scm(void* unused)
   scm_c_define_gsubr ("set-text-color!",2,0,0,guile_set_text_color);
   scm_c_define_gsubr ("get-text-font",1,0,0,guile_get_text_font);
   scm_c_define_gsubr ("set-text-font!",2,0,0,guile_set_text_font);
+  scm_gc_protect_object(global_userdata);
   return NULL;
 }
 
@@ -193,6 +194,17 @@ init()
   init_windows();
   directives_init();
   paths_init();
+}
+
+/*
+  A tiny bit of glue to hook exec_config_file into guile mode
+  stuff without affecting everything else.
+*/
+static
+void* run_config_file(void* filename)
+{
+  exec_config_file(filename);
+  return NULL;
 }
 
 int
@@ -239,16 +251,14 @@ main (int argc, char **argv)
   */
   SDL_EnableUNICODE(1);
   scm_with_guile(init_scm,NULL);
-  scm_init_guile();
-  SCM_TICK;
   init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
-  scm_gc_protect_object(global_userdata);
-  exec_config_file(initfile);
+  scm_with_guile(run_config_file,initfile);
   /*Set up REPL signal and run REPL thread*/
   repl_signal = SDL_CreateMutex();
   SDL_mutexP(repl_signal);
   SDL_CreateThread (exec_guile_shell, 0);
+  scm_init_guile();
   while (1)
     {
       SCM_TICK;
@@ -270,9 +280,20 @@ main (int argc, char **argv)
 		  SDL_mutexP(repl_signal);
 		break;
               default:
+		/*
+		  Guile code
+		*/
                 dispatch_event(*event);
+		/*
+		  End Guile code
+		*/
 	    }
 	}
+      /*
+	These require some event code,
+	but otherwise don't seem to
+	use guile.
+      */
       move_mobs ();
       animate_mobs ();
       render_screen (screen);
