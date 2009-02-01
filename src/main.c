@@ -276,7 +276,6 @@ main (int argc, char **argv)
   SDL_CreateThread (exec_guile_shell, 0);
   while (1)
     {
-      SCM_TICK;
       now = SDL_GetTicks ();
       next = now + (int) (1000 / FRAMES_PER_SECOND);
       while (SDL_PollEvent (event))
