@@ -110,12 +110,20 @@ get_keysym_symbol(SDL_Event e)
     }
 }
 
-void dispatch_event(SDL_Event e)
+static void *
+inner_dispatch_event(void* arg)
 {
+  SDL_Event e = *(SDL_Event*)arg;
   SCM c = dispatch(e);
   event ev = make_event(scm_car(c),scm_cdr(c));
   if(ev.type != SCM_EOL)
     eventstack_addevent(&global_usereventstack,ev);
+  return NULL;
+}
+
+void dispatch_event(SDL_Event e)
+{
+  scm_with_guile(inner_dispatch_event,&e);
 }
 
 static inline void*
