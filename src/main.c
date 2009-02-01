@@ -126,6 +126,14 @@ void dispatch_event(SDL_Event e)
   scm_with_guile(inner_dispatch_event,&e);
 }
 
+void *
+run_mob_updates(void* unused)
+{
+  move_mobs ();
+  animate_mobs ();  
+  return NULL;
+}
+
 static inline void*
 init_scm(void* unused)
 {
@@ -266,7 +274,6 @@ main (int argc, char **argv)
   repl_signal = SDL_CreateMutex();
   SDL_mutexP(repl_signal);
   SDL_CreateThread (exec_guile_shell, 0);
-  scm_init_guile();
   while (1)
     {
       SCM_TICK;
@@ -288,22 +295,10 @@ main (int argc, char **argv)
 		  SDL_mutexP(repl_signal);
 		break;
               default:
-		/*
-		  Guile code
-		*/
                 dispatch_event(*event);
-		/*
-		  End Guile code
-		*/
 	    }
 	}
-      /*
-	These require some event code,
-	but otherwise don't seem to
-	use guile.
-      */
-      move_mobs ();
-      animate_mobs ();
+      scm_with_guile(run_mob_updates,NULL);
       render_screen (screen);
       if (SDL_Flip (screen) == -1)
 	{
