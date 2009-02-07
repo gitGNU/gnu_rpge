@@ -130,7 +130,6 @@ void *
 run_mob_updates(void* unused)
 {
   move_mobs ();
-  animate_mobs ();  
   return NULL;
 }
 
@@ -297,7 +296,11 @@ main (int argc, char **argv)
                 dispatch_event(*event);
 	    }
 	}
+      /*
+	Run move_mobs, which needs guile mode now.
+      */
       scm_with_guile(run_mob_updates,NULL);
+      animate_mobs ();  
       render_screen (screen);
       if (SDL_Flip (screen) == -1)
 	{
