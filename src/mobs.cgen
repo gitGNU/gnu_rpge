@@ -192,23 +192,48 @@ mob_stop_movement(mob* m)
   m->xmoveamount = m->xmoverate = m->ymoveamount = m->ymoverate = 0;
 }
 
-static void
-add_mob_collision_event(mob* mob1, mob* mob2)
+static void*
+inner_add_mob_collision_event(void* indices)
 {
-  int index1 = -1, index2 = -1;
-  for(int i = 0; i < mobs.objcount ; i++)
-    {
-      if(mobs.data[i].data == mob1)
-        index1 = i;
-      else if(mobs.data[i].data == mob2)
-        index2 = i;
-    }
-  eventstack_addevent(&global_usereventstack,make_event(scm_from_locale_symbol("collision"),scm_cons(scm_from_int(index1),scm_from_int(index2))));
+  int index1 = ((int*)indices)[0], index2 = ((int*)indices)[1];
+  eventstack_addevent(&global_usereventstack,
+		      make_event(scm_from_locale_symbol("collision"),
+				 scm_cons(scm_from_int(index1),
+					  scm_from_int(index2))));  
+  return NULL;
 }
 
 static void
-add_mob_tilechange_event(mob* m, int oldx, int oldy, int oldg, int newx, int newy, int newg)
+add_mob_collision_event(mob* mob1, mob* mob2)
 {
+  int indexes[2] = {-1,-1};
+  for(int i = 0; i < mobs.objcount ; i++)
+    {
+      if(mobs.data[i].data == mob1)
+        indexes[0] = i;
+      else if(mobs.data[i].data == mob2)
+        indexes[1] = i;
+    }
+  scm_with_guile(inner_add_mob_collision_event,indexes);
+}
+
+struct tilechange_arg
+{
+  mob* m;
+  int oldx,oldy,oldg,newx,newy,newg;
+};
+
+static void*
+add_mob_tilechange_event(void* arg)
+{
+  struct tilechange_arg* args = arg;
+  mob* m = args->m;
+  int oldx = args->oldx, 
+    oldy = args->oldy,
+    oldg = args->oldg,
+    newx = args->newx, 
+    newy = args->newy,
+    newg = args->newg;
   SCM type = scm_from_locale_symbol("tile-change");
   SCM data = scm_cons(scm_list_n(scm_from_int(oldx),
 				 scm_from_int(oldy),
@@ -219,8 +244,8 @@ add_mob_tilechange_event(mob* m, int oldx, int oldy, int oldg, int newx, int new
 				 scm_from_int(newg),
 				 SCM_UNDEFINED));
   eventstack_addevent(&(m->events),make_event(type,data));
+  return NULL;
 }
-
 
 /*
 This can only be called safely from move_mob, since otherwise move_mob or something similar may attempt to reference it at any point in time.
@@ -371,9 +396,14 @@ move_mob (mob * m)
 		    set_mob_tile_y(m,old_tiley);
 		}
 	    }
-          /*Add an event on the mob, so users can do whatever they want with this information*/
+          /*Add an event on the mob, so users can do whatever they want with this information
+	   This requires some annoying shuffling of structs due to needing
+	  guile mode locally.*/
           if(tilex_center != old_tilex || tiley_center != old_tiley)
-	    add_mob_tilechange_event(m,old_tilex,old_tiley,m->grid,tilex,tiley,m->grid);
+	    {
+	      struct tilechange_arg args = {m,old_tilex,old_tiley,m->grid,tilex,tiley,m->grid};
+	      scm_with_guile(add_mob_tilechange_event,&args);
+	    }
           set_mob_occupants(m);
         }
       else
@@ -490,13 +520,14 @@ set_mob_position_by_index(int ind,int x, int y, int g)
   int oldx = m->x , oldy = m->y , oldg = m->grid;
   if(!occupied(x,y,g))
     {
+      struct tilechange_arg args = {m,oldx,oldy,oldg,x,y,g};
       lock_mobs();
       reset_occupant(oldx,oldy,oldg);
       m->x = x * TILE_WIDTH;
       m->y = y * TILE_HEIGHT;
       m->grid = g;
       set_occupant(x,y,g,m);
-      add_mob_tilechange_event(m,oldx,oldy,oldg,x,y,g);
+      scm_with_guile(add_mob_tilechange_event,&args);
       unlock_mobs();
       return 1;
     }

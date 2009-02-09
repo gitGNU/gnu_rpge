@@ -126,13 +126,6 @@ void dispatch_event(SDL_Event e)
   scm_with_guile(inner_dispatch_event,&e);
 }
 
-void *
-run_mob_updates(void* unused)
-{
-  move_mobs ();
-  return NULL;
-}
-
 static inline void*
 init_scm(void* unused)
 {
@@ -299,7 +292,7 @@ main (int argc, char **argv)
       /*
 	Run move_mobs, which needs guile mode now.
       */
-      scm_with_guile(run_mob_updates,NULL);
+      move_mobs ();
       animate_mobs ();  
       render_screen (screen);
       if (SDL_Flip (screen) == -1)

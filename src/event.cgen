@@ -194,7 +194,7 @@ eventstack_get_first_of_user (eventstack * es, unsigned long int luser)
   while((index = eventstack_get_index_of_user(*es,luser)) >= es->events.objcount && block)
     {
       LOCK_STACK(es);
-      while(status = SDL_CondWaitTimeout(es->block,es->lock,250)==SDL_MUTEX_TIMEDOUT)
+      while((status = SDL_CondWaitTimeout(es->block,es->lock,250))==SDL_MUTEX_TIMEDOUT)
 	{
 	  /*This lock/unlock cycle is necessary to prevent a deadlock if other threads need this mutex before they can SCM_TICK */
 	  UNLOCK_STACK(es);
