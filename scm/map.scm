@@ -94,9 +94,15 @@
     (call-with-input-file filename eval-expr)))
 			       
 (set-map-procedure! 'initialize-grid register-grid)
-(set-map-procedure! 'all-tiles (lambda (name tilespec)
-				 (named-grid:set-all-tiles! name 
-							    (apply create-tile
-								   `(,(cadr tilespec)
-								     ,(caddr tilespec)
-								     ,(primitive-eval (cadddr tilespec)))))))
+
+(let ((process-tilespec (lambda (tilespec)
+			  (apply create-tile
+				 `(,(cadr tilespec)
+				   ,(caddr tilespec)
+				   ,(primitive-eval (cadddr tilespec)))))))
+  (set-map-procedure! 'all-tiles (lambda (name tilespec)
+				   (named-grid:set-all-tiles! name 
+							      (process-tilespec tilespec))))
+  (set-map-procedure! 'tile (lambda (name x y tilespec)
+			      (named-grid:set-tile! name x y (process-tilespec tilespec)))))
+			    
