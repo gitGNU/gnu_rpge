@@ -106,3 +106,5 @@
   (set-map-procedure! 'tile (lambda (name x y tilespec)
 			      (named-grid:set-tile! name x y (process-tilespec tilespec)))))
 			    
+(set-map-procedure! 'begin (lambda args 
+			     (for-each primitive-eval (cdr args))))
