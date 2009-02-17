@@ -108,3 +108,6 @@
 			    
 (set-map-procedure! 'begin (lambda args 
 			     (for-each primitive-eval (cdr args))))
+
+(set-map-procedure! 'mob (lambda (name x y sprite)
+			   (make-mob x y (named-grid name) sprite)))
