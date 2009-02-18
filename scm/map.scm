@@ -39,7 +39,7 @@
 (define map-destruction-procedure (lambda (m) (car (cddddr m))))
 
 (define (add-map! name mobs warps preloadeds refcount destruction-procedure)
-  (hasq-set! maps name (list refcount mobs warps preloadeds destruction-procedure)))
+  (hashq-set! maps name (list refcount mobs warps preloadeds destruction-procedure)))
 
 (define (destroy-map! name)
   (let* ((named-map (get-named-map name))
@@ -47,7 +47,7 @@
 	 (map-warps (map-warps named-map))
 	 (preloadeds (map-preloads named-map)))
     (for-each map-decref preloadeds)
-    (for-each remove-mob map-mobs)
+    (hash-for-each (lambda (k v) (remove-mob v) map-mobs))
     (for-each remove-warp! map-warps)
     (named-grid:remove-grid! name)))
 
