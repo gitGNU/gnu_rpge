@@ -23,6 +23,9 @@
 
 (define maps (make-hash-table))
 
+(define (get-named-map name)
+  (hashq-ref maps name))
+
 (define (map-incref name)
   (aif (get-named-map name)
        (set-car! it (+ (car it) 1))))
@@ -40,6 +43,9 @@
 
 (define (add-map! name mobs warps preloadeds refcount destruction-procedure)
   (hashq-set! maps name (list refcount mobs warps preloadeds destruction-procedure)))
+
+(define (add-empty-map! name)
+  (add-map! name (make-hash-table) (make-hash-table) '() 1 (lambda anything 'DONE)))
 
 (define (destroy-map! name)
   (let* ((named-map (get-named-map name))
@@ -69,6 +75,10 @@
 	(lambda (op proc)
 	  (hash-set! map-procs op proc))))
 
+(define (add-map-mob! name sym x y sprite)
+  (let ((m (make-mob x y (named-grid name) sprite)))
+    (hash-set! (map-mobs (get-named-map name)) sym m)))
+
 ;This is supposed to be used in the context of map-load,
 ;where name defines the 'context' of the map expression,
 ;the car of the expression determines the procedure to call
@@ -91,6 +101,7 @@
 	    'DONE
 	    (begin (map-eval name expr)
 		   (eval-expr port)))))
+    (add-empty-map! name)
     (call-with-input-file filename eval-expr)))
 			       
 (set-map-procedure! 'initialize-grid register-grid)
@@ -109,5 +120,7 @@
 (set-map-procedure! 'begin (lambda args 
 			     (for-each primitive-eval (cdr args))))
 
-(set-map-procedure! 'mob (lambda (name x y sprite)
-			   (make-mob x y (named-grid name) sprite)))
+(set-map-procedure! 'mob (lambda (name name-or-x y sprite . overflow)
+			   (if (symbol? name-or-x)
+			       (add-map-mob! name name-or-x y sprite (car overflow))
+			       (add-map-mob! name (gensym) name-or-x y sprite))))
