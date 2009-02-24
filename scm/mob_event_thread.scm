@@ -21,10 +21,12 @@
   (let ((ind (open-mob-events mob #t)))
     (lambda ()
       (do ((ev (get-mob-event mob ind) (get-mob-event mob ind)))
-	  ((get-from-table (tracked-mob-table) mob) (remove-from-table! (tracked-mob-table) mob))
+	  ((not (tracked-mob? m)) (remove-from-table! (tracked-mob-table) mob))
 	(execute-mob-binding mob ev)
 	(execute-global-mob-binding mob ev)))))
 
+(define (tracked-mob? m)
+  (equal? (get-from-table (tracked-mob-table) m) #f))
 
 (define (add-thread-listener! mob)
   (make-thread (listener-proc mob)))

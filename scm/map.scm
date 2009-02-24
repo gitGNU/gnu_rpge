@@ -79,6 +79,9 @@
   (let ((m (make-mob x y (named-grid name) sprite)))
     (hash-set! (map-mobs (get-named-map name)) sym m)))
 
+(define (map-named-mob map name)
+  (hash-ref (map-mobs map) name))
+
 ;This is supposed to be used in the context of map-load,
 ;where name defines the 'context' of the map expression,
 ;the car of the expression determines the procedure to call
@@ -124,3 +127,14 @@
 			   (if (symbol? name-or-x)
 			       (add-map-mob! name name-or-x y sprite (car overflow))
 			       (add-map-mob! name (gensym) name-or-x y sprite))))
+
+(set-map-procedure! 'mob-bind (lambda (name id ev proc)
+				(let ((p (primitive-eval proc))
+				      (m (map-named-mob (get-named-map name) id)))
+				  (if (not (tracked-mob? m))
+				      (begin
+					(add-tracked-mob! m)
+					(init-mob-bindings m)))
+				  (add-mob-binding! m ev p))))
+				      
+				
