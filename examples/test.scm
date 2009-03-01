@@ -43,7 +43,8 @@
 ;Bindings for dialog system, both from dialog.scm
 (add-binding 'q (lambda () (if (not (null? (get-current-dialog))) (next-message))))
 (add-binding 'e (lambda () (if (not (null? (get-current-dialog))) (decide))))
+;(bind-event 'collision (lambda () (display "COLLISION!") (newline)))
 (named-grid:set-tile! grid 5 5 (create-tile "tile1.png" (make-rect 0 0 16 16) block-all-undirectional))
 (set-main-grid (named-grid grid))
-(make-thread safe-load "keys.scm")
+(make-thread safe-load "global-bind-loop.scm")
 (run-repl)

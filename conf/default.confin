@@ -7,6 +7,7 @@ table.guile		#Table API
 utils.guile		#Utility functions
 mobutils.scm		#Mob-related utilities
 key-funcs.scm 		#Key API
+global-bind.scm 	#Global event binding API
 stats.scm		#Statistics system
 mob_event_thread.scm	#Mob event binding system
 border-window.scm	#Defines bordered windows of the very basic type
@@ -19,3 +20,4 @@ item-types.scm		#Defines a few built-in item types
 npc.scm			#Defines default NPC types
 terrain.scm		#Provides a small, small abstraction on top of the basic grids.
 map.scm			#Map API
+default-bindings.scm 	#Default event bindings used by other libraries.

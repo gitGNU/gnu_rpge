@@ -1,4 +1,4 @@
-;Copyright  2008,2009 Remco Bras
+;Copyright  2009 Remco Bras
 ;
 ;This file is part of the RPGE.
 ;
@@ -15,21 +15,11 @@
 ;You should have received a copy of the GNU General Public License
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
- 
-(define get-bindings (make-table-closure))
 
-(define (bind-key key proc)
-  (add-to-table! (get-bindings) key proc))
+;default-bindings.scm: Define the default global event bindings.
+;This file is primarily used by other libraries and should not be
+;modified for the purpose of creating an application using rpge.
 
-(define (add-binding key proc)
-  (let ((current-b (get-binding key)))
-    (if (null? current-b)
-	(bind-key key proc)
-	(begin (remove-binding key)
-	       (bind-key key (interleave current-b proc))))))
-
-(define (get-binding key)
-  (get-from-table (get-bindings) key))
-
-(define (remove-binding key)
-  (remove-from-table! (get-bindings) key))
+(bind-event 'key-down (lambda (e) 
+			(let ((b (get-binding (cdr e))))
+			  (if (not (null? b)) (exec b)))))

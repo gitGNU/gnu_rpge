@@ -15,21 +15,11 @@
 ;You should have received a copy of the GNU General Public License
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
- 
-(define get-bindings (make-table-closure))
 
-(define (bind-key key proc)
-  (add-to-table! (get-bindings) key proc))
+;global-bind-loop.scm: A file containing some simple glue to allow games to
+;simply start the global event loop.
 
-(define (add-binding key proc)
-  (let ((current-b (get-binding key)))
-    (if (null? current-b)
-	(bind-key key proc)
-	(begin (remove-binding key)
-	       (bind-key key (interleave current-b proc))))))
-
-(define (get-binding key)
-  (get-from-table (get-bindings) key))
-
-(define (remove-binding key)
-  (remove-from-table! (get-bindings) key))
+;Boilerplate: allow other loads to proceed.
+(unlock-mutex load-mutex)
+;Go into the actual loop
+(check-for-events)

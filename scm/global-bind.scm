@@ -33,10 +33,6 @@
       (hashq-set! subtab sym proc)
       sym)))
 
-(bind-event 'key-down (lambda (e) 
-			(let ((b (get-binding (cdr e))))
-			  (if (not (null? b)) (exec b)))))
-
 (define (remove-binding event binding)
   (let ((subtab (hashq-ref (bindings) event)))
     (if subtab
@@ -47,9 +43,3 @@
     (cond  
     ((not (null? (car event))) (branch event))))
   (check-for-events))
-
-;signal that the next load may be executed
-(unlock-mutex load-mutex)
-(check-for-events)
-
-
