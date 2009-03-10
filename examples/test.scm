@@ -17,7 +17,7 @@
 ;
 (use-modules (ice-9 threads))
 (set-global-data (init-table))
-(set-mob-bootstrap-proc! (lambda (X) 
+(add-mob-bootstrap-proc! (lambda (X) 
 			   (set-mob-data X (init-table)) 
 			   (stats-init X)
 			   (init-mob-bindings X)))
