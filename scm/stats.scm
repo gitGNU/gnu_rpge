@@ -53,3 +53,26 @@
 
 (define set-mob-attack! (stat-setter 'attack))
 (define get-mob-attack (stat-getter 'attack))
+
+(define set-mob-life! (stat-setter 'life))
+(define get-mob-life (stat-getter 'life))
+
+(define get-mob-armor (stat-getter 'armor))
+(define set-mob-armor! (stat-setter 'armor))
+
+(define get-mob-experience (stat-getter 'experience))
+(define set-mob-experience! (stat-setter 'experience))
+
+(define (decrease-mob-life! mob v)
+  (set-mob-life! mob (- (get-mob-life mob) v)))
+
+(define get-mob-experience-value (stat-getter 'experience-value))
+(define set-mob-experience-value! (stat-setter 'experience-value))
+
+(define (mob-dead? m)
+  (<= (get-mob-life m) 0))
+
+(define (award-experience! victor loser)
+  (set-mob-experience! victor 
+		       (+ (get-mob-experience victor)
+			  (get-mob-experience-value loser))))

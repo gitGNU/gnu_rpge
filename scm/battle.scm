@@ -26,7 +26,7 @@
 ;They shall return a number.
 (define (get-damage attacker defender)
   ;Damage == (attack-armor)*(random factor in [0.75-1])
-  (* (let ((raw (- (get-attack attacker) (get-armor defender))))
+  (* (let ((raw (- (get-mob-attack attacker) (get-mob-armor defender))))
        (if (> raw 0)
 	   raw
 	   0))
@@ -37,7 +37,7 @@
 (define (battle-executor damage-procedure)
   (lambda (attacker defender)
     (let ((damage (damage-procedure attacker defender)))
-      (decrease-life defender damage))))
+      (decrease-mob-life! defender damage))))
 
 ;Create a twin battle handler, which handles simultaneous attacks.
 ;This can take any battle handler, as long as it follows the same conventions 
@@ -58,6 +58,7 @@
     ;A lot of logic is still hardcoded in this.
     ;Mob death is universal, as is handling it,
     ;which merely leaves award-experience! as something to swap out.
+    ;If this must be a really self-contained lib, swap out the death procs as well.
     (map (lambda (a b)
 	   (if (mob-dead? a)
 	       (begin
