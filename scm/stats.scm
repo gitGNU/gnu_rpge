@@ -24,7 +24,10 @@
 (define (get-stat mob stat)
   (let ((stat-proc (get-stat-proc stat)))
     (if (null? stat-proc)
-	(get-from-table (mob-stats-table mob) stat)
+	(let ((in-table (get-from-table (mob-stats-table mob) stat)))
+	  (if (null? in-table)
+	      0
+	      in-table))
 	(stat-proc mob))))
 
 (define (set-stat mob stat value)
