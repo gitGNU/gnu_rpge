@@ -79,3 +79,7 @@
   (set-mob-experience! victor 
 		       (+ (get-mob-experience victor)
 			  (get-mob-experience-value loser))))
+
+;handle-death! is currently an alias for remove-mob
+;This alias exists just in case removal and death become non-equal.
+(define handle-death! remove-mob)
