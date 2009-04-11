@@ -15,35 +15,39 @@
 ;You should have received a copy of the GNU General Public License
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>
 ;
+
+;General initialization, open the threads module,
+;initialize the global userdata and set 
+;our bootstrap procedure to allow statistics and
+;mob bindings to work.
+;Most of this should probably be handled automatically
+;by the required libraries.
 (use-modules (ice-9 threads))
 (set-global-data (init-table))
 (add-mob-bootstrap-proc! (lambda (X) 
 			   (set-mob-data X (init-table)) 
 			   (stats-init X)
 			   (init-mob-bindings X)))
-(define grid  (register-grid 'foo 50 40))
-(named-grid:set-all-tiles! grid (create-tile "tile2.png" (make-rect 0 0 16 16) block-none))
-(define m (make-mob 0 0 (named-grid grid) "sprite_letter.png"))
-(define n (make-mob 5 0 (named-grid grid) "sprite_letter.png"))
-;Tell mob_event_test.scm to get a move on and track this mob.
-(add-tracked-mob! m)
-(add-mob-binding! m 'tile-change (lambda (event)
-				 (let ((newpos (cddr event)))
-				   (set-camera-x (car newpos)) 
-				   (set-camera-y (cadr newpos))
-				   (set-main-grid (caddr newpos)))))
+;Load the test map.
+(map-load "test.map")
+;We still need to do some things with this mob that haven't been
+;ported to the map language yet, grab it.
+;At this point, the mob has already been automatically tracked, and our above bootstrap
+;procedure has taken care of the initialization needed for that.
+(define m (map-named-mob (get-named-map 'test) 'main))
+;Definition to simplify the below bindings.
 (define (binding-generator m x y)
   (lambda () (if (null? (get-current-dialog))
 		 (add-mob-movement m x y 16))))
-;Camera locking is now handled externally, so these are back to their old simplicity.
+;Bind keys to movement.
 (add-binding 'd (binding-generator m 1 0))
 (add-binding 'a (binding-generator m -1 0))
 (add-binding 's (binding-generator m 0 1))
 (add-binding 'w (binding-generator m 0 -1))
-;Bindings for dialog system, both from dialog.scm
+;Default bindings for the dialog system, allowing some simple movement in dialogs and
+;menus.
 (add-binding 'q (lambda () (if (not (null? (get-current-dialog))) (next-message))))
 (add-binding 'e (lambda () (if (not (null? (get-current-dialog))) (decide))))
-(named-grid:set-tile! grid 5 5 (create-tile "tile1.png" (make-rect 0 0 16 16) block-all-undirectional))
-(set-main-grid (named-grid grid))
+(set-main-grid (named-grid 'test))
 (make-thread safe-load "global-bind-loop.scm")
 (run-repl)

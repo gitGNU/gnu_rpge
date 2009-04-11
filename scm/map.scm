@@ -132,9 +132,7 @@
 				(let ((p (primitive-eval proc))
 				      (m (map-named-mob (get-named-map name) id)))
 				  (if (not (tracked-mob? m))
-				      (begin
-					(add-tracked-mob! m)
-					(init-mob-bindings m)))
-				  (add-mob-binding! m ev p))))
-				      
+				      (add-tracked-mob! m)
+				      (add-mob-binding! m ev p)))))
+
 				

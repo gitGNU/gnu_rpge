@@ -1,0 +1,22 @@
+;Main grid initialization, sets the tilegrid to an empty one.
+(initialize-grid 50 40)
+;Set all tiles at once.
+(all-tiles (tile "tile2.png" (0 0 16 16) block-none))
+;Replace one tile.
+(tile 5 5 (tile "tile1.png" (0 0 16 16) block-all-undirectional))
+;Make a named mob.
+(mob main 0 0 "sprite_letter.png")
+;This bit illustrates anonymous mobs.
+;They'll be properly taken care of, but are otherwise not very useful.
+(mob 5 0 "sprite_letter.png")
+;Add a binding for the mob's tile-change event, to lock
+;the camera to this mob.
+;Probably a generic enough utility to put somewhere else.
+(mob-bind main 
+	  tile-change 
+	  (lambda (event)
+	    (let ((newpos (cddr event)))
+	      (set-camera-x (car newpos)) 
+	      (set-camera-y (cadr newpos))
+	      (set-main-grid (caddr newpos)))))
+
