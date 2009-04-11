@@ -132,7 +132,9 @@
 				(let ((p (primitive-eval proc))
 				      (m (map-named-mob (get-named-map name) id)))
 				  (if (not (tracked-mob? m))
-				      (add-tracked-mob! m)
-				      (add-mob-binding! m ev p)))))
+				      (add-tracked-mob! m))
+				  (add-mob-binding! m ev p))))
 
+(set-map-procedure! 'show-grid (lambda (name)
+				 (set-main-grid (named-grid name))))
 				

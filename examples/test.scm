@@ -48,6 +48,5 @@
 ;menus.
 (add-binding 'q (lambda () (if (not (null? (get-current-dialog))) (next-message))))
 (add-binding 'e (lambda () (if (not (null? (get-current-dialog))) (decide))))
-(set-main-grid (named-grid 'test))
 (make-thread safe-load "global-bind-loop.scm")
 (run-repl)

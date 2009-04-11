@@ -19,4 +19,5 @@
 	      (set-camera-x (car newpos)) 
 	      (set-camera-y (cadr newpos))
 	      (set-main-grid (caddr newpos)))))
-
+;Make this grid the one rendered in the game window.
+(show-grid)
