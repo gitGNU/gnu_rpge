@@ -67,6 +67,12 @@ get_keydown_symbol(SDL_Event e)
   return scm_from_locale_symbol("key-down");
 }
 
+SCM
+get_keyup_symbol(SDL_Event e)
+{
+  return scm_from_locale_symbol("key-up");
+}
+
 /*
   Simply return the SDL-defined name of whichever sym this corresponds to.
   There are some vague warnings in the docs concerning SDLKey, though
@@ -233,6 +239,7 @@ main (int argc, char **argv)
   scm_with_guile(init_scm,NULL);
   init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
+  add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keyup_symbol,get_keysym_symbol));
   scm_with_guile(run_config_file,initfile);
   /*Set up REPL signal and run REPL thread*/
   repl_signal = SDL_CreateMutex();
