@@ -68,46 +68,18 @@ get_keydown_symbol(SDL_Event e)
 }
 
 /*
-  To do: Fix this.
-  The problem with this code is that it relies on UNICODE conversion,
-  which SDL doesn't do at all for keyup events.
-  Said conversion also incurs an overhead and SDL has a function
-  to get the name of a keysym anyway.
-  The added benefit of doing so it that it also works for
-  things like left arrow keys without lots of special-purpose
-  silliness.
+  Simply return the SDL-defined name of whichever sym this corresponds to.
+  There are some vague warnings in the docs concerning SDLKey, though
+  those don't seem to make much sense.
+  Either way, this is the simplest way to make this not suck.
+  Note that using scm_from_locale_symbol here preserves the 'eqness'
+  of different instances of the same key compared to the previous mess,
+  which is a good thing.
 */
 SCM 
 get_keysym_symbol(SDL_Event e)
 {
-  short sym = e.key.keysym.unicode;
-  char printable;
-  if(!sym)
-    return SCM_EOL; /*Return NIL for non-printable (control) chars*/
-  else
-    {
-      if(sym & 0xFF80)/*Non-ASCII char, ignore for now*/
-        return SCM_EOL;
-      else  /*ASCII char*/
-        {
-          printable = sym & 0x7F;
-          switch(printable)
-           {
-              case '\n':
-                return scm_from_locale_symbol("newline");
-                break;
-              case '\t':
-                return scm_from_locale_symbol("tab");
-                break;
-              case ' ':
-                return scm_from_locale_symbol("space");
-                break;
-              default:
-                return scm_from_locale_symboln(&printable,1);
-                break;
-            }
-        }
-    }
+  return scm_from_locale_symbol(SDL_GetKeyName(e.key.keysym.sym));
 }
 
 static void *
