@@ -25,18 +25,29 @@
 ;Each key is a symbol, each value is a list of hash tables.
 (define key-bindings-table (closure-gen (make-hash-table)))
 
+;Return the list all keys are bound to once the first attempt
+;to bind anything to them is made.
 (define (initial-binding-list)
   (list (make-hash-table)
 	(make-hash-table)
 	(make-hash-table)))
 
+;Helper procedure to initialize a binding to the initial value
+;returned by the procedure above.
 (define (initialize-binding! key)
   (hash-set! (key-bindings-table) key (initial-binding-list)))
 
+;Convenience selectors for the lists used as bindings in 
+;(key-bindings-table).
 (define on-press-table car)
 (define on-release-table cadr)
 (define while-pressed-table caddr)
 
+;Helper procedure to define a procedure that
+;manipulates bindings.
+;The argument sub-table-getter is called with a binding list as 
+;returned (initially) from initial-binding-list, and should
+;return a hash table the key should be bound in.
 (define (binding-procedure sub-table-getter)
   (letrec ((result (lambda (key procedure)
 		    (let ((current-binding (hash-ref (key-bindings-table) key)))
@@ -50,6 +61,7 @@
 			    (result key procedure)))))))
     result))
 
+;User-friendlier procedures that access the three hash tables individually.
 (define bind-keypress! (binding-procedure on-press-table))
 (define bind-keyrelease! (binding-procedure on-release-table))
 (define bind-while-pressed! (binding-procedure while-pressed-table))
