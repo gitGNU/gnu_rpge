@@ -49,17 +49,16 @@
 ;returned (initially) from initial-binding-list, and should
 ;return a hash table the key should be bound in.
 (define (binding-procedure sub-table-getter)
-  (letrec ((result (lambda (key procedure)
-		    (let ((current-binding (hash-ref (key-bindings-table) key)))
-		      (if current-binding
-			  (let ((sub-table (sub-table-getter current-binding))
-				(sym (gensym)))
-			    (hash-set! sub-table sym procedure)
-			    sym)
-			  (begin
-			    (initialize-binding! key)
-			    (result key procedure)))))))
-    result))
+  (alambda (key procedure)
+	   (let ((current-binding (hash-ref (key-bindings-table) key)))
+	     (if current-binding
+		 (let ((sub-table (sub-table-getter current-binding))
+		       (sym (gensym)))
+		   (hash-set! sub-table sym procedure)
+		   sym)
+		 (begin
+		   (initialize-binding! key)
+		   (self key procedure))))))
 
 ;User-friendlier procedures that access the three hash tables individually.
 (define bind-keypress! (binding-procedure on-press-table))
