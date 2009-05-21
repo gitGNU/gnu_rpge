@@ -195,6 +195,13 @@ remake_tilegrid(tilelayer* main_grid)
   return main_grid->imagebuffer;
 }
 
+static void
+free_grid_image_buffer(tilelayer* grid)
+{
+  SDL_FreeSurface(grid->imagebuffer);
+  grid->imagebuffer = NULL;
+}
+
 tile** set_tile(int gridid, unsigned int x, unsigned int y, tile replacement)
 {
   tilelayer* grid = GRID_PTR(gridid);
@@ -299,8 +306,9 @@ remove_grid_at(int index)
 inline void
 set_maingrid_index(int ind)
 {
-  maingrid_index = ind;
   SDL_mutexP(tile_mutex);
+  free_grid_image_buffer(GRID_PTR(maingrid_index));
+  maingrid_index = ind;
   remake_tilegrid(GRID_PTR(ind));
   SDL_mutexV(tile_mutex);
 }
