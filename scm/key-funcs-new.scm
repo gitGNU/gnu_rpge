@@ -37,7 +37,7 @@
 (define (initialize-binding! key)
   (hash-set! (key-bindings-table) key (initial-binding-list)))
 
-;Convenience selectors for the lists used as bindings in 
+;Convenience selectors for the lists used as bindings in
 ;(key-bindings-table).
 (define on-press-table car)
 (define on-release-table cadr)
@@ -45,7 +45,7 @@
 
 ;Helper procedure to define a procedure that
 ;manipulates bindings.
-;The argument sub-table-getter is called with a binding list as 
+;The argument sub-table-getter is called with a binding list as
 ;returned (initially) from initial-binding-list, and should
 ;return a hash table the key should be bound in.
 (define (binding-procedure sub-table-getter)
@@ -76,14 +76,15 @@
 	    (hash-fold (lambda (key value accum)
 			 (interleave accum value))
 		       (lambda () 'DONE)
-		       sub-table))))))
+		       sub-table))
+	  (lambda () 'DONE)))))
 
 ;User-friendlier procedures that get each of the normally defined bindings
 ;from the 3 tables used for every key.
 (define key-press-binding (binding-getter-procedure on-press-table))
 (define key-release-binding (binding-getter-procedure on-release-table))
 (define key-held-binding (binding-getter-procedure while-pressed-table))
-			 
+
 
 ;Another hash table containing the status of keys.
 (define key-status-map (closure-gen (make-hash-table)))
@@ -105,7 +106,9 @@
 ;consistently-running bindings.
 (define (execute-key-held-procedures)
   (hash-for-each (lambda (k v)
-		   (if v 
+		   (if v
 		       ((key-held-binding k))))
 		 (key-status-map)))
-  
+
+(define (make-key-held-thread)
+  (thread-job execute-key-held-procedures (cons 0 250000)))
