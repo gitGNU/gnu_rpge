@@ -85,7 +85,6 @@
 (define key-release-binding (binding-getter-procedure on-release-table))
 (define key-held-binding (binding-getter-procedure while-pressed-table))
 
-
 ;Another hash table containing the status of keys.
 (define key-status-map (closure-gen (make-hash-table)))
 
@@ -110,5 +109,20 @@
 		       ((key-held-binding k))))
 		 (key-status-map)))
 
+;Convenience procedure, creates a thread that
+;runs execute-key-held-procedures every quarter second.
 (define (make-key-held-thread)
   (thread-job execute-key-held-procedures (cons 0 250000)))
+
+;Interface procedure, handles a key event by calling the
+;appropriate binding and marking some things.
+(define (handle-key-event ev)
+  (let ((type (car ev))
+	(key (cdr ev)))
+    (cond ((eq? type 'key-down) 
+	   (mark-key-held! key) 
+	   ((key-press-binding key)))
+	  ((eq? type 'key-up)
+	   (mark-key-released! key)
+	   ((key-release-binding key))))))
+	   
