@@ -1,0 +1,23 @@
+#Default RPGE configuration file. This file is installed in datadir/conf and loaded by the default skeleton config file.
+scheme-dir:datadir/scm/
+scheme-dir:datadir/examples/
+image-dir:datadir/images/
+font-dir:datadir/fonts/
+table.guile		#Table API
+utils.guile		#Utility functions
+mobutils.scm		#Mob-related utilities
+key-funcs-new.scm	#New key binding API.
+global-bind.scm 	#Global event binding API
+stats.scm		#Statistics system
+mob_event_thread.scm	#Mob event binding system
+border-window.scm	#Defines bordered windows of the very basic type
+dialog.scm		#Dialog API defining basic dialog type functions (prototype, needs working out specific calling contracts)
+dialog-types.scm 	#Defines built-in dialog types
+inventory.scm 		#Defines basic mob inventories
+item.scm		#Defines the general item mechanisms
+equipment.scm		#Defines equipment basics
+item-types.scm		#Defines a few built-in item types
+npc.scm			#Defines default NPC types
+terrain.scm		#Provides a small, small abstraction on top of the basic grids.
+map.scm			#Map API
+default-bindings-new.scm #New default key bindings, used by key-funcs-new.

@@ -42,7 +42,7 @@ sequence tile_layers;
 SDL_mutex* tile_mutex;
 
 /*We do need to know what world the user would like us to render*/
-int maingrid_index;
+int maingrid_index = -1;
 
 #define GRID_PTR(n) ((tilelayer*)tile_layers.data[n].data)
 
@@ -307,7 +307,8 @@ inline void
 set_maingrid_index(int ind)
 {
   SDL_mutexP(tile_mutex);
-  free_grid_image_buffer(GRID_PTR(maingrid_index));
+  if(maingrid_index >= 0 && GRID_PTR(maingrid_index)->imagebuffer)
+    free_grid_image_buffer(GRID_PTR(maingrid_index));
   maingrid_index = ind;
   remake_tilegrid(GRID_PTR(ind));
   SDL_mutexV(tile_mutex);
