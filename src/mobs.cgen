@@ -29,13 +29,13 @@ mobs_init(void)
   mobs = sequence_init();
 }
 
-static void
+static inline void
 lock_mobs()
 {
   SDL_mutexP(mob_mutex);
 }
 
-static void
+static inline void
 unlock_mobs()
 {
   SDL_mutexV(mob_mutex);
@@ -288,6 +288,44 @@ mob_set_movement (mob * m, int xam, double xrate, int yam, double yrate)
 }
 
 /*
+  Struct declaration needed for the following few procedures.
+*/
+struct mob_motion_start_event_descriptor
+{
+  mob* m;
+  int xtiles,ytiles,frames;
+};
+
+static void*
+inner_add_mob_motion_start_event(void* arg)
+{
+  struct mob_motion_start_event_descriptor* stuff = (struct mob_motion_start_event_descriptor*)arg;
+  eventstack_addevent(&(stuff->m->events),
+		      make_event(scm_from_locale_symbol("motion-start"),
+				 scm_list_n(scm_from_int(stuff->xtiles),
+					    scm_from_int(stuff->ytiles),
+					    scm_from_int(stuff->frames),
+					    SCM_UNDEFINED)));
+  return NULL;
+}
+
+/*
+  Since events must be sent to the stacks when mobs start moving and stop
+  moving, convenience procedures to handle this are added here.
+*/
+static void
+add_mob_motion_start_event(mob* m, int xtiles, int ytiles, int frames)
+{
+  /*
+    We can presume that this will only be called
+    from the context of mob_move_all, that is, that 
+    the mob mutex is locked.
+  */
+  struct mob_motion_start_event_descriptor stuff = {m,xtiles,ytiles,frames};
+  scm_with_guile(inner_add_mob_motion_start_event,&stuff);
+}
+
+/*
   Set up movement parameters, nothing very complicated.
 */
 static void
@@ -295,9 +333,10 @@ mob_move_all (mob * m, int xtiles, int ytiles, int frames)
 {
   int xam = xtiles*TILE_WIDTH;
   int yam = ytiles*TILE_HEIGHT;
-  int xrate = xam/frames;
-  int yrate = yam/frames;
+  double xrate = xam/frames;
+  double yrate = yam/frames;
   mob_set_movement (m, xam, xrate, yam, yrate);
+  add_mob_motion_start_event(m,xtiles,ytiles,frames);
 }
 
 /*

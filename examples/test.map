@@ -19,5 +19,22 @@
 	      (set-camera-x (car newpos)) 
 	      (set-camera-y (cadr newpos))
 	      (set-main-grid (caddr newpos)))))
+(mob-bind main
+	  motion-start
+	  (lambda (event)
+	    (display "Motion change: ")
+	    (newline)
+	    (display "Moving ")
+	    (display (cadr event))
+	    (display " tiles to the right")
+	    (newline)
+	    (display "Moving ")
+	    (display (caddr event))
+	    (display " tiles down")
+	    (newline)
+	    (display "In ")
+	    (display (cadddr event))
+	    (display " frames")
+	    (newline)))
 ;Make this grid the one rendered in the game window.
 (show-grid)
