@@ -296,6 +296,11 @@ struct mob_motion_start_event_descriptor
   int xtiles,ytiles,frames;
 };
 
+/*
+  Workhorse procedure, to be run in guile mode.
+  Arg should be a pointer to a properly filled-in
+  struct mob_motion_start_event_descriptor.
+*/
 static void*
 inner_add_mob_motion_start_event(void* arg)
 {
@@ -323,6 +328,26 @@ add_mob_motion_start_event(mob* m, int xtiles, int ytiles, int frames)
   */
   struct mob_motion_start_event_descriptor stuff = {m,xtiles,ytiles,frames};
   scm_with_guile(inner_add_mob_motion_start_event,&stuff);
+}
+
+/*
+  Workhorse procedure, to be run in guile mode.
+  Adds a motion stop event and only needs the mob pointer.
+  Hence, arg is a pointer to the mob this event needs to be
+  added to.
+*/
+static void*
+inner_add_mob_motion_stop_event(void* arg)
+{
+  eventstack_addevent(&((mob*)arg)->events,
+		      make_event(scm_from_locale_symbol("motion-stop"),
+				 SCM_EOL));
+}
+
+static void
+add_mob_motion_stop_event(mob* m)
+{
+  scm_with_guile(inner_add_mob_motion_stop_event,m);
 }
 
 /*
