@@ -36,5 +36,11 @@
 	    (display (cadddr event))
 	    (display " frames")
 	    (newline)))
+(mob-bind main
+	  motion-stop
+	  (lambda (event)
+	    (display "Mob stopped:")
+	    (display (map-named-mob (get-named-map 'test) 'main))
+	    (newline)))
 ;Make this grid the one rendered in the game window.
 (show-grid)

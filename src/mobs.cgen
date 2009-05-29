@@ -186,12 +186,6 @@ animate_mobs ()
   unlock_mobs();
 }
 
-inline void
-mob_stop_movement(mob* m)
-{
-  m->xmoveamount = m->xmoverate = m->ymoveamount = m->ymoverate = 0;
-}
-
 static void*
 inner_add_mob_collision_event(void* indices)
 {
@@ -342,12 +336,27 @@ inner_add_mob_motion_stop_event(void* arg)
   eventstack_addevent(&((mob*)arg)->events,
 		      make_event(scm_from_locale_symbol("motion-stop"),
 				 SCM_EOL));
+  return NULL;
 }
 
 static void
 add_mob_motion_stop_event(mob* m)
 {
   scm_with_guile(inner_add_mob_motion_stop_event,m);
+}
+
+/*
+  Simple inline procedure that stops a mob.
+  Since this stops the mob's movement by force,
+  a stop event is automatically generated.
+  Note that this event is generated even if the stop
+  was spurious and the mob was not moving before.
+*/
+static inline void
+mob_stop_movement(mob* m)
+{
+  m->xmoveamount = m->xmoverate = m->ymoveamount = m->ymoverate = 0;
+  add_mob_motion_stop_event(m);
 }
 
 /*
@@ -373,12 +382,18 @@ static void
 move_mob (mob * m)
 {
   int oldx = m->x, oldy = m->y;
+  char was_moving, should_stop;
   if(!moving(*m) && m->move_descriptors.objcount)
     {
       move_descriptor md = *((move_descriptor*)m->move_descriptors.data[0].data);
       mob_move_all(m,md.tilex,md.tiley,md.frames);
       sequence_remove_at(&m->move_descriptors,0);
     }
+  /*
+    Store if the mob was initially moving.
+    Used below to determine if it stopped.
+  */
+  was_moving = moving(*m);
   if (m->xmoveamount)
     {
       if (abs (m->xmoveamount) < abs (m->xmoverate))
@@ -405,6 +420,16 @@ move_mob (mob * m)
 	  m->ymoveamount -= m->ymoverate;
 	}
     }
+  /*
+    Store if stop event should be sent on this mob.
+    Essentially, this is true if the mob was moving at the start of the frame
+    and isn't at the end, whether for reasons of simply being done moving
+    or for reasons of collisions.
+    In case of collisions, we'd like this to not give any extra events, 
+    so we fire the event only at the end of the procedure.
+    So, first, the mob stopped naturally if it isn't moving now and was moving.
+  */
+  should_stop = !moving(*m) && was_moving;
   if(m->x != oldx || m->y != oldy)
     {
       /*
@@ -422,6 +447,11 @@ move_mob (mob * m)
       if(m->x < 0 || tilex >= MAIN_GRID->width || m->y < 0 || tiley >=MAIN_GRID->height)
 	{
 	  mob_stop_movement(m);
+	  /*
+	    We already stopped the mob, no event should be fired even
+	    if it might otherwise be necessary to do so.
+	  */
+	  should_stop = 0;
 	  /*Do some fixing of coordinates, to make sure the top-left corner of the sprite is at the limit of the set of allowed positions*/
 	  m->x <  0 ? m->x = 0 : set_mob_tile_x(m,old_tilex);
 	  m->y <  0 ? m->y = 0 : set_mob_tile_y(m,old_tiley);
@@ -453,6 +483,10 @@ move_mob (mob * m)
 	      if(stop)
 		{
 		  mob_stop_movement(m);
+		  /*
+		    As usual, do not fire an event now.
+		  */
+		  should_stop = 0;
 		  /*Coordinate fixing, to make sure the mob is on the OLD tile properly.*/
 		  if(tilex != old_tilex)
 		    set_mob_tile_x(m,old_tilex);
@@ -473,6 +507,11 @@ move_mob (mob * m)
       else
         {
           mob_stop_movement(m);
+	  /*
+	    Do not fire an event now as the mob is being
+	    stopped by force, which fires an event.
+	  */
+	  should_stop = 0;
 	  /*Coordinate fixing, to make sure the mob is on the OLD tile properly.*/
 	  if(tilex != old_tilex)
 	    set_mob_tile_x(m,old_tilex);
@@ -489,6 +528,8 @@ move_mob (mob * m)
           add_mob_collision_event(m,occupant);
         }
     }
+  if(should_stop)
+    add_mob_motion_stop_event(m);
 }
 
 void
