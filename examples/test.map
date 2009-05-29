@@ -19,6 +19,9 @@
 	      (set-camera-x (car newpos)) 
 	      (set-camera-y (cadr newpos))
 	      (set-main-grid (caddr newpos)))))
+;Testing binding for a motion-start event.
+;This just prints all the components of the event,
+;albeit in a slightly clumsy fashion.
 (mob-bind main
 	  motion-start
 	  (lambda (event)
@@ -36,6 +39,9 @@
 	    (display (cadddr event))
 	    (display " frames")
 	    (newline)))
+;Testing binding for a motion-stop event.
+;Since there's nothing particularly interesting to print,
+;this just prints a message saying the mob was stopped.
 (mob-bind main
 	  motion-stop
 	  (lambda (event)
