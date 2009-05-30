@@ -137,5 +137,6 @@ render_screen(SDL_Surface* dest)
     }
   render_windows(dest);
   render_texts(dest);
+  SDL_Flip(dest);
 }
 

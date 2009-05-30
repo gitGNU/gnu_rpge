@@ -224,18 +224,13 @@ main (int argc, char **argv)
   int next, now;
   SDL_Init (SDL_INIT_EVERYTHING);
   TTF_Init ();
-  screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE);
+  screen = SDL_SetVideoMode (SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
   if (screen == NULL)
     {
       fprintf (stderr, "SDL_SetVideoMode failed: %s\n", SDL_GetError ());
       return 1;
     }
   SDL_WM_SetCaption ("rpge", "rpge");
-  /*
-    Enable UNICODE conversion for keysyms so we can map the ASCII characters to their relevant descriptions, provided they are not equal to a few special chars.
-    This does have some overhead according to the docs, so we might want to come up with a different, possibly faster scheme to take care of this later.
-  */
-  SDL_EnableUNICODE(1);
   scm_with_guile(init_scm,NULL);
   init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
