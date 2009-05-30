@@ -263,9 +263,6 @@ main (int argc, char **argv)
                 dispatch_event(*event);
 	    }
 	}
-      /*
-	Run move_mobs, which needs guile mode now.
-      */
       move_mobs ();
       animate_mobs ();  
       render_screen (screen);
