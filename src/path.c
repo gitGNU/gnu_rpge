@@ -50,13 +50,8 @@ fexists(char* file)
   /*Presume that reading in text mode or reading in binary mode will not cause any differences to the existence of the file*/
   FILE* f = fopen(file,"rt");
   if(f)
-    {
-      fclose(f);
-      return 1;
-    }
-  /*Otherwise, since f is a NULL FILE*, don't bother closing*/
-  else
-    return 0;
+    fclose(f);
+  return f != NULL;
 }
 
 /*
