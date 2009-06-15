@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "dispatch.h"
 sequence event_dispatch_pairs;
 SDL_mutex* dispatch_lock;
-convertors(dispatch_pair);
+S_CONVERTORS(dispatch_pair,DISPATCH_PAIR);
 
 dispatch_pair
 make_dispatch_pair (Uint32 eventtype, SCM (*typeproc) (SDL_Event),

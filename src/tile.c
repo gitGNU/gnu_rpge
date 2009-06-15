@@ -20,9 +20,8 @@ tile.c: Implement the functions related to tiles and tilelayers.
 */
 #include "tile.h"
 
-/*Declare convertor usage, so sed can find it and take care of the mess*/
-convertors(tilelayer);
-convertors(imagecounter);
+S_CONVERTORS(tilelayer,TILELAYER);
+S_CONVERTORS(imagecounter,IMAGECOUNTER);
 
 /*The sequence of current ready, loaded tilegrids (or tile_layers, whichever). The main idea here is to ensure that whatever links to the main grid is at any and all times 
   loaded. (Technically, the point is to A: be able to load the new grid immediately on transition, B: swap around tilegrids if necessary (a prereq of A, really) and C: make sure

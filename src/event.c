@@ -24,8 +24,8 @@ eventstack global_usereventstack;
 #define LOCK_STACK(s) s->lock? SDL_mutexP(s->lock) : -1;
 #define UNLOCK_STACK(s) s->lock? SDL_mutexV(s->lock) : -1;
 
-convertors(event);
-convertors(user);
+S_CONVERTORS(event,EVENT);
+S_CONVERTORS(user,USER);
 
 event
 make_event (SCM type, SCM data)

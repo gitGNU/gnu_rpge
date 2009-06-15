@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 sequence windows;
 SDL_mutex* window_mutex;
-convertors(window);
+S_CONVERTORS(window,WINDOW);
 
 void 
 init_windows()

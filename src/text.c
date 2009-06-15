@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 sequence fonts;
 sequence texts;
-convertors(font);
-convertors(text);
+S_CONVERTORS(font,FONT);
+S_CONVERTORS(text,TEXT);
 SDL_mutex *font_mutex,*text_mutex;
 
 void

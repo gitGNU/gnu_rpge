@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "guile_load.h"
 
 sequence argvs;
-convertors(thread_argv);
+S_CONVERTORS(thread_argv,THREAD_ARGV);
 SDL_mutex* argv_lock;
 
 void

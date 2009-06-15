@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 sequence images = {0,0};
 SDL_mutex* image_mutex;
-convertors(image);
+S_CONVERTORS(image,IMAGE);
 
 #define ADD_REF(n) ((image*)images.data[n].data)->count++
 #define DEC_REF(n) ((image*)images.data[n].data)->count--

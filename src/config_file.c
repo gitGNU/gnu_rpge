@@ -22,7 +22,7 @@ config_file.c: declare a function or two to load scheme files from a configurati
 
 #include "config_file.h"
 SDL_mutex* directive_lock;
-convertors(directive_t);
+S_CONVERTORS(directive_t,DIRECTIVE_T)
 sequence directives = {0,0};
 
 /*Define a custom getline so we don't need gcc. The semantics of the glibc variety are slightly different, but this should do for all sane cases. This may need a replacement calloc on some systems, which should be easy enough to

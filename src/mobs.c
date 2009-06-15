@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "mobs.h"
 sequence mobs;
 SDL_mutex* mob_mutex;
-convertors(move_descriptor);
-convertors(mob);
+S_CONVERTORS(move_descriptor,MOVE_DESCRIPTOR);
+S_CONVERTORS(mob,MOB);
 
 void
 mobs_init(void)

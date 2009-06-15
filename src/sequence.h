@@ -43,6 +43,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define TYPE_IMAGECOUNTER 15
 #define TYPE_USER 16
 
+/*
+  A prototype macro to replace the ugliness using convertors.sh and .cgen files.
+  The extra argument capitalized_name is used until I can find something that
+  sucks less.
+*/
+#define CONVERTORS(type,namestr,capitalized_name) inline object make_##namestr##_obj(type foo) \
+   { \
+     object o;\
+     o.data = xmalloc(sizeof(type));\
+     o.typeinfo = TYPE_##capitalized_name;\
+     *((type*)o.data) = foo;\
+     return o;\
+   }\
+   inline type \
+   get_obj_##namestr(object o)\
+   {\
+     return *((type*)o.data);\
+   }
+
+/*
+  Convenience edition of previous macro.
+  Unfortunately, I haven't found a way to upper-case things in the C preprocessor yet.
+  (The S stands for 'Simple')
+*/
+#define S_CONVERTORS(type,capitalized_name) CONVERTORS(type,type,capitalized_name)
+
+
+
   
 typedef struct
 {

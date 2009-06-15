@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
 #include "sequence.h"
-convertors(int);
-convertors(Uint32);
-convertors(char*,string);
+S_CONVERTORS(int,INT);
+S_CONVERTORS(Uint32,UINT32);
+CONVERTORS(char*,string,STRING);
 
 /*Return empty sequences and objects, for initialization and/or defaulting purposes*/
 sequence

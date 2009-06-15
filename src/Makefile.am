@@ -1,9 +1,5 @@
 #Makefile.am for RPGE C source code.
 bin_PROGRAMS = rpge
-rpge_SOURCES = main.c video.c video.h main.h mobs.h mobs.cgen imagestack.h imagestack.cgen tile.h tile.c guile.h guile.cgen constants.h event.cgen event.h window.h window.cgen sequence.cgen sequence.h text.cgen text.h dispatch.cgen dispatch.h config_file.cgen config_file.h camera.c camera.h path.h path.c guile_mob.c guile_mob.h guile_camera.c guile_camera.h guile_window.c guile_window.h guile_tile.c guile_tile.h guile_text.h guile_text.c guile_global_event.c guile_global_event.h guile_load.cgen guile_load.h
+rpge_SOURCES = main.c video.c video.h main.h mobs.h mobs.c imagestack.h imagestack.c tile.h tile.c guile.h guile.c constants.h event.c event.h window.h window.c sequence.c sequence.h text.c text.h dispatch.c dispatch.h config_file.c config_file.h camera.c camera.h path.h path.c guile_mob.c guile_mob.h guile_camera.c guile_camera.h guile_window.c guile_window.h guile_tile.c guile_tile.h guile_text.h guile_text.c guile_global_event.c guile_global_event.h guile_load.c guile_load.h
 rpge_LDADD= $(top_builddir)/lib/libgnu.a
 AM_CFLAGS= -I$(top_srcdir)/lib -I$(top_builddir)/lib -Wall -pg
-SUFFIXES=.cgen
-MOSTLYCLEANFILES=dispatch.c imagestack.c mobs.c guile.c event.c window.c sequence.c text.c dispatch.c config_file.c guile_load.c
-.cgen.c:
-	$(top_srcdir)/convertors.sh $< $@
