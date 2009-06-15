@@ -1,9 +1,5 @@
 This file records all known RPGE limitations and bugs. Any bugs herein are things that may need urgent attention.
 
--RPGE's build system uses the GNU sed extensions \U and \E, for aesthetic reasons. 
-
 -The GUILE API related to fonts, texts and windows is not powerful enough. Furthermore, the mob animation API needs work.
-
--There is no way for scripts to know when mobs stop moving or change their movement, should this exist anyway?
 
 -For future purposes: RPGE users cannot arbitrarily swap around engine states yet. Of course, such a feature is highly dangerous, very thread-unsafe and generally pretty hard to use, but extra-ordinarily powerful. For example, it would allow one to do game saves by literally dumping the state of the engine to a file. Such a trick however requires a new layer of objectization, which allows any or almost any RPGE object to be 'transliterated' into a GUILE representation. If done improperly, this would be insanely slow.
