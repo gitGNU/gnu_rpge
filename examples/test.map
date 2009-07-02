@@ -47,6 +47,7 @@
 	  (lambda (event)
 	    (display "Mob stopped:")
 	    (display (map-named-mob (get-named-map 'test) 'main))
-	    (newline)))
+	    (newline)
+	    (queue-mob-motion! (map-named-mob (get-named-map 'test) 'main))))
 ;Make this grid the one rendered in the game window.
 (show-grid)

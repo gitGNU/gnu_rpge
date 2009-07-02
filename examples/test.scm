@@ -27,7 +27,8 @@
 (add-mob-bootstrap-proc! (lambda (X) 
 			   (set-mob-data X (init-table)) 
 			   (stats-init X)
-			   (init-mob-bindings X)))
+			   (init-mob-bindings X)
+			   (init-mob-velocity! X)))
 ;Load the test map.
 (map-load "test.map")
 ;We still need to do some things with this mob that haven't been
@@ -35,18 +36,39 @@
 ;At this point, the mob has already been automatically tracked, and our above bootstrap
 ;procedure has taken care of the initialization needed for that.
 (define m (map-named-mob (get-named-map 'test) 'main))
+
+(defmacro when (test . body)
+  `(if ,test
+       (begin ,@body)))
+
 ;Definition to simplify the below bindings.
-(define (binding-generator m x y)
-  (lambda () (if (null? (get-current-dialog))
-		 (add-mob-movement m x y 16))))
+(define (press-binding-generator m x y)
+  (lambda () (when (null? (get-current-dialog))
+		   (if (not (= x 0))
+		       (set-mob-velocity-x! m x))
+		   (if (not (= y 0))
+		       (set-mob-velocity-y! m y)))))
+
+(define (release-binding-generator m x y)
+  (lambda () (when (null? (get-current-dialog))
+		   (if (not (= x 0))
+		       (set-mob-velocity-x! m 0))
+		   (if (not (= y 0))
+		       (set-mob-velocity-y! m 0)))))
+
+(define (bind-movement-key key mob x y)
+  (bind-keypress! key (press-binding-generator m x y))
+  (bind-keyrelease! key (release-binding-generator m x y)))
+
 ;Bind keys to movement.
-(add-binding 'd (binding-generator m 1 0))
-(add-binding 'a (binding-generator m -1 0))
-(add-binding 's (binding-generator m 0 1))
-(add-binding 'w (binding-generator m 0 -1))
+(bind-movement-key 'a m -1 0)
+(bind-movement-key 's m 0 1)
+(bind-movement-key 'd m 1 0)
+(bind-movement-key 'w m 0 -1)
+
 ;Default bindings for the dialog system, allowing some simple movement in dialogs and
 ;menus.
-(add-binding 'q (lambda () (if (not (null? (get-current-dialog))) (next-message))))
-(add-binding 'e (lambda () (if (not (null? (get-current-dialog))) (decide))))
+(bind-keypress! 'q (lambda () (if (not (null? (get-current-dialog))) (next-message))))
+(bind-keypress! 'e (lambda () (if (not (null? (get-current-dialog))) (decide))))
 (make-thread safe-load "global-bind-loop.scm")
 (run-repl)

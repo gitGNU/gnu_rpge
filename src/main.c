@@ -234,7 +234,7 @@ main (int argc, char **argv)
   scm_with_guile(init_scm,NULL);
   init();
   add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keydown_symbol,get_keysym_symbol));
-  add_dispatch_pair(make_dispatch_pair(SDL_KEYDOWN,get_keyup_symbol,get_keysym_symbol));
+  add_dispatch_pair(make_dispatch_pair(SDL_KEYUP,get_keyup_symbol,get_keysym_symbol));
   scm_with_guile(run_config_file,initfile);
   /*Set up REPL signal and run REPL thread*/
   repl_signal = SDL_CreateMutex();

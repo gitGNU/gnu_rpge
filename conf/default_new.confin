@@ -21,3 +21,4 @@ npc.scm			#Defines default NPC types
 terrain.scm		#Provides a small, small abstraction on top of the basic grids.
 map.scm			#Map API
 default-bindings-new.scm #New default key bindings, used by key-funcs-new.
+mob_motion.scm		 #Mob motion bindings.

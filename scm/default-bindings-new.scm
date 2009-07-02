@@ -21,3 +21,4 @@
 ;modified for the purpose of creating an application using rpge.
 
 (bind-event 'key-down handle-key-event)
+(bind-event 'key-up handle-key-event)

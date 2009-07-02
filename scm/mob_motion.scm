@@ -23,9 +23,23 @@
 (define (get-mob-velocity m)
   (get-from-table (get-mob-data m) 'velocity))
 
+(define (wrap-velocity-setter proc)
+  (lambda (m v)
+    (let ((not-moving (and (= (car (get-mob-velocity m)) 0) (= (cdr (get-mob-velocity m)) 0))))
+      (proc m v)
+      (if not-moving
+	  (queue-mob-motion! m)))))
+
 ;;Trivial setter.
-(define (set-mob-velocity! m v)
-  (set-in-table! (get-mob-data m) 'velocity v))
+(define set-mob-velocity! (wrap-velocity-setter (lambda (m v)
+						  (set-in-table! (get-mob-data m) 'velocity v))))
+
+;;Utility setters.
+(define set-mob-velocity-x! (wrap-velocity-setter (lambda (m v)
+						    (set-car! (get-mob-velocity m) v))))
+
+(define set-mob-velocity-y! (wrap-velocity-setter (lambda (m v)
+						    (set-cdr! (get-mob-velocity m) v))))
 
 ;;Queue the default motion for a mob, given its velocity.
 ;;Velocity is given as number-of-tiles-per-16-frames.
@@ -34,12 +48,12 @@
   (let ((v (get-mob-velocity m)))
     (cond ((and (= (car v) 0) (= (cdr v) 0)) #f)
 	  (else (add-mob-movement m (car v) (cdr v) 16) #t))))
-	
+
 ;;The weirdly-named 'motion continuator', i.e. the procedure that,
 ;;when a mob is stopped, simply queues the next motion.
-;;More properly, it simply curries queue-mob-motion!.   
+;;More properly, it simply curries queue-mob-motion!.
 (define (mob-motion-continuator m)
   (lambda (event)
     (queue-mob-motion! m)))
-  
-	   
+
+
