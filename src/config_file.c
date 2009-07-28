@@ -87,16 +87,31 @@ exclude_comments(char* str)
   return len;
 }
 
+static void 
+inner_register_directive(char* name, directive_t_callee func)
+{
+  directive_t d = {name,func};
+  SDL_mutexP(directive_lock);
+  sequence_append(&directives,make_directive_t_obj(d));
+  SDL_mutexV(directive_lock);  
+}
+
 void
 register_directive(char* name, void (*func)(char*))
 {
-  directive_t d;
   struct directive_t_func cfunc = {0,func};
-  d.name = name;
-  d.func.cfunc = cfunc;
-  SDL_mutexP(directive_lock);
-  sequence_append(&directives,make_directive_t_obj(d));
-  SDL_mutexV(directive_lock);
+  directive_t_callee callee;
+  callee.cfunc = cfunc;
+  inner_register_directive(name,callee);
+}
+
+void
+register_scm_directive(char* name, SCM func)
+{
+  struct directive_t_scm scmfunc = {1,func};
+  directive_t_callee callee;
+  callee.scmfunc = scmfunc;
+  inner_register_directive(name,callee);
 }
 
 void
