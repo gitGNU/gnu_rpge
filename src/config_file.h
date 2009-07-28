@@ -33,10 +33,33 @@ config_file.h: Here because config_file.c needs an accompanying header.
 #include "path.h"
 #include "guile.h" /*We need scm_c_safe_load*/
 
+/*
+  Define a few structs so we can use either a guile procedure or C function to handle
+  config file directives.
+*/
+struct directive_t_func
+{
+  char scmp;
+  void (*func)(char *);
+};
+
+struct directive_t_scm
+{
+  char scmp;
+  SCM lambda;
+};
+
+typedef union
+{
+  char scmp;
+  struct directive_t_func cfunc;
+  struct directive_t_scm scmfunc;
+} directive_t_callee;
+
 typedef struct
 {
   char* name;
-  void (*func)(char*);
+  directive_t_callee func;
 } directive_t;
 
 #define BLOCK_SIZE 256

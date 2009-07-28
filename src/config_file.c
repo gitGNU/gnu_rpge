@@ -1,5 +1,5 @@
 /*
-Copyright Remco Bras 2007
+Copyright Remco Bras 2007,2009
 This file is part of RPGE.
 
 RPGE is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ config_file.c: declare a function or two to load scheme files from a configurati
 
 #include "config_file.h"
 SDL_mutex* directive_lock;
-S_CONVERTORS(directive_t,DIRECTIVE_T)
+S_CONVERTORS(directive_t,DIRECTIVE_T);
 sequence directives = {0,0};
 
 /*Define a custom getline so we don't need gcc. The semantics of the glibc variety are slightly different, but this should do for all sane cases. This may need a replacement calloc on some systems, which should be easy enough to
@@ -91,8 +91,9 @@ void
 register_directive(char* name, void (*func)(char*))
 {
   directive_t d;
+  struct directive_t_func cfunc = {0,func};
   d.name = name;
-  d.func = func;
+  d.func.cfunc = cfunc;
   SDL_mutexP(directive_lock);
   sequence_append(&directives,make_directive_t_obj(d));
   SDL_mutexV(directive_lock);
@@ -107,6 +108,16 @@ directives_init()
   register_directive(strdup("scheme-dir"),add_scheme_dir);
   register_directive(strdup("image-dir"),add_image_dir);
   register_directive(strdup("font-dir"),add_font_dir);
+}
+
+void 
+funcall_directive(directive_t directive, char* data)
+{
+  directive_t_callee callee = directive.func;
+  if(callee.scmp)
+    scm_apply_1(callee.scmfunc.lambda,scm_from_locale_string(data),SCM_EOL);
+  else
+    callee.cfunc.func(data);
 }
 
 /*
@@ -124,7 +135,7 @@ handle_colon_directive(char* directive, char* data)
       str = ((directive_t*)directives.data[i].data)->name;
       if(!strcmp(str,directive))
 	{
-	  ((directive_t*)directives.data[i].data)->func(data);
+	  funcall_directive(get_obj_directive_t(directives.data[i]),data);
 	}
     }
 }
