@@ -163,6 +163,9 @@ init_scm(void* unused)
   scm_c_define_gsubr ("set-text-color!",2,0,0,guile_set_text_color);
   scm_c_define_gsubr ("get-text-font",1,0,0,guile_get_text_font);
   scm_c_define_gsubr ("set-text-font!",2,0,0,guile_set_text_font);
+  scm_c_define_gsubr ("register-directive!",2,0,0,guile_register_directive);
+  scm_c_define_gsubr ("remove-directive!",1,0,0,guile_remove_directive);
+  scm_c_define_gsubr ("load-config-file",1,0,0,guile_load_config_file);
   scm_gc_protect_object(global_userdata);
   return NULL;
 }

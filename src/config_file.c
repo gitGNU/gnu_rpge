@@ -114,6 +114,49 @@ register_scm_directive(char* name, SCM func)
   inner_register_directive(name,callee);
 }
 
+/*
+  Free the data allocated to directive d.
+  Since C function pointers do not need freeing unless
+  they have been dynamically allocated and dealing with the Guile GC
+  is the job of guile_config_file.c, this only frees the name of the
+  directive.
+*/
+static void 
+free_directive(directive_t d)
+{
+  free(d.name);
+}
+
+/*
+  Remove the ith directive.
+  This does no error checking whatsoever.
+*/
+static inline void
+remove_directive_at(int i)
+{
+  SDL_mutexP(directive_lock);
+  free_directive(get_obj_directive_t(directives.data[i]));
+  sequence_remove_at(&directives,i);
+  SDL_mutexV(directive_lock);
+}
+
+/*
+  Remove all directives named name.
+*/
+void
+remove_directive(char* name)
+{
+  for(int i = 0; i < directives.objcount; i++)
+    {
+      char* str = get_obj_directive_t(directives.data[i]).name;
+      if(!strcmp(str,name))
+	{
+	  remove_directive_at(i);
+	  i--;
+	}
+    }
+}
+
 void
 directives_init()
 {

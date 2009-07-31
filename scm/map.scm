@@ -106,6 +106,7 @@
 		   (eval-expr port)))))
     (add-empty-map! name)
     (call-with-input-file filename eval-expr)))
+
 			       
 (set-map-procedure! 'initialize-grid register-grid)
 

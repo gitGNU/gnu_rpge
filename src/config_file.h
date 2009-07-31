@@ -62,10 +62,17 @@ typedef struct
   directive_t_callee func;
 } directive_t;
 
+extern sequence directives;
+
 #define BLOCK_SIZE 256
 
 char* getline(FILE* stream);
 void exec_config_file(char* filename);
 void directives_init();
+void register_scm_directive(char* name, SCM func);
+void register_directive(char* name,void (*func)(char*));
+void remove_directive(char* name);
+directive_t get_obj_directive_t(object o);
+object make_directive_t_obj(directive_t d);
 
 #endif
