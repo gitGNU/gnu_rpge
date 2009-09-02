@@ -23,6 +23,17 @@
 
 (define maps (make-hash-table))
 
+(define map-paths (path-list-init))
+
+(define (add-map-path! path)
+  (set! map-paths (path-list-add path map-paths)))
+
+(define (remove-map-path! path)
+  (set! map-paths (path-list-remove path map-paths)))
+
+;;Hook the above into config files.
+(register-directive! "map-dir" add-map-path!)
+
 (define (get-named-map name)
   (hashq-ref maps name))
 
@@ -105,7 +116,7 @@
 	    (begin (map-eval name expr)
 		   (eval-expr port)))))
     (add-empty-map! name)
-    (call-with-input-file filename eval-expr)))
+    (call-with-path-list-input-file map-paths filename eval-expr)))
 
 			       
 (set-map-procedure! 'initialize-grid register-grid)
@@ -138,4 +149,3 @@
 
 (set-map-procedure! 'show-grid (lambda (name)
 				 (set-main-grid (named-grid name))))
-				

@@ -19,6 +19,9 @@ equipment.scm		#Defines equipment basics
 item-types.scm		#Defines a few built-in item types
 npc.scm			#Defines default NPC types
 terrain.scm		#Provides a small, small abstraction on top of the basic grids.
+path.scm		#Path list API, providing path-based loading.
 map.scm			#Map API
+map-dir:datadir/examples/
+map-dir:datadir/maps/
 default-bindings-new.scm #New default event bindings used by other libraries.
 mob_motion.scm		#Mob velocity/movement API.

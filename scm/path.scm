@@ -46,9 +46,17 @@
 ;;Open a file named path, given that it may be in any of the directories specified in liz or the current working directory.
 (define (open-input-file-with-path-list path liz)
   (define (loop l)
+    (display l)
+    (newline)
     (cond ((null? l) '())
-	  ((file-exists? (string-append (car liz) path)) (open-input-file (string-append (car liz) path)))
-	  (else (loop (cdr liz)))))
+	  ((file-exists? (string-append (car l) path)) (open-input-file (string-append (car l) path)))
+	  (else (loop (cdr l)))))
   (cond ((file-exists? path) (open-input-file path))
 	(else (loop liz))))
+
+(define (call-with-path-list-input-file liz file proc)
+  (let ((stream (open-input-file-with-path-list file liz)))
+    (cond ((null? stream) #f)
+	  (else (proc stream)
+		(close stream)))))
 

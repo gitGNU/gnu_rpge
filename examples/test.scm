@@ -29,8 +29,10 @@
 			   (stats-init X)
 			   (init-mob-bindings X)
 			   (init-mob-velocity! X)))
+
 ;Load the test map.
 (map-load "test.map")
+
 ;We still need to do some things with this mob that haven't been
 ;ported to the map language yet, grab it.
 ;At this point, the mob has already been automatically tracked, and our above bootstrap
