@@ -109,7 +109,7 @@ Rpge provides two pre-made configuration files, called default.conf and skeleton
 * Configuration file basics::   
 * Pre-defined directives::      
 * Defining directives::         
-* Caveats::                     
+* Caveats when running code from configuration files::  
 @end menu
 
 @node Configuration file basics, Pre-defined directives, rpge configuration files, rpge configuration files
@@ -137,12 +137,15 @@ Add name to the load path for maps. The default load path for maps includes both
 @command{scheme-dir:@var{name}}
 Add name to the load path for Scheme source files. The default load path consists of the scm and examples subdirectories in the installation path of rpge's data.
 
-@node Defining directives, Caveats, Pre-defined directives, rpge configuration files
+@node Defining directives, Caveats when running code from configuration files, Pre-defined directives, rpge configuration files
 @subsection Defining directives
 Scheme code can define new directives, using @command{(register-directive! @var{name} @var{proc})}, where @var{name} is a string naming the directive and @var{proc} is a procedure of one argument. When the directive is used in a configuration file, proc will be called with one string argument, containing the argument to the directive, with any trailing spaces and comments removed.
 
-@node Caveats,  , Defining directives, rpge configuration files
-@subsection Caveats
+@node Caveats when running code from configuration files,  , Defining directives, rpge configuration files
+@subsection Caveats when running code from configuration files
+Scheme code run from configuration files is loaded through safe-load, which is an rpge primitive created to avoid threading bugs due to multiple files loading at once. Essentially, this means that, whenever a file is loaded from a configuration file, a mutex is locked. 
+Normally, this causes no problem whatsoever, provided one does not fork off threads to load other files and the script terminates at some point. 
+In the former case, one should do the loading in the forked threads using safe-load, for example by using @command{(make-thread safe-load ``foo.scm'')} instead of @command{(make-thread load ``foo.scm'')}. The latter case requires that the script that does not terminate is run from a new thread rather than directly from the configuration file. Furthermore, it should @command{(unlock-mutex load-mutex)} once it is done defining variables, so other files can be loaded.
 
 @node rpge's view of the world, Communication in rpge, Invoking rpge, Top
 @chapter rpge's view of the world
