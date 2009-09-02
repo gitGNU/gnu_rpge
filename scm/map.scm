@@ -118,6 +118,8 @@
     (add-empty-map! name)
     (call-with-path-list-input-file map-paths filename eval-expr)))
 
+;;Make loading maps a little easier.
+(register-directive! "map" map-load)
 			       
 (set-map-procedure! 'initialize-grid register-grid)
 

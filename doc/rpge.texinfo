@@ -6,7 +6,7 @@
 @c %**end of header
 
 @copying
-  Copyright @copyright{}  2007,2008  Remco Bras.
+  Copyright @copyright{}  2007,2008,2009  Remco Bras.
   Permission is granted to copy, distribute and/or modify this document
   under the terms of the GNU Free Documentation License, Version 1.3
   or any later version published by the Free Software Foundation;
@@ -17,7 +17,7 @@
 
 @titlepage
   @title Role Playing Game Engine
-  @subtitle Version 0.0.1
+  @subtitle Version 0.0.2
   @author Remco Bras
   @page 
   @vskip 0pt plus 1filll
@@ -26,109 +26,126 @@
 
 @contents
 
-@node Top, About RPGE and obtaining it, (dir), (dir)
+@node Top, About rpge and obtaining it, (dir), (dir)
 @ifnottex
 @top Role Playing Game Engine
-This manual is for RPGE, version 0.0.1.
+This manual is for rpge, version 0.0.2.
 @end ifnottex
 
 @menu
-* About RPGE and obtaining it::  
-* Invoking RPGE::               
-* RPGE's view of the world::    
-* Communication in RPGE::       
+* About rpge and obtaining it::  
+* Invoking rpge::               
+* rpge's view of the world::    
+* Communication in rpge::       
 * API Reference::               
 * GNU Free Documentation License::  
 @end menu
 
-@node About RPGE and obtaining it, Invoking RPGE, Top, Top
-@chapter About RPGE and obtaining it
+@node About rpge and obtaining it, Invoking rpge, Top, Top
+@chapter About rpge and obtaining it
 
 @menu
-* About RPGE and this manual::  
+* About rpge and this manual::  
 * Getting a copy::              
 * Installation::                
 @end menu
 
-@node About RPGE and this manual, Getting a copy, About RPGE and obtaining it, About RPGE and obtaining it
-@section About RPGE and this manual
-RPGE is a GNU package, providing an engine for two-dimensional graphical role playing games. It is driven and extended by writing programs in GUILE, a dialect of Scheme.
-This manual is for RPGE 0.0.1 and aims to document the parts of the workings of RPGE that people using it should know about, the way RPGE is driven using GUILE and
-how RPGE can be obtained, installed and otherwise used. 
+@node About rpge and this manual, Getting a copy, About rpge and obtaining it, About rpge and obtaining it
+@section About rpge and this manual
+rpge is a GNU package, providing an engine for two-dimensional graphical role playing games. It is driven and extended by writing programs in GUILE, a dialect of Scheme.
+This manual is for rpge 0.0.2 and aims to document the parts of the workings of rpge that people using it should know about, the way rpge is driven using GUILE and
+how rpge can be obtained, installed and otherwise used. 
 
-@node Getting a copy, Installation, About RPGE and this manual, About RPGE and obtaining it
+@node Getting a copy, Installation, About rpge and this manual, About rpge and obtaining it
 @section Getting a copy
 
-RPGE can be obtained using anonymous git or from the web. In case you wish to use anonymous git, the following
-command creates a local copy of the RPGE git repository:
-@code{git clone git://git.savannah.nongnu.org/rpge.git}.
+rpge can be obtained using anonymous git or from the web. In case you wish to use anonymous git, the following
+command creates a local copy of the rpge git repository:
+@code{git clone git://git.savannah.gnu.org/rpge.git}.
 Those who prefer the web can download a copy of a release from the GNU mirrors, a list of which is kept at @indicateurl{http://www.gnu.org/prep/ftp.html}, or, if necessary,
 directly from @indicateurl{ftp://ftp.gnu.org} by FTP.
-Either of these options will allow you to receive a copy of RPGE, but keep in mind that the sources in git will be more current, but probably also buggier than the releases. 
+Either of these options will allow you to receive a copy of rpge, but keep in mind that the sources in git will be more current, but probably also buggier than the releases. 
 
-@node Installation,  , Getting a copy, About RPGE and obtaining it
+@node Installation,  , Getting a copy, About rpge and obtaining it
 @section Installation
-To install RPGE, your system will, at the time of writing (users of Git are advised to check the file 'README' in the root of the source tree for possibly updated information),
+To install rpge, your system will, at the time of writing (users of Git are advised to check the file 'README' in the root of the source tree for possibly updated information),
 need the following:
 @itemize @bullet
 @item An ISO C99-compliant C compiler that does not attempt to link when passed the -c option
 @item A make program compatible with Makefiles produced by GNU configure scripts
 @item A UNIX shell to execute GNU configure scripts
-@item GNU sed
+@item sed
 @item The SimpleDirectmediaLayer libraries and development files, including the sdl-image and sdl-ttf libraries
-@item GUILE, including the development files and libraries, 1.8 or later. Several versions in the 1.8 series still appear to break RPGE. Version 1.8.5 appears to work, at least on x86.
+@item GUILE, including the development files and libraries, 1.8 or later. Several versions in the 1.8 series still appear to break rpge. Version 1.8.5 appears to work, at least on x86.
 @end itemize
 
-If you have the above dependencies, you can install RPGE by moving to the directory containing the source code and running @code{./configure && make} to build RPGE.
-Once the build is complete and error-free, RPGE can be installed by running @code{make install} as a user with administrator privileges.
+If you have the above dependencies, you can install rpge by moving to the directory containing the source code and running @code{./configure && make} to build rpge.
+Once the build is complete and error-free, rpge can be installed by running @code{make install} as a user with administrator privileges.
 
-@node Invoking RPGE, RPGE's view of the world, About RPGE and obtaining it, Top
-@chapter Invoking RPGE
+@node Invoking rpge, rpge's view of the world, About rpge and obtaining it, Top
+@chapter Invoking rpge
 
 @menu
 * A summary of command-line options::  
-* RPGE initialization files::   
+* rpge configuration files::    
 @end menu
 
-@node A summary of command-line options, RPGE initialization files, Invoking RPGE, Invoking RPGE
+@node A summary of command-line options, rpge configuration files, Invoking rpge, Invoking rpge
 @section A summary of command-line options
-RPGE is invoked on the command-line using @code{RPGE @var{options}} in which options is one or more of the following, with their required arguments:
+Rpge is invoked on the command-line using @code{rpge @var{options}} in which options is one or more of the following, with their required arguments:
 @itemize
 @item -v or --version: Prints version information and exits.
 @item -h or --help: Prints a summary of usage and options and exits.
-@item -f @var{file}: Changes the default initialization file handled at startup from .RPGE to @var{file}
+@item -f @var{file}: Changes the default initialization file handled at startup from .rpge to @var{file}
 @end itemize
 
-@node RPGE initialization files,  , A summary of command-line options, Invoking RPGE
-@section RPGE initialization files
-Once started, RPGE parses command-line options, initializes the libraries it uses and, before entering the frame loop, processes an initialization file.
-This file, .RPGE by default, contains the names of files containing Scheme code for RPGE to execute, one per line, in sequence. Any lines starting with
-'#' are ignored. 
+@node rpge configuration files,  , A summary of command-line options, Invoking rpge
+@section rpge configuration files
+This section describes the configuration files used by rpge. By default, rpge reads the configuration file named .rpge in the current directory when started. This can be overridden using the -f option, for example using @command{rpge -f foo.conf} to use foo.conf instead. 
 
-This facility is used in the sample files to include several common Scheme files. It is advised to use these files, since they provide common interfaces for matters like
-dealing with events, handling the statistics of mobs and a generic table type. However, it is certainly possible and sometimes useful to replace them. Keep in mind that
-anything that depends on other files should be loaded after them. 
+Rpge provides two pre-made configuration files, called default.conf and skeleton.conf. Default.conf sets up the default load paths and scheme libraries, as documented elsewhere in this manual. This file is intended to be included in your own configuration file. The other pre-made configuration file, skeleton.conf, does this and can serve as an example. Both files are created when rpge is installed and adjusted to the system-specific location of included files.
 
-Files loaded by initialization files may create threads, for example to load a certain mechanism to handle events in a loop. To do so, declare (use-modules (ice-9 threads)) at the start of your file and use (make-thread safe-load @var{filename}) to load the file.
-The safe-load procedure is a RPGE primitive, which uses a load mutex to ensure that no concurrent loads happen. Since looping mechanisms may run forever, such files should
-define all their procedures and call (unlock-mutex load-mutex) just before entering their main loops. This ensures that the background script is loaded properly and new loads
-can happen safely. 
+@menu
+* Configuration file basics::   
+* Pre-defined directives::      
+* Defining directives::         
+* Caveats::                     
+@end menu
 
-When loading a file referenced in an initialization file, RPGE looks for it in the current directory first, after which it checks through a sequence of scheme paths. These are
-directories that may contain scheme code. By default, this sequence is empty on startup. To fill the sequence, use a so-called colon directive in your initialization file,
-of the form @code{scheme-dir:@var{directory}}. This adds @var{directory}, which should be a complete, relative or absolute, path to the directory (for example /usr/local/share/RPGE/scm or ../), 
-to the scheme paths. A similar facility exists for sprites, so the default sprites can be found by simply referencing them by name. To add an image search directory, use the
-directive @code{image-dir:@var{directory}}, which acts like the scheme-dir directive.
+@node Configuration file basics, Pre-defined directives, rpge configuration files, rpge configuration files
+@subsection Configuration file basics
+A configuration file in rpge consists of a series of commands, each on one line. Each command instructs rpge to either load a file of Scheme code or execute another action. The command to execute a file of Scheme source is just the filename of the file. This filename can be relative to the current directory, an absolute path or a path relative to any directory in the Scheme load path. 
+To execute another action, you can use a directive, which is a command of the form @command{@var{directive-name}:@var{argument}}. The meaning of argument depends on the directive. 
+Comments start with # and last for the remainder of the line.
 
-Since several common files and directories may be loaded and declared very often, RPGE provides an include directive to tell RPGE to load another configuration file. This
-does not use any paths yet, so when using it, the path passed to it should be a complete path to the other configuration file. Syntactically, the directive is @code{include:@var{file}}.
-To deal with the problem of loading the default libraries on startup, RPGE's build system builds a default configuration file for you using sed. This file is located in conf/default.conf, relative to the RPGE source directory.
-This file is installed on your system by make install and sets up the default scheme directories, image directories and libraries. RPGE also makes a skeleton configuration file,
-conf/skeleton.conf, for you, which includes default.conf and loads the testing game, test.scm. Loading RPGE with this file (using for example @code{src/RPGE -f conf/skeleton.conf} in the top source directory after running make), will fail until make install has run.
-This is intentional, as the file is meant to make it easy to work with the included files in any RPGE installation. 
+@node Pre-defined directives, Defining directives, Configuration file basics, rpge configuration files
+@subsection Pre-defined directives
+In rpge, several directives are pre-defined. Many of these deal with the locations where rpge searches for specific types of files. All directives are listed below in alphabetical order.
 
-@node RPGE's view of the world, Communication in RPGE, Invoking RPGE, Top
-@chapter RPGE's view of the world
+@command{font-dir:@var{name}}
+Add name to the load path for fonts. By default, this path includes the fonts subdirectory in the installation path for rpge's data.
+
+@command{image-dir:@var{name}}
+Add name to the load path for images. The images subdirectory of the installation path for rpge's data is included by default.
+
+@command{map:@var{name}}
+Load the map named name. As with Scheme source files, name may be relative to any directory in the map path, relative to the working directory or absolute.
+
+@command{map-dir:@var{name}}
+Add name to the load path for maps. The default load path for maps includes both the examples and maps subdirectories of the directory in which rpge's data is installed.
+
+@command{scheme-dir:@var{name}}
+Add name to the load path for Scheme source files. The default load path consists of the scm and examples subdirectories in the installation path of rpge's data.
+
+@node Defining directives, Caveats, Pre-defined directives, rpge configuration files
+@subsection Defining directives
+Scheme code can define new directives, using @command{(register-directive! @var{name} @var{proc})}, where @var{name} is a string naming the directive and @var{proc} is a procedure of one argument. When the directive is used in a configuration file, proc will be called with one string argument, containing the argument to the directive, with any trailing spaces and comments removed.
+
+@node Caveats,  , Defining directives, rpge configuration files
+@subsection Caveats
+
+@node rpge's view of the world, Communication in rpge, Invoking rpge, Top
+@chapter rpge's view of the world
 
 @menu
 * Overview::                    
@@ -136,76 +153,76 @@ This is intentional, as the file is meant to make it easy to work with the inclu
 * Mobs::                        
 @end menu
 
-@node Overview, Tiles, RPGE's view of the world, RPGE's view of the world
+@node Overview, Tiles, rpge's view of the world, rpge's view of the world
 @section Overview
-In RPGE, a world is essentially a flat, 2-dimensional surface, divided into tiles. These tiles are small, rectangular areas, with configurable widths and heights. 
+In rpge, a world is essentially a flat, 2-dimensional surface, divided into tiles. These tiles are small, rectangular areas, with configurable widths and heights. 
 On these tiles, objects called mobs can move around in any way they wish, possibly blocked by certain tiles while freely passing over others. 
 These mobs are each rendered as a so-called sprite, a 2-dimensional picture. The picture to render is determined by the file loaded for the mob and its animation status.
 
-In the future, this model could be expanded to allow any number of concurrent 'worlds' on a single RPGE instance, something that could be especially useful if RPGE were 
+In the future, this model could be expanded to allow any number of concurrent 'worlds' on a single rpge instance, something that could be especially useful if rpge were 
 ever networked. At present though, there is only one world and parallel universes are merely science-fiction. 
 
-@node Tiles, Mobs, Overview, RPGE's view of the world
+@node Tiles, Mobs, Overview, rpge's view of the world
 @section Tiles
-RPGE tiles need a little more discussion, since they have some interesting properties that users may want to be aware of. First, all tiles in the tilegrid are independent. 
+rpge tiles need a little more discussion, since they have some interesting properties that users may want to be aware of. First, all tiles in the tilegrid are independent. 
 Changing the data of a single tile does not change the data of the others, with one important exception. The one exception is that changing the image data used by a tile
-directly (something only possible through either runtime reloading of images or modifying the RPGE source, there is no API function) changes the image data used by all tiles
+directly (something only possible through either runtime reloading of images or modifying the rpge source, there is no API function) changes the image data used by all tiles
 using the image of the same filename and index. 
 
-Second, RPGE differentiates between the various directions a mob arrives at a tile from. For example, if a mob is moving right when it hits a blocking tile, that tile will
+Second, rpge differentiates between the various directions a mob arrives at a tile from. For example, if a mob is moving right when it hits a blocking tile, that tile will
 only block if the BLOCK_LEFT flag is set. Similarly, for a mob arriving at any tile, the blocking flag for the corresponding edge is checked. 
 
-Third, RPGE has the facilities in place to differentiate between two types of mobs (dubbed 'ground' and 'air' mobs) and block none, one or both of those. However, these flags
+Third, rpge has the facilities in place to differentiate between two types of mobs (dubbed 'ground' and 'air' mobs) and block none, one or both of those. However, these flags
 are unused at the time of writing. 
 
-Fourth, though RPGE does check for tile blocking while a mob is moving, mobs moving over tiles while they are being changed may cause some bugs. For example, a mob
+Fourth, though rpge does check for tile blocking while a mob is moving, mobs moving over tiles while they are being changed may cause some bugs. For example, a mob
 moving over a tile that does not block while it is being modified to block will probably proceed to move over the tile anyway, as blocking was checked when the mob entered
 the tile and will not be checked when the mob leaves it.
 
-@node Mobs,  , Tiles, RPGE's view of the world
+@node Mobs,  , Tiles, rpge's view of the world
 @section Mobs
 Mobs, like tiles, have some interesting properties. The most important of these is the ability to add any data you want to any mob you want. This data, dubbed the 'mob user data
-', can be queried and set from GUILE. By default, it is the empty list marker and protected from the garbage collector. Since RPGE only allows a single GUILE value of user data
+', can be queried and set from GUILE. By default, it is the empty list marker and protected from the garbage collector. Since rpge only allows a single GUILE value of user data
 for every mob, it is recommended to fill this space with a list, table or other compound data structure so you can put arbitrarily large amounts of data in this space. The
 example statistics system and other systems that work with mob user data will presume this data is a table. It is also worth noting that the default mob bootstrap procedure
 sets this data to an empty table.
 
-This bootstrap procedure is another property of mobs that users can use to enhance mobs. Since systems using mob user data may need initialization, RPGE provides this procedure,
+This bootstrap procedure is another property of mobs that users can use to enhance mobs. Since systems using mob user data may need initialization, rpge provides this procedure,
 which is called by the GUILE procedure make-mob only, not by the primitive create-mob, to set the initial value of this data. The procedure may however do any arbitrary amount
 of processing or data creation, as long as it takes a single argument representing the mob being created. 
 
-Closer to the C side of things, mobs are currently considered as wide and as high as a single tile. Therefore, RPGE will render sprites of SPRITE_WIDTH width and SPRITE_HEIGHT
-height, both of those macros being equal to the respective dimensions of tiles. When determining what sprite to render, RPGE looks up the image data associated with the image
-index given in the mob (images are loaded globally in RPGE, to save space) and takes a rect of the specified width and height, starting at a starting point determined by the
+Closer to the C side of things, mobs are currently considered as wide and as high as a single tile. Therefore, rpge will render sprites of SPRITE_WIDTH width and SPRITE_HEIGHT
+height, both of those macros being equal to the respective dimensions of tiles. When determining what sprite to render, rpge looks up the image data associated with the image
+index given in the mob (images are loaded globally in rpge, to save space) and takes a rect of the specified width and height, starting at a starting point determined by the
 current animation of the mob. Animations are laid out horizontally in the image data, being right next to each other and SPRITE_WIDTH wide each. Individual frames of a certain
-animation are in its column, right below each other with no padding. Essentially, RPGE treats the image data as a frame grid, indexed in the horizontal direction by the index
+animation are in its column, right below each other with no padding. Essentially, rpge treats the image data as a frame grid, indexed in the horizontal direction by the index
 of the mob's current animation and in the vertical direction by the index of the mob's current frame. Animations can loop automatically if that is desired. 
 
-In addition to being animated, mobs can move. RPGE provides two primitives for making mobs move, the generic move-mob which immediately changes the direction and
+In addition to being animated, mobs can move. rpge provides two primitives for making mobs move, the generic move-mob which immediately changes the direction and
 movement of a mob, regardless of any current velocity. Since this is not very practical if you want mobs to move along a path specified by keying it in asynchronously,
-RPGE natively supports queueing up movements, which is done using mob-add-movement. If the mob is not moving, this procedure has the same effect as move-mob. Otherwise,
+rpge natively supports queueing up movements, which is done using mob-add-movement. If the mob is not moving, this procedure has the same effect as move-mob. Otherwise,
 the movement is queued up in a FIFO buffer, the first element of which is started when the mob is done with its current movement, and so on. This buffer is not cleared by calls
 to move-mob. If mobs collide however, the buffer is instantly cleared on both colliding mobs. The rationale behind this is that 
-RPGE should wait for users to issue new commands, since a collision implicitly is a result of being unable to execute movement commands.
+rpge should wait for users to issue new commands, since a collision implicitly is a result of being unable to execute movement commands.
 
-Finally, mobs support RPGE's event mechanism, which is currently hardly being used. In the future, this could be used to send an event whenever a mob completes a motion or,
+Finally, mobs support rpge's event mechanism, which is currently hardly being used. In the future, this could be used to send an event whenever a mob completes a motion or,
 more generally, changes its motion. This would be useful for animation purposes. 
 
-@node Communication in RPGE, API Reference, RPGE's view of the world, Top
-@chapter Communication in RPGE
-In RPGE, there are two kinds of communication, being communication between RPGE itself and the scripts running in it and communication between the scripts themselves.  The latter type of communication can be handled in any way the users want, just like in any multithreaded program. Communication between RPGE and the engine is not so freeform, but is similar to communication in GTK, Xlib or a similar system.
+@node Communication in rpge, API Reference, rpge's view of the world, Top
+@chapter Communication in rpge
+In rpge, there are two kinds of communication, being communication between rpge itself and the scripts running in it and communication between the scripts themselves.  The latter type of communication can be handled in any way the users want, just like in any multithreaded program. Communication between rpge and the engine is not so freeform, but is similar to communication in GTK, Xlib or a similar system.
 
 This communication is handled by so-called events, which live on things called 'eventstacks'. Regardless of the specific stack, events themselves are simple messages, basically consisting of something to identify the particular type of message and whatever the user should know about it.
 
 Another property of eventstacks one should be aware of is that they need to be opened before usage. Once opened, it is guaranteed that the user receives any event that arrives after the stack was opened. A stack without users does not accumulate any events at all. Regardless of this last property, it is advised to add any useful event to the appropriate stack, even if users are not guaranteed. 
 
-Stacks themselves live in RPGE, being assigned to either a certain object or just being global. There is currently one global stack and every single mob has a stack of its own. Global stacks should be used for events that are not related to anything that has a stack of its own and is a single object, for example a collision between two mobs or a keypress. Stacks assigned to the object are for events related to the object exclusively, for example an event sent when a mob moves across a tile boundary. 
+Stacks themselves live in rpge, being assigned to either a certain object or just being global. There is currently one global stack and every single mob has a stack of its own. Global stacks should be used for events that are not related to anything that has a stack of its own and is a single object, for example a collision between two mobs or a keypress. Stacks assigned to the object are for events related to the object exclusively, for example an event sent when a mob moves across a tile boundary. 
 
 @menu
 * Event Reference::             
 @end menu
 
-@node Event Reference,  , Communication in RPGE, Communication in RPGE
+@node Event Reference,  , Communication in rpge, Communication in rpge
 @section Event Reference
 
 This section lists all current events. Note that events, to GUILE, are pairs whose car holds data identifying the particular type of event and whose cdr holds data associated
@@ -225,9 +242,9 @@ Mob events:
 
 @end itemize
 
-@node API Reference, GNU Free Documentation License, Communication in RPGE, Top
+@node API Reference, GNU Free Documentation License, Communication in rpge, Top
 @appendix API Reference
-This section describes the entire RPGE GUILE API, all the way from primitives to the stuff implemented in the examples that are part of the RPGE distribution.
+This section describes the entire rpge GUILE API, all the way from primitives to the stuff implemented in the examples that are part of the rpge distribution.
 
 @menu
 * Primitives::                  
@@ -295,7 +312,7 @@ Primitives related to tiles and grids thereof:
 
 Creates a tile, using @var{sprite} as the filename to load a sprite from, @var{clipping-rect} as a list representing a rectangular clipping area,
 containing the part of the sprite image that should be used for rendering, and @var{blocking} as an identifier indicating which mobs are blocked.
-The types of blocking RPGE currently checks for are block-<direction>, where direction is left, right up or down. The particular direction
+The types of blocking rpge currently checks for are block-<direction>, where direction is left, right up or down. The particular direction
 indicates the edge the mob to be blocked hits, i.e. a tile with block-right for @var{blocking} blocks mobs attempting to cross its right edge.
 There is a single combined constant combining all four directions, conveniently named block-all-directions. Other variations can be obtained by
 simply adding individual constants.
@@ -382,7 +399,7 @@ Global miscellaneous primitives:
 
 @item @code{(get-global-data)}
 
-Returns the current value of the global data stored inside RPGE.
+Returns the current value of the global data stored inside rpge.
 
 @item @code{(set-global-data @var{value})}
 
@@ -422,10 +439,10 @@ and ends.
 @node Scheme-level APIs,  , Primitives, API Reference
 @section Scheme-level APIs
 
-In addition to the primitives defined by the RPGE core, the default RPGE initialization file loads several
-files that define many Scheme functions for use with RPGE. Usually, these are meant to provide functionality
-that the developers felt shouldn't be 'hardcoded' in RPGE and can be replaced by an equivalent built on either
-GUILE itself or a combination of GUILE and the RPGE primitives described in the previous section.
+In addition to the primitives defined by the rpge core, the default rpge initialization file loads several
+files that define many Scheme functions for use with rpge. Usually, these are meant to provide functionality
+that the developers felt shouldn't be 'hardcoded' in rpge and can be replaced by an equivalent built on either
+GUILE itself or a combination of GUILE and the rpge primitives described in the previous section.
 
 In the default initialization file, files are ordered in such a way that, at the very least, they will be 
 loaded after their dependencies have been loaded. Therefore, if you replace files, it is recommended to check if files
@@ -512,12 +529,12 @@ Initialize event binding for @var{mob}.
 
 @item @code{(bind-mob-event @var{mob} @var{event} @var{proc})}
 Bind @var{event} to @var{proc} on @var{mob}. @var{proc} should be a procedure of
-1 argument, the event sent by RPGE, which is a pair of a type (usually a symbol) and
+1 argument, the event sent by rpge, which is a pair of a type (usually a symbol) and
 some associated data.
 
 @item @code{(execute-mob-binding @var{mob} @var{event})}
 Execute the procedure bound to @var{event} for @var{mob}, passing it the event. Note that
-for this procedure, @var{event} should contain the full event sent by RPGE, but while binding,
+for this procedure, @var{event} should contain the full event sent by rpge, but while binding,
 it should contain the type data for the event.
 
 @end itemize

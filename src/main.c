@@ -1,5 +1,5 @@
 /*
-Copyright Remco Bras and Michael de Lang 2007,2008.
+Copyright Remco Bras and Michael de Lang 2007,2008,2009.
 This file is part of RPGE.
 
 RPGE is free software; you can redistribute it and/or modify
@@ -199,7 +199,7 @@ void* run_config_file(void* filename)
 int
 main (int argc, char **argv)
 {
-  char* initfile = ".RPGE", option_char;
+  char* initfile = ".rpge", option_char;
   int longopt_index = 0;
   struct option options[] = {
   {"version",0,NULL,'v'},
