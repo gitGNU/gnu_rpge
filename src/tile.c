@@ -162,7 +162,7 @@ decrease_count(tilelayer* grid,int imageid)
   int index = search_for_image_id(grid->imagecounts,imageid);
   if(index == -1)
     {
-      fprintf(stderr,"rpge:decrease_count: Warning: potentially corrupted imagecounts on grid %u, cannot find count for %d\n",(unsigned int)grid,imageid);
+      fprintf(stderr,"rpge:decrease_count: Warning: potentially corrupted imagecounts on grid %p, cannot find count for %d\n",grid,imageid);
     }
   else
     {
