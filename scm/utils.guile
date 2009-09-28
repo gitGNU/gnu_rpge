@@ -19,15 +19,11 @@
 (define make-rect list)
 
 (define block-none 0)
-(define block-ground 1)
-(define block-air 2)
-(define block-all (+ block-ground block-air))
 (define block-left 4)
 (define block-right 8)
 (define block-up 16)
 (define block-down 32)
-(define block-all-directions (+ block-left block-right block-up block-down))
-(define block-all-undirectional (+ block-all block-all-directions))
+(define block-all (+ block-left block-right block-up block-down))
 (define (load-in-thread filename)
 	(make-thread load filename))
         

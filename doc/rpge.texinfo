@@ -176,11 +176,7 @@ Second, rpge differentiates between the various directions a mob arrives at a ti
 only block if the BLOCK_LEFT flag is set. Similarly, for a mob arriving at any tile, the blocking flag for the corresponding edge is checked. 
 TODO: Make a nice tabular description of the various flags.
 
-Third, rpge has the facilities in place to differentiate between two types of mobs (dubbed 'ground' and 'air' mobs) and block none, one or both of those. However, these flags
-are unused at the time of writing. 
-TODO: Fix this horrendous bug and tabulate.
-
-Fourth, though rpge does check for tile blocking while a mob is moving, mobs moving over tiles while they are being changed may cause some bugs. For example, a mob
+Third, though rpge does check for tile blocking while a mob is moving, mobs moving over tiles while they are being changed may cause some bugs. For example, a mob
 moving over a tile that does not block while it is being modified to block will probably proceed to move over the tile anyway, as blocking was checked when the mob entered
 the tile and will not be checked when the mob leaves it.
 
