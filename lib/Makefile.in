@@ -57,10 +57,9 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/00gnulib.m4 \
 	$(top_srcdir)/m4/include_next.m4 $(top_srcdir)/m4/inline.m4 \
 	$(top_srcdir)/m4/longlong.m4 $(top_srcdir)/m4/multiarch.m4 \
 	$(top_srcdir)/m4/onceonly.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/stddef_h.m4 $(top_srcdir)/m4/stdint.m4 \
-	$(top_srcdir)/m4/stdlib_h.m4 $(top_srcdir)/m4/strerror.m4 \
-	$(top_srcdir)/m4/string_h.m4 $(top_srcdir)/m4/unistd_h.m4 \
-	$(top_srcdir)/m4/wchar.m4 $(top_srcdir)/m4/wchar_t.m4 \
+	$(top_srcdir)/m4/stdint.m4 $(top_srcdir)/m4/stdlib_h.m4 \
+	$(top_srcdir)/m4/strerror.m4 $(top_srcdir)/m4/string_h.m4 \
+	$(top_srcdir)/m4/unistd_h.m4 $(top_srcdir)/m4/wchar.m4 \
 	$(top_srcdir)/m4/wint_t.m4 $(top_srcdir)/m4/xalloc.m4 \
 	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -137,7 +136,6 @@ GNULIB_CALLOC_POSIX = @GNULIB_CALLOC_POSIX@
 GNULIB_CHOWN = @GNULIB_CHOWN@
 GNULIB_CLOSE = @GNULIB_CLOSE@
 GNULIB_DUP2 = @GNULIB_DUP2@
-GNULIB_DUP3 = @GNULIB_DUP3@
 GNULIB_ENVIRON = @GNULIB_ENVIRON@
 GNULIB_EUIDACCESS = @GNULIB_EUIDACCESS@
 GNULIB_FCHDIR = @GNULIB_FCHDIR@
@@ -180,9 +178,7 @@ GNULIB_MEMMEM = @GNULIB_MEMMEM@
 GNULIB_MEMPCPY = @GNULIB_MEMPCPY@
 GNULIB_MEMRCHR = @GNULIB_MEMRCHR@
 GNULIB_MKDTEMP = @GNULIB_MKDTEMP@
-GNULIB_MKOSTEMP = @GNULIB_MKOSTEMP@
 GNULIB_MKSTEMP = @GNULIB_MKSTEMP@
-GNULIB_PIPE2 = @GNULIB_PIPE2@
 GNULIB_PUTENV = @GNULIB_PUTENV@
 GNULIB_RANDOM_R = @GNULIB_RANDOM_R@
 GNULIB_RAWMEMCHR = @GNULIB_RAWMEMCHR@
@@ -208,7 +204,6 @@ GNULIB_STRTOK_R = @GNULIB_STRTOK_R@
 GNULIB_STRTOLL = @GNULIB_STRTOLL@
 GNULIB_STRTOULL = @GNULIB_STRTOULL@
 GNULIB_STRVERSCMP = @GNULIB_STRVERSCMP@
-GNULIB_UNISTD_H_GETOPT = @GNULIB_UNISTD_H_GETOPT@
 GNULIB_UNISTD_H_SIGPIPE = @GNULIB_UNISTD_H_SIGPIPE@
 GNULIB_UNSETENV = @GNULIB_UNSETENV@
 GNULIB_WCRTOMB = @GNULIB_WCRTOMB@
@@ -235,7 +230,6 @@ HAVE_DECL_STRTOK_R = @HAVE_DECL_STRTOK_R@
 HAVE_DECL_WCTOB = @HAVE_DECL_WCTOB@
 HAVE_DECL_WCWIDTH = @HAVE_DECL_WCWIDTH@
 HAVE_DUP2 = @HAVE_DUP2@
-HAVE_DUP3 = @HAVE_DUP3@
 HAVE_EUIDACCESS = @HAVE_EUIDACCESS@
 HAVE_FSYNC = @HAVE_FSYNC@
 HAVE_FTRUNCATE = @HAVE_FTRUNCATE@
@@ -256,9 +250,7 @@ HAVE_MBSNRTOWCS = @HAVE_MBSNRTOWCS@
 HAVE_MBSRTOWCS = @HAVE_MBSRTOWCS@
 HAVE_MEMPCPY = @HAVE_MEMPCPY@
 HAVE_MKDTEMP = @HAVE_MKDTEMP@
-HAVE_MKOSTEMP = @HAVE_MKOSTEMP@
 HAVE_OS_H = @HAVE_OS_H@
-HAVE_PIPE2 = @HAVE_PIPE2@
 HAVE_RANDOM_H = @HAVE_RANDOM_H@
 HAVE_RANDOM_R = @HAVE_RANDOM_R@
 HAVE_RAWMEMCHR = @HAVE_RAWMEMCHR@
@@ -292,7 +284,6 @@ HAVE_UNISTD_H = @HAVE_UNISTD_H@
 HAVE_UNSETENV = @HAVE_UNSETENV@
 HAVE_UNSIGNED_LONG_LONG_INT = @HAVE_UNSIGNED_LONG_LONG_INT@
 HAVE_WCHAR_H = @HAVE_WCHAR_H@
-HAVE_WCHAR_T = @HAVE_WCHAR_T@
 HAVE_WCRTOMB = @HAVE_WCRTOMB@
 HAVE_WCSNRTOMBS = @HAVE_WCSNRTOMBS@
 HAVE_WCSRTOMBS = @HAVE_WCSRTOMBS@
@@ -315,14 +306,12 @@ LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
 NEXT_AS_FIRST_DIRECTIVE_ERRNO_H = @NEXT_AS_FIRST_DIRECTIVE_ERRNO_H@
-NEXT_AS_FIRST_DIRECTIVE_STDDEF_H = @NEXT_AS_FIRST_DIRECTIVE_STDDEF_H@
 NEXT_AS_FIRST_DIRECTIVE_STDINT_H = @NEXT_AS_FIRST_DIRECTIVE_STDINT_H@
 NEXT_AS_FIRST_DIRECTIVE_STDLIB_H = @NEXT_AS_FIRST_DIRECTIVE_STDLIB_H@
 NEXT_AS_FIRST_DIRECTIVE_STRING_H = @NEXT_AS_FIRST_DIRECTIVE_STRING_H@
 NEXT_AS_FIRST_DIRECTIVE_UNISTD_H = @NEXT_AS_FIRST_DIRECTIVE_UNISTD_H@
 NEXT_AS_FIRST_DIRECTIVE_WCHAR_H = @NEXT_AS_FIRST_DIRECTIVE_WCHAR_H@
 NEXT_ERRNO_H = @NEXT_ERRNO_H@
-NEXT_STDDEF_H = @NEXT_STDDEF_H@
 NEXT_STDINT_H = @NEXT_STDINT_H@
 NEXT_STDLIB_H = @NEXT_STDLIB_H@
 NEXT_STRING_H = @NEXT_STRING_H@
@@ -357,7 +346,6 @@ REPLACE_MBSTATE_T = @REPLACE_MBSTATE_T@
 REPLACE_MEMCHR = @REPLACE_MEMCHR@
 REPLACE_MEMMEM = @REPLACE_MEMMEM@
 REPLACE_MKSTEMP = @REPLACE_MKSTEMP@
-REPLACE_NULL = @REPLACE_NULL@
 REPLACE_PUTENV = @REPLACE_PUTENV@
 REPLACE_STRCASESTR = @REPLACE_STRCASESTR@
 REPLACE_STRDUP = @REPLACE_STRDUP@
@@ -375,11 +363,9 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SIG_ATOMIC_T_SUFFIX = @SIG_ATOMIC_T_SUFFIX@
 SIZE_T_SUFFIX = @SIZE_T_SUFFIX@
-STDDEF_H = @STDDEF_H@
 STDINT_H = @STDINT_H@
 STRIP = @STRIP@
 UNISTD_H_HAVE_WINSOCK2_H = @UNISTD_H_HAVE_WINSOCK2_H@
-UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS = @UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS@
 VERSION = @VERSION@
 VOID_UNSETENV = @VOID_UNSETENV@
 WCHAR_H = @WCHAR_H@
@@ -445,15 +431,15 @@ noinst_HEADERS =
 noinst_LIBRARIES = libgnu.a
 noinst_LTLIBRARIES = 
 EXTRA_DIST = errno.in.h error.c error.h exitfail.c exitfail.h \
-	intprops.h $(top_srcdir)/./link-warning.h stddef.in.h \
-	stdint.in.h stdlib.in.h strerror.c string.in.h unistd.in.h \
-	wchar.in.h xalloc.h xmalloc.c
-BUILT_SOURCES = $(ERRNO_H) $(STDDEF_H) $(STDINT_H) stdlib.h string.h \
-	unistd.h $(WCHAR_H)
+	intprops.h $(top_srcdir)/./link-warning.h stdint.in.h \
+	stdlib.in.h strerror.c string.in.h unistd.in.h wchar.in.h \
+	xalloc.h xmalloc.c
+BUILT_SOURCES = $(ERRNO_H) $(STDINT_H) stdlib.h string.h unistd.h \
+	$(WCHAR_H)
 SUFFIXES = 
-MOSTLYCLEANFILES = core *.stackdump errno.h errno.h-t stddef.h \
-	stddef.h-t stdint.h stdint.h-t stdlib.h stdlib.h-t string.h \
-	string.h-t unistd.h unistd.h-t wchar.h wchar.h-t
+MOSTLYCLEANFILES = core *.stackdump errno.h errno.h-t stdint.h \
+	stdint.h-t stdlib.h stdlib.h-t string.h string.h-t unistd.h \
+	unistd.h-t wchar.h wchar.h-t
 MOSTLYCLEANDIRS = 
 CLEANFILES = 
 DISTCLEANFILES = 
@@ -832,7 +818,7 @@ uninstall-am:
 # We need the following in order to create <errno.h> when the system
 # doesn't have one that is POSIX compliant.
 errno.h: errno.in.h
-	$(AM_V_GEN)rm -f $@-t $@ && \
+	rm -f $@-t $@
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
 	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
@@ -844,27 +830,13 @@ errno.h: errno.in.h
 	      -e 's|@''EOVERFLOW_HIDDEN''@|$(EOVERFLOW_HIDDEN)|g' \
 	      -e 's|@''EOVERFLOW_VALUE''@|$(EOVERFLOW_VALUE)|g' \
 	      < $(srcdir)/errno.in.h; \
-	} > $@-t && \
-	mv $@-t $@
-
-# We need the following in order to create <stddef.h> when the system
-# doesn't have one that works with the given compiler.
-stddef.h: stddef.in.h
-	$(AM_V_GEN)rm -f $@-t $@ && \
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
-	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
-	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
-	      -e 's|@''NEXT_STDDEF_H''@|$(NEXT_STDDEF_H)|g' \
-	      -e 's|@''HAVE_WCHAR_T''@|$(HAVE_WCHAR_T)|g' \
-	      -e 's|@''REPLACE_NULL''@|$(REPLACE_NULL)|g' \
-	      < $(srcdir)/stddef.in.h; \
-	} > $@-t && \
+	} > $@-t
 	mv $@-t $@
 
 # We need the following in order to create <stdint.h> when the system
 # doesn't have one that works with the given compiler.
 stdint.h: stdint.in.h
-	$(AM_V_GEN)rm -f $@-t $@ && \
+	rm -f $@-t $@
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
 	  sed -e 's/@''HAVE_STDINT_H''@/$(HAVE_STDINT_H)/g' \
 	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
@@ -891,13 +863,13 @@ stdint.h: stdint.in.h
 	      -e 's/@''HAVE_SIGNED_WINT_T''@/$(HAVE_SIGNED_WINT_T)/g' \
 	      -e 's/@''WINT_T_SUFFIX''@/$(WINT_T_SUFFIX)/g' \
 	      < $(srcdir)/stdint.in.h; \
-	} > $@-t && \
+	} > $@-t
 	mv $@-t $@
 
 # We need the following in order to create <stdlib.h> when the system
 # doesn't have one that works with the given compiler.
 stdlib.h: stdlib.in.h
-	$(AM_V_GEN)rm -f $@-t $@ && \
+	rm -f $@-t $@
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
 	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
@@ -910,7 +882,6 @@ stdlib.h: stdlib.in.h
 	      -e 's|@''GNULIB_GETLOADAVG''@|$(GNULIB_GETLOADAVG)|g' \
 	      -e 's|@''GNULIB_GETSUBOPT''@|$(GNULIB_GETSUBOPT)|g' \
 	      -e 's|@''GNULIB_MKDTEMP''@|$(GNULIB_MKDTEMP)|g' \
-	      -e 's|@''GNULIB_MKOSTEMP''@|$(GNULIB_MKOSTEMP)|g' \
 	      -e 's|@''GNULIB_MKSTEMP''@|$(GNULIB_MKSTEMP)|g' \
 	      -e 's|@''GNULIB_PUTENV''@|$(GNULIB_PUTENV)|g' \
 	      -e 's|@''GNULIB_RANDOM_R''@|$(GNULIB_RANDOM_R)|g' \
@@ -925,7 +896,6 @@ stdlib.h: stdlib.in.h
 	      -e 's|@''HAVE_GETSUBOPT''@|$(HAVE_GETSUBOPT)|g' \
 	      -e 's|@''HAVE_MALLOC_POSIX''@|$(HAVE_MALLOC_POSIX)|g' \
 	      -e 's|@''HAVE_MKDTEMP''@|$(HAVE_MKDTEMP)|g' \
-	      -e 's|@''HAVE_MKOSTEMP''@|$(HAVE_MKOSTEMP)|g' \
 	      -e 's|@''HAVE_REALLOC_POSIX''@|$(HAVE_REALLOC_POSIX)|g' \
 	      -e 's|@''HAVE_RANDOM_R''@|$(HAVE_RANDOM_R)|g' \
 	      -e 's|@''HAVE_RPMATCH''@|$(HAVE_RPMATCH)|g' \
@@ -943,13 +913,13 @@ stdlib.h: stdlib.in.h
 	      -e 's|@''VOID_UNSETENV''@|$(VOID_UNSETENV)|g' \
 	      -e '/definition of GL_LINK_WARNING/r $(LINK_WARNING_H)' \
 	      < $(srcdir)/stdlib.in.h; \
-	} > $@-t && \
+	} > $@-t
 	mv $@-t $@
 
 # We need the following in order to create <string.h> when the system
 # doesn't have one that works with the given compiler.
 string.h: string.in.h
-	$(AM_V_GEN)rm -f $@-t $@ && \
+	rm -f $@-t $@
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
 	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
@@ -1014,13 +984,13 @@ string.h: string.in.h
 	      -e 's|@''REPLACE_STRSIGNAL''@|$(REPLACE_STRSIGNAL)|g' \
 	      -e '/definition of GL_LINK_WARNING/r $(LINK_WARNING_H)' \
 	      < $(srcdir)/string.in.h; \
-	} > $@-t && \
+	} > $@-t
 	mv $@-t $@
 
 # We need the following in order to create an empty placeholder for
 # <unistd.h> when the system doesn't have one.
 unistd.h: unistd.in.h
-	$(AM_V_GEN)rm -f $@-t $@ && \
+	rm -f $@-t $@
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
 	  sed -e 's|@''HAVE_UNISTD_H''@|$(HAVE_UNISTD_H)|g' \
 	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
@@ -1029,7 +999,6 @@ unistd.h: unistd.in.h
 	      -e 's|@''GNULIB_CHOWN''@|$(GNULIB_CHOWN)|g' \
 	      -e 's|@''GNULIB_CLOSE''@|$(GNULIB_CLOSE)|g' \
 	      -e 's|@''GNULIB_DUP2''@|$(GNULIB_DUP2)|g' \
-	      -e 's|@''GNULIB_DUP3''@|$(GNULIB_DUP3)|g' \
 	      -e 's|@''GNULIB_ENVIRON''@|$(GNULIB_ENVIRON)|g' \
 	      -e 's|@''GNULIB_EUIDACCESS''@|$(GNULIB_EUIDACCESS)|g' \
 	      -e 's|@''GNULIB_FCHDIR''@|$(GNULIB_FCHDIR)|g' \
@@ -1045,14 +1014,11 @@ unistd.h: unistd.in.h
 	      -e 's|@''GNULIB_LCHOWN''@|$(GNULIB_LCHOWN)|g' \
 	      -e 's|@''GNULIB_LINK''@|$(GNULIB_LINK)|g' \
 	      -e 's|@''GNULIB_LSEEK''@|$(GNULIB_LSEEK)|g' \
-	      -e 's|@''GNULIB_PIPE2''@|$(GNULIB_PIPE2)|g' \
 	      -e 's|@''GNULIB_READLINK''@|$(GNULIB_READLINK)|g' \
 	      -e 's|@''GNULIB_SLEEP''@|$(GNULIB_SLEEP)|g' \
-	      -e 's|@''GNULIB_UNISTD_H_GETOPT''@|$(GNULIB_UNISTD_H_GETOPT)|g' \
 	      -e 's|@''GNULIB_UNISTD_H_SIGPIPE''@|$(GNULIB_UNISTD_H_SIGPIPE)|g' \
 	      -e 's|@''GNULIB_WRITE''@|$(GNULIB_WRITE)|g' \
 	      -e 's|@''HAVE_DUP2''@|$(HAVE_DUP2)|g' \
-	      -e 's|@''HAVE_DUP3''@|$(HAVE_DUP3)|g' \
 	      -e 's|@''HAVE_EUIDACCESS''@|$(HAVE_EUIDACCESS)|g' \
 	      -e 's|@''HAVE_FSYNC''@|$(HAVE_FSYNC)|g' \
 	      -e 's|@''HAVE_FTRUNCATE''@|$(HAVE_FTRUNCATE)|g' \
@@ -1062,7 +1028,6 @@ unistd.h: unistd.in.h
 	      -e 's|@''HAVE_GETPAGESIZE''@|$(HAVE_GETPAGESIZE)|g' \
 	      -e 's|@''HAVE_GETUSERSHELL''@|$(HAVE_GETUSERSHELL)|g' \
 	      -e 's|@''HAVE_LINK''@|$(HAVE_LINK)|g' \
-	      -e 's|@''HAVE_PIPE2''@|$(HAVE_PIPE2)|g' \
 	      -e 's|@''HAVE_READLINK''@|$(HAVE_READLINK)|g' \
 	      -e 's|@''HAVE_SLEEP''@|$(HAVE_SLEEP)|g' \
 	      -e 's|@''HAVE_DECL_ENVIRON''@|$(HAVE_DECL_ENVIRON)|g' \
@@ -1079,16 +1044,15 @@ unistd.h: unistd.in.h
 	      -e 's|@''REPLACE_LSEEK''@|$(REPLACE_LSEEK)|g' \
 	      -e 's|@''REPLACE_WRITE''@|$(REPLACE_WRITE)|g' \
 	      -e 's|@''UNISTD_H_HAVE_WINSOCK2_H''@|$(UNISTD_H_HAVE_WINSOCK2_H)|g' \
-	      -e 's|@''UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS''@|$(UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS)|g' \
 	      -e '/definition of GL_LINK_WARNING/r $(LINK_WARNING_H)' \
 	      < $(srcdir)/unistd.in.h; \
-	} > $@-t && \
+	} > $@-t
 	mv $@-t $@
 
 # We need the following in order to create <wchar.h> when the system
 # version does not work standalone.
 wchar.h: wchar.in.h
-	$(AM_V_GEN)rm -f $@-t $@ && \
+	rm -f $@-t $@
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
 	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
@@ -1131,7 +1095,7 @@ wchar.h: wchar.in.h
 	      -e 's|@''REPLACE_WCWIDTH''@|$(REPLACE_WCWIDTH)|g' \
 	      -e '/definition of GL_LINK_WARNING/r $(LINK_WARNING_H)' \
 	    < $(srcdir)/wchar.in.h; \
-	} > $@-t && \
+	} > $@-t
 	mv $@-t $@
 
 mostlyclean-local: mostlyclean-generic

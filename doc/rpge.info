@@ -148,7 +148,7 @@ to the system-specific location of included files.
 * Configuration file basics::
 * Pre-defined directives::
 * Defining directives::
-* Caveats::
+* Caveats when running code from configuration files::
 
 
 File: rpge.info,  Node: Configuration file basics,  Next: Pre-defined directives,  Prev: rpge configuration files,  Up: rpge configuration files
@@ -198,7 +198,7 @@ The default load path consists of the scm and examples subdirectories
 in the installation path of rpge's data.
 
 
-File: rpge.info,  Node: Defining directives,  Next: Caveats,  Prev: Pre-defined directives,  Up: rpge configuration files
+File: rpge.info,  Node: Defining directives,  Next: Caveats when running code from configuration files,  Prev: Pre-defined directives,  Up: rpge configuration files
 
 2.2.3 Defining directives
 -------------------------
@@ -211,10 +211,24 @@ containing the argument to the directive, with any trailing spaces and
 comments removed.
 
 
-File: rpge.info,  Node: Caveats,  Prev: Defining directives,  Up: rpge configuration files
+File: rpge.info,  Node: Caveats when running code from configuration files,  Prev: Defining directives,  Up: rpge configuration files
 
-2.2.4 Caveats
--------------
+2.2.4 Caveats when running code from configuration files
+--------------------------------------------------------
+
+Scheme code run from configuration files is loaded through safe-load,
+which is an rpge primitive created to avoid threading bugs due to
+multiple files loading at once. Essentially, this means that, whenever
+a file is loaded from a configuration file, a mutex is locked.
+Normally, this causes no problem whatsoever, provided one does not fork
+off threads to load other files and the script terminates at some point.
+In the former case, one should do the loading in the forked threads
+using safe-load, for example by using `(make-thread safe-load
+``foo.scm'')' instead of `(make-thread load ``foo.scm'')'. The latter
+case requires that the script that does not terminate is run from a new
+thread rather than directly from the configuration file. Furthermore,
+it should `(unlock-mutex load-mutex)' once it is done defining
+variables, so other files can be loaded.
 
 
 File: rpge.info,  Node: rpge's view of the world,  Next: Communication in rpge,  Prev: Invoking rpge,  Up: Top
@@ -238,9 +252,9 @@ In rpge, a world is essentially a flat, 2-dimensional surface, divided
 into tiles. These tiles are small, rectangular areas, with configurable
 widths and heights.  On these tiles, objects called mobs can move
 around in any way they wish, possibly blocked by certain tiles while
-freely passing over others.  These mobs are each rendered as a
-so-called sprite, a 2-dimensional picture. The picture to render is
-determined by the file loaded for the mob and its animation status.
+freely passing over others.  These mobs are each rendered as a sprite,
+a 2-dimensional picture. The picture to render is determined by the
+file loaded for the mob and its animation status.
 
    In the future, this model could be expanded to allow any number of
 concurrent 'worlds' on a single rpge instance, something that could be
@@ -253,7 +267,7 @@ File: rpge.info,  Node: Tiles,  Next: Mobs,  Prev: Overview,  Up: rpge's view of
 3.2 Tiles
 =========
 
-rpge tiles need a little more discussion, since they have some
+Rpge tiles need a little more discussion, since they have some
 interesting properties that users may want to be aware of. First, all
 tiles in the tilegrid are independent.  Changing the data of a single
 tile does not change the data of the others, with one important
@@ -267,11 +281,13 @@ filename and index.
 arrives at a tile from. For example, if a mob is moving right when it
 hits a blocking tile, that tile will only block if the BLOCK_LEFT flag
 is set. Similarly, for a mob arriving at any tile, the blocking flag
-for the corresponding edge is checked.
+for the corresponding edge is checked.  TODO: Make a nice tabular
+description of the various flags.
 
    Third, rpge has the facilities in place to differentiate between two
 types of mobs (dubbed 'ground' and 'air' mobs) and block none, one or
 both of those. However, these flags are unused at the time of writing.
+TODO: Fix this horrendous bug and tabulate.
 
    Fourth, though rpge does check for tile blocking while a mob is
 moving, mobs moving over tiles while they are being changed may cause
@@ -286,25 +302,30 @@ File: rpge.info,  Node: Mobs,  Prev: Tiles,  Up: rpge's view of the world
 3.3 Mobs
 ========
 
-Mobs, like tiles, have some interesting properties. The most important
-of these is the ability to add any data you want to any mob you want.
-This data, dubbed the 'mob user data ', can be queried and set from
-GUILE. By default, it is the empty list marker and protected from the
-garbage collector. Since rpge only allows a single GUILE value of user
-data for every mob, it is recommended to fill this space with a list,
-table or other compound data structure so you can put arbitrarily large
-amounts of data in this space. The example statistics system and other
-systems that work with mob user data will presume this data is a table.
-It is also worth noting that the default mob bootstrap procedure sets
-this data to an empty table.
+TODO: Split and rewrite this section, mentioning all the silly caveats
+later.  TODO: Expected plan: Start with a section outlining what mobs
+are, TODO: then describe how to create them, which things can use them
+and so on.  Mobs, like tiles, have some interesting properties. The
+most important of these is the ability to add any data you want to any
+mob you want. This data, dubbed the 'mob user data ', can be queried
+and set from GUILE. By default, it is the empty list marker and
+protected from the garbage collector. Since rpge only allows a single
+GUILE value of user data for every mob, it is recommended to fill this
+space with a list, table or other compound data structure so you can
+put arbitrarily large amounts of data in this space. The example
+statistics system and other systems that work with mob user data will
+presume this data is a table. It is also worth noting that the default
+mob bootstrap procedure sets this data to an empty table.
 
-   This bootstrap procedure is another property of mobs that users can
+   The bootstrap procedure is another property of mobs that users can
 use to enhance mobs. Since systems using mob user data may need
 initialization, rpge provides this procedure, which is called by the
-GUILE procedure make-mob only, not by the primitive create-mob, to set
-the initial value of this data. The procedure may however do any
-arbitrary amount of processing or data creation, as long as it takes a
-single argument representing the mob being created.
+GUILE procedure make-mob. The procedure may do any amount of processing
+or data creation, as long as it takes a single argument representing
+the mob being created. Note that there exists another procedure to
+create a mob, the primitive create-mob. This does not call the mob
+bootstrap procedure and should only be used if this property is
+required.
 
    Closer to the C side of things, mobs are currently considered as
 wide and as high as a single tile. Therefore, rpge will render sprites
@@ -348,12 +369,15 @@ File: rpge.info,  Node: Communication in rpge,  Next: API Reference,  Prev: rpge
 4 Communication in rpge
 ***********************
 
-In rpge, there are two kinds of communication, being communication
-between rpge itself and the scripts running in it and communication
-between the scripts themselves.  The latter type of communication can
-be handled in any way the users want, just like in any multithreaded
-program. Communication between rpge and the engine is not so freeform,
-but is similar to communication in GTK, Xlib or a similar system.
+TODO: Describe this in a separate section in a guile-like chapter
+'programming rpge'?  TODO: Such a section would make a good deal of
+sense.  In rpge, there are two kinds of communication, being
+communication between rpge itself and the scripts running in it and
+communication between the scripts themselves.  The latter type of
+communication can be handled in any way the users want, just like in
+any multithreaded program. Communication between rpge and the engine is
+not so freeform, but is similar to communication in GTK, Xlib or a
+similar system.
 
    This communication is handled by so-called events, which live on
 things called 'eventstacks'. Regardless of the specific stack, events
@@ -387,11 +411,18 @@ File: rpge.info,  Node: Event Reference,  Prev: Communication in rpge,  Up: Comm
 4.1 Event Reference
 ===================
 
-This section lists all current events. Note that events, to GUILE, are
-pairs whose car holds data identifying the particular type of event and
-whose cdr holds data associated with the specific event itself.
+TODO: Update this, given that it lacks key-up events that are not
+proper.  TODO: Also mention that the symbols are crafted by taking the
+SDL key name, TODO: so users can investigate which symbol to use by
+checking the key TODO: name.  This section lists all current events.
+Note that events, to GUILE, are pairs whose car holds data identifying
+the particular type of event and whose cdr holds data associated with
+the specific event itself.
 
-   Global events:
+   Global events: TODO:Split the various events related to different
+things into different sections or mention them in the relevant places.
+TODO: That is, mention key-related things in the section about binding
+keys and mob things in the section about mobs, and so on.
    * key-down:This event specifies a keypress. The car is the symbol
      'key-down, the cdr is a symbol indicating the key pressed.
      Usually, this is the letter typed by pressing  this particular
@@ -419,9 +450,11 @@ File: rpge.info,  Node: API Reference,  Next: GNU Free Documentation License,  P
 Appendix A API Reference
 ************************
 
-This section describes the entire rpge GUILE API, all the way from
-primitives to the stuff implemented in the examples that are part of
-the rpge distribution.
+TODO: Split this in a Guile-like way by topic. This also needs
+updating, badly. Any missing primitives should be added.  This section
+describes the entire rpge GUILE API, all the way from primitives to the
+stuff implemented in the examples that are part of the rpge
+distribution.
 
 * Menu:
 
@@ -1272,19 +1305,19 @@ Node: Installation2459
 Node: Invoking rpge3644
 Node: A summary of command-line options3874
 Node: rpge configuration files4451
-Node: Configuration file basics5461
-Node: Pre-defined directives6287
-Node: Defining directives7522
-Node: Caveats8053
-Node: rpge's view of the world8176
-Node: Overview8387
-Node: Tiles9289
-Node: Mobs10899
-Node: Communication in rpge14433
-Node: Event Reference16240
-Node: API Reference17582
-Node: Primitives17960
-Node: Scheme-level APIs23848
-Node: GNU Free Documentation License29888
+Node: Configuration file basics5504
+Node: Pre-defined directives6330
+Node: Defining directives7565
+Node: Caveats when running code from configuration files8139
+Node: rpge's view of the world9253
+Node: Overview9464
+Node: Tiles10356
+Node: Mobs12071
+Node: Communication in rpge15918
+Node: Event Reference17867
+Node: API Reference19695
+Node: Primitives20194
+Node: Scheme-level APIs26082
+Node: GNU Free Documentation License32122
 
 End Tag Table

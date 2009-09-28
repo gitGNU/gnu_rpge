@@ -687,7 +687,6 @@ GNULIB_BTOWC
 HAVE_UNISTD_H
 NEXT_AS_FIRST_DIRECTIVE_UNISTD_H
 NEXT_UNISTD_H
-UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS
 UNISTD_H_HAVE_WINSOCK2_H
 REPLACE_WRITE
 REPLACE_LSEEK
@@ -704,7 +703,6 @@ HAVE_DECL_GETLOGIN_R
 HAVE_DECL_ENVIRON
 HAVE_SLEEP
 HAVE_READLINK
-HAVE_PIPE2
 HAVE_LINK
 HAVE_GETUSERSHELL
 HAVE_GETPAGESIZE
@@ -714,14 +712,11 @@ HAVE_GETDOMAINNAME
 HAVE_FTRUNCATE
 HAVE_FSYNC
 HAVE_EUIDACCESS
-HAVE_DUP3
 HAVE_DUP2
 GNULIB_WRITE
 GNULIB_UNISTD_H_SIGPIPE
-GNULIB_UNISTD_H_GETOPT
 GNULIB_SLEEP
 GNULIB_READLINK
-GNULIB_PIPE2
 GNULIB_LSEEK
 GNULIB_LINK
 GNULIB_LCHOWN
@@ -737,7 +732,6 @@ GNULIB_FSYNC
 GNULIB_FCHDIR
 GNULIB_EUIDACCESS
 GNULIB_ENVIRON
-GNULIB_DUP3
 GNULIB_DUP2
 GNULIB_CLOSE
 GNULIB_CHOWN
@@ -819,7 +813,6 @@ HAVE_SETENV
 HAVE_RPMATCH
 HAVE_RANDOM_R
 HAVE_REALLOC_POSIX
-HAVE_MKOSTEMP
 HAVE_MKDTEMP
 HAVE_MALLOC_POSIX
 HAVE_GETSUBOPT
@@ -834,7 +827,6 @@ GNULIB_RPMATCH
 GNULIB_RANDOM_R
 GNULIB_PUTENV
 GNULIB_MKSTEMP
-GNULIB_MKOSTEMP
 GNULIB_MKDTEMP
 GNULIB_GETSUBOPT
 GNULIB_GETLOADAVG
@@ -865,11 +857,6 @@ HAVE_SYS_TYPES_H
 HAVE_INTTYPES_H
 HAVE_UNSIGNED_LONG_LONG_INT
 HAVE_LONG_LONG_INT
-NEXT_AS_FIRST_DIRECTIVE_STDDEF_H
-NEXT_STDDEF_H
-STDDEF_H
-HAVE_WCHAR_T
-REPLACE_NULL
 APPLE_UNIVERSAL_BUILD
 LTLIBINTL
 LIBINTL
@@ -1987,7 +1974,6 @@ $as_echo "$as_me: creating cache $cache_file" >&6;}
 fi
 
 gl_header_list="$gl_header_list errno.h"
-gl_header_list="$gl_header_list stddef.h"
 gl_header_list="$gl_header_list stdint.h"
 gl_header_list="$gl_header_list wchar.h"
 gl_header_list="$gl_header_list stdlib.h"
@@ -7503,77 +7489,6 @@ _ACEOF
 
 
 
-    REPLACE_NULL=0;
-  HAVE_WCHAR_T=1;
-  STDDEF_H='';
-
-
-  { $as_echo "$as_me:$LINENO: checking for wchar_t" >&5
-$as_echo_n "checking for wchar_t... " >&6; }
-if test "${gt_cv_c_wchar_t+set}" = set; then
-  $as_echo_n "(cached) " >&6
-else
-  cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-#include <stddef.h>
-       wchar_t foo = (wchar_t)'\0';
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext
-if { (ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval ac_try_echo="\"\$as_me:$LINENO: $ac_try_echo\""
-$as_echo "$ac_try_echo") >&5
-  (eval "$ac_compile") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest.$ac_objext; then
-  gt_cv_c_wchar_t=yes
-else
-  $as_echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	gt_cv_c_wchar_t=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-{ $as_echo "$as_me:$LINENO: result: $gt_cv_c_wchar_t" >&5
-$as_echo "$gt_cv_c_wchar_t" >&6; }
-  if test $gt_cv_c_wchar_t = yes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define HAVE_WCHAR_T 1
-_ACEOF
-
-  fi
-
-
-
-
-
-
-
-
   { $as_echo "$as_me:$LINENO: checking for long long int" >&5
 $as_echo_n "checking for long long int... " >&6; }
 if test "${ac_cv_type_long_long_int+set}" = set; then
@@ -7831,7 +7746,6 @@ _ACEOF
   GNULIB_GETLOADAVG=0;
   GNULIB_GETSUBOPT=0;
   GNULIB_MKDTEMP=0;
-  GNULIB_MKOSTEMP=0;
   GNULIB_MKSTEMP=0;
   GNULIB_PUTENV=0;
   GNULIB_RANDOM_R=0;
@@ -7846,7 +7760,6 @@ _ACEOF
   HAVE_GETSUBOPT=1;
   HAVE_MALLOC_POSIX=1;
   HAVE_MKDTEMP=1;
-  HAVE_MKOSTEMP=1;
   HAVE_REALLOC_POSIX=1;
   HAVE_RANDOM_R=1;
   HAVE_RPMATCH=1;
@@ -8434,7 +8347,6 @@ $as_echo "$gl_cv_next_string_h" >&6; }
   GNULIB_CHOWN=0;
   GNULIB_CLOSE=0;
   GNULIB_DUP2=0;
-  GNULIB_DUP3=0;
   GNULIB_ENVIRON=0;
   GNULIB_EUIDACCESS=0;
   GNULIB_FCHDIR=0;
@@ -8450,14 +8362,11 @@ $as_echo "$gl_cv_next_string_h" >&6; }
   GNULIB_LCHOWN=0;
   GNULIB_LINK=0;
   GNULIB_LSEEK=0;
-  GNULIB_PIPE2=0;
   GNULIB_READLINK=0;
   GNULIB_SLEEP=0;
-  GNULIB_UNISTD_H_GETOPT=0;
   GNULIB_UNISTD_H_SIGPIPE=0;
   GNULIB_WRITE=0;
     HAVE_DUP2=1;
-  HAVE_DUP3=1;
   HAVE_EUIDACCESS=1;
   HAVE_FSYNC=1;
   HAVE_FTRUNCATE=1;
@@ -8467,7 +8376,6 @@ $as_echo "$gl_cv_next_string_h" >&6; }
   HAVE_GETPAGESIZE=1;
   HAVE_GETUSERSHELL=1;
   HAVE_LINK=1;
-  HAVE_PIPE2=1;
   HAVE_READLINK=1;
   HAVE_SLEEP=1;
   HAVE_DECL_ENVIRON=1;
@@ -8484,8 +8392,6 @@ $as_echo "$gl_cv_next_string_h" >&6; }
   REPLACE_LSEEK=0;
   REPLACE_WRITE=0;
   UNISTD_H_HAVE_WINSOCK2_H=0;
-  UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS=0;
-
 
 
 
@@ -8798,135 +8704,6 @@ _ACEOF
 
   fi
 
-
-
-
-
-  if test $gt_cv_c_wchar_t = no; then
-    HAVE_WCHAR_T=0
-    STDDEF_H=stddef.h
-  fi
-  { $as_echo "$as_me:$LINENO: checking whether NULL can be used in arbitrary expressions" >&5
-$as_echo_n "checking whether NULL can be used in arbitrary expressions... " >&6; }
-if test "${gl_cv_decl_null_works+set}" = set; then
-  $as_echo_n "(cached) " >&6
-else
-  cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-#include <stddef.h>
-      int test[2 * (sizeof NULL == sizeof (void *)) -1];
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext
-if { (ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval ac_try_echo="\"\$as_me:$LINENO: $ac_try_echo\""
-$as_echo "$ac_try_echo") >&5
-  (eval "$ac_compile") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  $as_echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest.$ac_objext; then
-  gl_cv_decl_null_works=yes
-else
-  $as_echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	gl_cv_decl_null_works=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-{ $as_echo "$as_me:$LINENO: result: $gl_cv_decl_null_works" >&5
-$as_echo "$gl_cv_decl_null_works" >&6; }
-  if test $gl_cv_decl_null_works = no; then
-    REPLACE_NULL=1
-    STDDEF_H=stddef.h
-  fi
-  if test -n "$STDDEF_H"; then
-
-
-
-
-  :
-
-
-
-
-
-
-
-     if test $gl_cv_have_include_next = yes; then
-       gl_cv_next_stddef_h='<'stddef.h'>'
-     else
-       { $as_echo "$as_me:$LINENO: checking absolute name of <stddef.h>" >&5
-$as_echo_n "checking absolute name of <stddef.h>... " >&6; }
-if test "${gl_cv_next_stddef_h+set}" = set; then
-  $as_echo_n "(cached) " >&6
-else
-
-	  if test $ac_cv_header_stddef_h = yes; then
-	    cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-#include <stddef.h>
-
-_ACEOF
-	    	    	    	    	    	    	    	    case "$host_os" in
-	      aix*) gl_absname_cpp="$ac_cpp -C" ;;
-	      *)    gl_absname_cpp="$ac_cpp" ;;
-	    esac
-	    	    	    	    gl_cv_next_stddef_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
-	       sed -n '\#/stddef.h#{
-		 s#.*"\(.*/stddef.h\)".*#\1#
-		 s#^/[^/]#//&#
-		 p
-		 q
-	       }'`'"'
-	  else
-	    gl_cv_next_stddef_h='<'stddef.h'>'
-	  fi
-
-fi
-{ $as_echo "$as_me:$LINENO: result: $gl_cv_next_stddef_h" >&5
-$as_echo "$gl_cv_next_stddef_h" >&6; }
-     fi
-     NEXT_STDDEF_H=$gl_cv_next_stddef_h
-
-     if test $gl_cv_have_include_next = yes || test $gl_cv_have_include_next = buggy; then
-       # INCLUDE_NEXT_AS_FIRST_DIRECTIVE='include_next'
-       gl_next_as_first_directive='<'stddef.h'>'
-     else
-       # INCLUDE_NEXT_AS_FIRST_DIRECTIVE='include'
-       gl_next_as_first_directive=$gl_cv_next_stddef_h
-     fi
-     NEXT_AS_FIRST_DIRECTIVE_STDDEF_H=$gl_next_as_first_directive
-
-
-
-  fi
 
 
 
@@ -11064,9 +10841,7 @@ $as_echo "$gl_cv_header_wchar_h_standalone" >&6; }
   fi
 
 
-
-
-  if test $gl_cv_header_wchar_h_standalone != yes || test $gt_cv_c_wint_t != yes || test -n "$STDDEF_H"; then
+  if test $gl_cv_header_wchar_h_standalone != yes || test $gt_cv_c_wint_t != yes; then
     WCHAR_H=wchar.h
   fi
 
