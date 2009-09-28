@@ -46,13 +46,14 @@ AC_DEFUN([gl_INIT],
   gl_HEADER_ERRNO_H
   gl_ERROR
   m4_ifdef([AM_XGETTEXT_OPTION],
-    [AM_XGETTEXT_OPTION([--flag=error:3:c-format])
-     AM_XGETTEXT_OPTION([--flag=error_at_line:5:c-format])])
+    [AM_][XGETTEXT_OPTION([--flag=error:3:c-format])
+     AM_][XGETTEXT_OPTION([--flag=error_at_line:5:c-format])])
   gl_EXITFAIL
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
   gl_INLINE
   gl_MULTIARCH
+  gl_STDDEF_H
   gl_STDINT_H
   gl_STDLIB_H
   gl_FUNC_STRERROR
@@ -202,6 +203,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/exitfail.h
   lib/gettext.h
   lib/intprops.h
+  lib/stddef.in.h
   lib/stdint.in.h
   lib/stdlib.in.h
   lib/strerror.c
@@ -222,12 +224,14 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/longlong.m4
   m4/multiarch.m4
   m4/onceonly.m4
+  m4/stddef_h.m4
   m4/stdint.m4
   m4/stdlib_h.m4
   m4/strerror.m4
   m4/string_h.m4
   m4/unistd_h.m4
   m4/wchar.m4
+  m4/wchar_t.m4
   m4/wint_t.m4
   m4/xalloc.m4
 ])
