@@ -160,23 +160,25 @@ In the former case, one should do the loading in the forked threads using safe-l
 @section Overview
 In rpge, a world is essentially a flat, 2-dimensional surface, divided into tiles. These tiles are small, rectangular areas, with configurable widths and heights. 
 On these tiles, objects called mobs can move around in any way they wish, possibly blocked by certain tiles while freely passing over others. 
-These mobs are each rendered as a so-called sprite, a 2-dimensional picture. The picture to render is determined by the file loaded for the mob and its animation status.
+These mobs are each rendered as a sprite, a 2-dimensional picture. The picture to render is determined by the file loaded for the mob and its animation status.
 
 In the future, this model could be expanded to allow any number of concurrent 'worlds' on a single rpge instance, something that could be especially useful if rpge were 
 ever networked. At present though, there is only one world and parallel universes are merely science-fiction. 
 
 @node Tiles, Mobs, Overview, rpge's view of the world
 @section Tiles
-rpge tiles need a little more discussion, since they have some interesting properties that users may want to be aware of. First, all tiles in the tilegrid are independent. 
+Rpge tiles need a little more discussion, since they have some interesting properties that users may want to be aware of. First, all tiles in the tilegrid are independent. 
 Changing the data of a single tile does not change the data of the others, with one important exception. The one exception is that changing the image data used by a tile
 directly (something only possible through either runtime reloading of images or modifying the rpge source, there is no API function) changes the image data used by all tiles
 using the image of the same filename and index. 
 
 Second, rpge differentiates between the various directions a mob arrives at a tile from. For example, if a mob is moving right when it hits a blocking tile, that tile will
 only block if the BLOCK_LEFT flag is set. Similarly, for a mob arriving at any tile, the blocking flag for the corresponding edge is checked. 
+TODO: Make a nice tabular description of the various flags.
 
 Third, rpge has the facilities in place to differentiate between two types of mobs (dubbed 'ground' and 'air' mobs) and block none, one or both of those. However, these flags
 are unused at the time of writing. 
+TODO: Fix this horrendous bug and tabulate.
 
 Fourth, though rpge does check for tile blocking while a mob is moving, mobs moving over tiles while they are being changed may cause some bugs. For example, a mob
 moving over a tile that does not block while it is being modified to block will probably proceed to move over the tile anyway, as blocking was checked when the mob entered
@@ -184,15 +186,18 @@ the tile and will not be checked when the mob leaves it.
 
 @node Mobs,  , Tiles, rpge's view of the world
 @section Mobs
+TODO: Split and rewrite this section, mentioning all the silly caveats later.
+TODO: Expected plan: Start with a section outlining what mobs are,
+TODO: then describe how to create them, which things can use them and so on.
 Mobs, like tiles, have some interesting properties. The most important of these is the ability to add any data you want to any mob you want. This data, dubbed the 'mob user data
 ', can be queried and set from GUILE. By default, it is the empty list marker and protected from the garbage collector. Since rpge only allows a single GUILE value of user data
 for every mob, it is recommended to fill this space with a list, table or other compound data structure so you can put arbitrarily large amounts of data in this space. The
 example statistics system and other systems that work with mob user data will presume this data is a table. It is also worth noting that the default mob bootstrap procedure
 sets this data to an empty table.
 
-This bootstrap procedure is another property of mobs that users can use to enhance mobs. Since systems using mob user data may need initialization, rpge provides this procedure,
-which is called by the GUILE procedure make-mob only, not by the primitive create-mob, to set the initial value of this data. The procedure may however do any arbitrary amount
-of processing or data creation, as long as it takes a single argument representing the mob being created. 
+The bootstrap procedure is another property of mobs that users can use to enhance mobs. Since systems using mob user data may need initialization, rpge provides this procedure,
+which is called by the GUILE procedure make-mob. The procedure may do any amount
+of processing or data creation, as long as it takes a single argument representing the mob being created. Note that there exists another procedure to create a mob, the primitive create-mob. This does not call the mob bootstrap procedure and should only be used if this property is required.
 
 Closer to the C side of things, mobs are currently considered as wide and as high as a single tile. Therefore, rpge will render sprites of SPRITE_WIDTH width and SPRITE_HEIGHT
 height, both of those macros being equal to the respective dimensions of tiles. When determining what sprite to render, rpge looks up the image data associated with the image
@@ -213,6 +218,8 @@ more generally, changes its motion. This would be useful for animation purposes.
 
 @node Communication in rpge, API Reference, rpge's view of the world, Top
 @chapter Communication in rpge
+TODO: Describe this in a separate section in a guile-like chapter 'programming rpge'?
+TODO: Such a section would make a good deal of sense.
 In rpge, there are two kinds of communication, being communication between rpge itself and the scripts running in it and communication between the scripts themselves.  The latter type of communication can be handled in any way the users want, just like in any multithreaded program. Communication between rpge and the engine is not so freeform, but is similar to communication in GTK, Xlib or a similar system.
 
 This communication is handled by so-called events, which live on things called 'eventstacks'. Regardless of the specific stack, events themselves are simple messages, basically consisting of something to identify the particular type of message and whatever the user should know about it.
@@ -227,11 +234,16 @@ Stacks themselves live in rpge, being assigned to either a certain object or jus
 
 @node Event Reference,  , Communication in rpge, Communication in rpge
 @section Event Reference
-
+TODO: Update this, given that it lacks key-up events that are not proper.
+TODO: Also mention that the symbols are crafted by taking the SDL key name,
+TODO: so users can investigate which symbol to use by checking the key
+TODO: name.
 This section lists all current events. Note that events, to GUILE, are pairs whose car holds data identifying the particular type of event and whose cdr holds data associated
 with the specific event itself. 
 
 Global events:
+TODO:Split the various events related to different things into different sections or mention them in the relevant places.
+TODO: That is, mention key-related things in the section about binding keys and mob things in the section about mobs, and so on.
 @itemize
 @item key-down:This event specifies a keypress. The car is the symbol 'key-down, the cdr is a symbol indicating the key pressed. Usually, this is the letter typed by pressing  this particular key. For example, if the a key is pressed without holding down shift, the cdr of the associated event will hold the symbol 'a. Newlines, tabs  and spaces are converted to 'newline, 'tab and 'space, respectively.
 
@@ -247,6 +259,7 @@ Mob events:
 
 @node API Reference, GNU Free Documentation License, Communication in rpge, Top
 @appendix API Reference
+TODO: Split this in a Guile-like way by topic. This also needs updating, badly. Any missing primitives should be added.
 This section describes the entire rpge GUILE API, all the way from primitives to the stuff implemented in the examples that are part of the rpge distribution.
 
 @menu
