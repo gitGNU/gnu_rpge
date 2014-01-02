@@ -65,8 +65,7 @@ typedef struct
 extern sequence directives;
 
 #define BLOCK_SIZE 256
-
-char* getline(FILE* stream);
+char* getline2(FILE* stream);
 void exec_config_file(char* filename);
 void directives_init();
 void register_scm_directive(char* name, SCM func);

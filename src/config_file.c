@@ -28,7 +28,7 @@ sequence directives = {0,0};
 /*Define a custom getline so we don't need gcc. The semantics of the glibc variety are slightly different, but this should do for all sane cases. This may need a replacement calloc on some systems, which should be easy enough to
 throw in. Much unlike the fgets it is based on, this variety of getline removes any leftover newlines. Memory allocated by this procedure should be free()d by the caller.*/
 char*
-getline(FILE* stream)
+getline2(FILE* stream)
 {
    unsigned int size = 0;
    char* string = (char*) xcalloc(BLOCK_SIZE,sizeof(char)), *status = NULL;
@@ -212,7 +212,7 @@ exec_config_file(char* filename)
     }
   char* str,*colon;
   int len;
-  while((str = getline(file)))
+  while((str = getline2(file)))
     {
       if(str[0] != 0 && str[0] != '#')
 	{

@@ -1,0 +1,10 @@
+/errno.in.h
+/msvc-inval.c
+/msvc-inval.h
+/msvc-nothrow.c
+/msvc-nothrow.h
+/stddef.in.h
+/strerror-override.c
+/strerror-override.h
+/verify.h
+/xalloc-oversized.h
