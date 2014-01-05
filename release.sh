@@ -17,13 +17,16 @@ mv /tmp/rpge-$1 .
 cd rpge-$1
 echo "s/NOTVERSIONNEDPACKAGE/"$1"/" >tempGen.sed
 echo "Writing"
-sed -f tempGen.sed configure.in>temp2
+sed -f tempGen.sed configure.ac>temp2
 rm configure.in
 sed -f tempGen.sed configure>temp21
 rm configure
 mv temp21 configure
+sed -f tempGen.sed doc/rpge.texinfo >tesxteinfo
+rm doc/rpge.texinfo
+mv tesxteinfo doc/rpge.texinfo
 chmod +x configure
-mv temp2 configure.in
+mv temp2 configure.ac
 sed -f tempGen.sed Makefile.in>temp22
 rm temp2 temp21 temp22
 sed -f tempGen.sed doxygen.conf>temp3

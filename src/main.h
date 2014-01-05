@@ -33,6 +33,7 @@ This program is part of the GNU project, released under the aegis of GNU."
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_image.h>
+#include "config.h"
 #include <libguile.h>
 #include <getopt.h>
 #include "xalloc.h"

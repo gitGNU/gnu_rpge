@@ -17,7 +17,7 @@
 
 @titlepage
   @title Role Playing Game Engine
-  @subtitle Version 0.0.2
+  @subtitle Version NOTVERSIONNEDPACKAGE
   @author Remco Bras
   @page 
   @vskip 0pt plus 1filll
@@ -29,7 +29,7 @@
 @node Top, About rpge and obtaining it, (dir), (dir)
 @ifnottex
 @top Role Playing Game Engine
-This manual is for rpge, version 0.0.2.
+This manual is for rpge, version NOTVERSIONNEDPACKAGE.
 @end ifnottex
 
 @menu
@@ -53,7 +53,7 @@ This manual is for rpge, version 0.0.2.
 @node About rpge and this manual, Getting a copy, About rpge and obtaining it, About rpge and obtaining it
 @section About rpge and this manual
 rpge is a GNU package, providing an engine for two-dimensional graphical role playing games. It is driven and extended by writing programs in GUILE, a dialect of Scheme.
-This manual is for rpge 0.0.2 and aims to document the parts of the workings of rpge that people using it should know about, the way rpge is driven using GUILE and
+This manual is for rpge NOTVERSIONNEDPACKAGE and aims to document the parts of the workings of rpge that people using it should know about, the way rpge is driven using GUILE and
 how rpge can be obtained, installed and otherwise used. 
 
 @node Getting a copy, Installation, About rpge and this manual, About rpge and obtaining it

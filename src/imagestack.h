@@ -21,6 +21,7 @@ imagestack.h: Define imagestack structs and declare imagestack functions so imag
 */
 #ifndef IMGSTACK_H
 #define IMGSTACK_H
+#include "config.h"
 #include "video.h"
 #include <SDL/SDL.h>
 #include <string.h>

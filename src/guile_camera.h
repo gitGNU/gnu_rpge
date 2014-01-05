@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #ifndef GUILE_CAMERA_H
 #define GUILE_CAMERA_H
-
+#include "config.h"
 #include <libguile.h>
 #include "camera.h"
 

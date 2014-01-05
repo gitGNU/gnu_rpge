@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #ifndef GUILE_H
 #define GUILE_H
-
+#include "config.h"
 #include "event.h"
 #include "tile.h"
 #include "text.h"

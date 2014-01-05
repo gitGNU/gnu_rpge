@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 #define MOBS_H
 #include <SDL/SDL.h>
 #include <stdlib.h>
+#include "config.h"
 #include <libguile.h>
 #include "sequence.h"
 #include "constants.h"

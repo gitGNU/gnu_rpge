@@ -8,3 +8,5 @@
 /strerror-override.h
 /verify.h
 /xalloc-oversized.h
+/sys_types.in.h
+/unistd.c

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #ifndef WINDOW_H
 #define WINDOW_H
+#include "config.h"
 
 #include "video.h"
 #include "imagestack.h"

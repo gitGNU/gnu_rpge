@@ -22,6 +22,7 @@ You should have received a copy of the GNU General Public License
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include "constants.h"
+#include "config.h"
 #include "mobs.h"
 #include "tile.h"
 #include "text.h"

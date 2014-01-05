@@ -22,7 +22,7 @@ config_file.h: Here because config_file.c needs an accompanying header.
 
 #ifndef CONFIG_FILE_H
 #define CONFIG_FILE_H
-
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

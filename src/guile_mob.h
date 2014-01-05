@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #ifndef GUILE_MOB_H
 #define GUILE_MOB_H
-
+#include "config.h"
 #include <libguile.h>
 #include "mobs.h"
 #include "constants.h"

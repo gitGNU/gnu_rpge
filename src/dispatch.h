@@ -22,6 +22,7 @@ dispatch.h: define the data structures required for automated dispatching of (SD
 
 #ifndef DISPATCH_H
 #define DISPATCH_H
+#include "config.h"
 #include <SDL/SDL.h>
 #include <libguile.h>
 #include "sequence.h"

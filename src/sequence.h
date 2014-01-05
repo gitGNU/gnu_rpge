@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 /*prototype sequence header*/
 #ifndef SEQ_H
 #define SEQ_H
+#include "config.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #ifndef TILE_H
 #define TILE_H
-
+#include "config.h"
 #include <SDL/SDL.h>
 #include "xalloc.h"
 #include "mobs.h"

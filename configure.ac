@@ -1,14 +1,15 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
-
-AC_INIT(configure.in)
-AM_INIT_AUTOMAKE([rpge],[0.0.1],[vrsoft@gmail.com])
+AC_INIT([rpge], [NOTVERSIONNEDPACKAGE])
+#AC_INIT(configure.in)
+#AM_INIT_AUTOMAKE([rpge],[NOTVERSIONNEDPACKAGE],[sebastien.diaz@gmail.com])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])
+AM_INIT_AUTOMAKE
 # Checks for programs.
 AC_PROG_CC_STDC
-AC_PROG_RANLIB
+#AC_PROG_RANLIB
 
 #Necessary GNUlib macro invocation
 gl_EARLY
@@ -20,6 +21,8 @@ AC_CHECK_LIB(guile, scm_init_guile,[],[echo 'Required library libguile not found
 AC_CHECK_LIB(SDL_ttf, TTF_FontHeight,[],[echo 'Required library libSDL_ttf not found'; exit])
 #GNUlib
 gl_INIT
+
+LT_INIT
 
 # Checks for header files.
 AC_CHECK_HEADERS(SDL/SDL.h SDL/SDL_image.h SDL/SDL_ttf.h libguile.h)

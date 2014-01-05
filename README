@@ -11,3 +11,4 @@ can find information about these in the BUGS file in the root of the source code
 for the RPGE manual is included in the doc/ subdirectory, so you can learn about using RPGE. The manual
 comes with the same rights as the software, as it is distributed under the GNU Free Documentation License.
 
+To try a demo use ,on the package directory , src/rpge -f conf/default-local.conf

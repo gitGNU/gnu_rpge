@@ -3,7 +3,7 @@
 ;Set all tiles at once.
 (all-tiles (tile "tile2.png" (0 0 16 16) block-none))
 ;Replace one tile.
-(tile 5 5 (tile "tile1.png" (0 0 16 16) block-all-undirectional))
+(tile 5 5 (tile "tile1.png" (0 0 16 16) block-all))
 ;Make a named mob.
 (mob main 0 0 "sprite_letter.png")
 ;This bit illustrates anonymous mobs.

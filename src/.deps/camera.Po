@@ -1,5 +1,0 @@
-camera.o: camera.c camera.h constants.h
-
-camera.h:
-
-constants.h:

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #ifndef GUILE_LOAD_H
 #define GUILE_LOAD_H
-
+#include "config.h"
 #include <libguile.h>
 #include "path.h"
 #include "sequence.h"
